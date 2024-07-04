@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<style type="text/css">
+body {
+  background-color: #d6d6d3;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+     flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#e5f8cd;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+</style>
+
+  <title>修正指定之userright</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>
+        <inputer></inputer>
+        <!-- <outputer></outputer> -->
+    </div>
+
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" :href="listpageurl">{{listpage}}</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#">{{edit1}} <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">{{editbatch}}</a>
+            </li>
+          </ul>
+          <span class="navbar-text">
+            <!--{{statusreport}}-->
+          </span>
+        </div>
+      </nav>
+    </template>
+
+    <template id="inputerUI" >
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">修正{{userright.a25code}}之對照資料</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{card_subtitle}}</h6>
+          <form :action="updateurl" method="post">
+            <div class="form-group" :key="inputerUIkey">
+            <label for="formGroupExampleInput2">{{items.item}}</label>
+            <input type="text" name="_id" class="form-control" id="formGroupExampleInput" :value="userright._id">
+
+            <label for="formGroupExampleInput2">{{items.item0}}</label>
+            <select :name="names.name0" class="form-select">
+              <optgroup v-for="(group,index) of groups" :key="group._id">
+              <option :value="group.a25code" :selected="groupindex[index]">{{group.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>
+            <label for="formGroupExampleInput2">{{items.item1}}</label>
+            <select :name="names.name1" class="form-select">
+              <optgroup v-for="(operation,index) of operations" :key="operation._id">
+              <option :value="operation.a25code" :selected="operationindex[index]">{{operation.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>
+            <label for="formGroupExampleInput2">{{items.item2}}</label>
+            <input type="text" :name="names.name2" class="form-control" id="formGroupExampleInput2" :value="userright.a15storage">
+
+            <label for="formGroupExampleInput2">{{items.item3}}</label>
+            <select :name="names.name3" class="form-select">
+              <optgroup v-for="(scope,index) of scopes" :key="scope._id">
+              <option :value="scope.a25code" :selected="scopeindex[index]">{{scope.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>
+            <label for="formGroupExampleInput2">{{items.item4}}</label>
+            <input type="text" :name="names.name4" class="form-control" id="formGroupExampleInput4" :value="userright.a25access">
+
+            <label for="formGroupExampleInput2">{{items.item5}}</label>
+            <select :name="names.name5" class="form-select">
+              <optgroup v-for="(dboperate,index) of dboperates" :key="dboperate._id">
+              <option :value="dboperate.a25code" :selected="dboperateindex[index]">{{dboperate.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>
+              <input type="hidden" name="statusreport" class="form-control" id="msg1" value="由修正userright後進入本頁">
+
+              <input type="submit" id="button1" value="確定送出" class="btn btn-info">
+            </div>
+          </form>
+          <input type="submit" id="button2" value="重新輸入" class="btn btn-info" @click="rerender()">
+          <!-- <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div>
+    </template>
+
+
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        listpage:"回前頁",
+        input1:"手動新增1筆",
+        inputbatch:"批次輸入",
+        crawl:"從網路抓取",
+        statusreport:'<%- statusreport %>',
+        personID:'<%- personID %>',
+        listpageurl:""        
+      }
+    },
+    mounted:function(){
+      this.listpageurl="/career/userright/"+this.personID
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("inputer",{
+    props:{},
+    data(){
+      return {
+        card_title:"",
+        card_subtitle:"請修正以下各項資料:",
+        items:{
+          item:"ID",
+          item0:"使用者群組",
+          item1:"對程式之操作權限",
+          item2:"可動用儲存區M數",
+          item3:"可視範圍",
+          item4:"可連接之資料庫",
+          item5:"資料庫操作權限",
+          item99:"特別註記"
+          },
+        names:{
+          name0:"a05group",
+          name1:"a10operation",
+          name2:"a15storage",
+          name3:"a20scope",
+          name4:"a25access",
+          name5:"a30dboperate"
+            },
+      userright:JSON.parse(decodeURIComponent('<%=userright%>')),
+      termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+        groups:[],
+        operations:[],
+        scopes:[],
+        dboperates:[],
+        groupindex:[],
+        operationindex:[],
+        scopeindex:[],
+        dboperateindex:[], 
+      inputerUIkey:0,
+      personID: '<%- personID %>',
+      updateurl:""
+      }//EOF return
+    },//EOF data()
+    mounted:function(){
+        this.updateurl="/career/userright/update/"+this.personID;
+
+        for(term of this.termlist){
+            if(term.a20field=="a05group"){
+                this.groups.push(term)
+            }
+        }
+        for(term of this.termlist){
+            if(term.a20field=="a10operation"){
+                this.operations.push(term)
+            }
+        }
+        for(term of this.termlist){
+            if(term.a20field=="a20scope"){
+                this.scopes.push(term)
+            }
+        }
+        for(term of this.termlist){
+            if(term.a20field=="a30dboperate"){
+                this.dboperates.push(term)
+            }
+        }
+        for(group of this.groups){
+            if(group.a25code==this.userright.a05group){
+                this.groupindex.push(true)
+            }else{
+                this.groupindex.push(false)
+            }
+        }
+        for(operation of this.operations){
+            if(operation.a25code==this.userright.a10operation){
+                this.operationindex.push(true)
+            }else{
+                this.operationindex.push(false)
+            }
+        }
+        for(scope of this.scopes){
+            if(scope.a25code==this.userright.a20scope){
+                this.scopeindex.push(true)
+            }else{
+                this.scopeindex.push(false)
+            }
+        }
+        for(dboperate of this.dboperates){
+            if(dboperate.a25code==this.userright.a30dboperate){
+                this.dboperateindex.push(true)
+            }else{
+                this.dboperateindex.push(false)
+            }
+        } 
+    },
+    methods:{
+        rerender:function() {
+      this.inputerUIkey += 1;
+      console.log("inputerUIkey:"+this.inputerUIkey)
+    }
+    },
+
+    template:"#inputerUI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        components:{
+
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        }
+    })
+</script>
+
+
+  </body>
+</html>
