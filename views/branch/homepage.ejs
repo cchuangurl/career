@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<style type="text/css">
+body {  
+background-color: rgb(248, 243, 243);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+
+#sidearea{  
+background-color: rgb(213, 218, 210);
+  height:720px;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.sidepart{
+    height:240px;
+    padding: 10px;
+    border-radius:10px
+}
+#bellcall{
+    background:#f5f5d6   
+}
+#messageboard{
+    background:#d6f5de
+}
+#loginarea{
+    background:#f8f8a6
+}
+#contactpart{
+    background:#d6f5de ;
+    width:100vw;
+    height:100px;
+    
+}
+.contactinfo {
+    margin-left:100px
+}
+#bulletin {
+    background:#def3f8;
+    height:720px;
+    }
+#sharezone {
+    background:#f8e8c5;
+    height:720px;
+    }
+.navbar{background:#d6eff5;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+
+</style>
+
+  <title>本網站首頁</title>
+  </head>
+  <body>
+    <div id="show_div">
+        <div class="row">
+            <bander></bander>
+        </div>
+        <div class="row" align="justify">
+            <div class="col-lg-3 col-md-6 col-sm-12" id="sidearea">
+                <sidebar></sidebar> </div>
+            <div class="col-lg-9 col-md-6 col-sm-12">
+                <div class="row" align="justify">
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="bulletin">
+                        <content2></content2> </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="sharezone">
+                        <content1></content1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="row" align="justify">
+            <contacter></contacter>
+        </div>
+        --> 
+    </div>
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">{{profile}}<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="resumeurl">{{resume}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="paperurl">{{paper}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="downloadurl">{{download}}</a>
+              </li>
+              
+          </ul>
+          <span class="navbar-text">
+            <font size="1">{{statusreport}}</font>
+          </span>
+        </div>
+      </nav>
+    </template>
+     
+    <template id="content1UI">
+        <nav aria-label="...">
+            <table>
+                <tr class="pagination">
+                  <td class="page-item" v-show="firstPage" @click="goFirstPage()">回第1頁</td>
+                  <td class="page-item" v-show="previousRound" @click="goPreviousRound()">上{{perRound}}頁</td>
+                  <div class="page index">
+                  <td class="page-item" :active="activeIndex[0]" v-show="showIndex[0]" @click="getShowData(0)">{{pageIndex[0]}}</td>
+                  <td class="page-item" :active="activeIndex[1]" v-show="showIndex[1]" @click="getShowData(1)">{{pageIndex[1]}}</td>
+                  <td class="page-item" :active="activeIndex[2]" v-show="showIndex[2]" @click="getShowData(2)">{{pageIndex[2]}}</td>
+                  <td class="page-item" :active="activeIndex[3]" v-show="showIndex[3]" @click="getShowData(3)">{{pageIndex[3]}}</td>
+                  <td class="page-item" :active="activeIndex[4]" v-show="showIndex[4]" @click="getShowData(4)">{{pageIndex[4]}}</td>
+                  <td class="page-item" :active="activeIndex[5]" v-show="showIndex[5]" @click="getShowData(5)">{{pageIndex[5]}}</td>
+                  <td class="page-item" :active="activeIndex[6]" v-show="showIndex[6]" @click="getShowData(6)">{{pageIndex[6]}}</td>
+                  <td class="page-item" :active="activeIndex[7]" v-show="showIndex[7]" @click="getShowData(7)">{{pageIndex[7]}}</td>
+                  <td class="page-item" :active="activeIndex[8]" v-show="showIndex[8]" @click="getShowData(8)">{{pageIndex[8]}}</td>
+                  <td class="page-item" :active="activeIndex[9]" v-show="showIndex[9]" @click="getShowData(9)">{{pageIndex[9]}}</td>
+              </div>
+                  <td class="page-item" v-show="nextRound" @click="goNextRound()">下{{perRound}}頁</td>
+                  <td class="page-item" v-show="endPage" @click="goEndPage()">到最末頁</td>
+                </tr>
+                </table>           
+        </table>              
+        <table border="1" class="table table-striped">
+            <thead>
+            <tr>
+                <!-- <th>{{items1.item1}}</th> -->
+                <th>{{items1.item2}}</th>
+                <th>{{items1.item3}}</th>                          
+                <!--<th>{{items1.item4}}</th>    
+               <th>特別註記</th> -->
+            </tr>
+            </thead>
+            <tbody id="postlist">
+                <tr v-for="post of postShow" :key="post._id">
+                <!-- <td>{{post.a10posttype}}</td>                
+                <td>{{post.a10poster}}</td> -->
+                <td>{{post.a15postdate}}</td>
+                <!--<td>{{post.a20postdate.getFullYear()}}/{{post.a20postdate.getMonth()}}/{{post.a20postdate.getDate()}}</td>-->
+                <td>{{post.a20posttitle}}</td>  
+                <!-- statusreport="由已擷取資料組清單頁進入本頁"> -->
+                
+                  <td>
+                    <input type="submit" value="檢視" @click="lookonepost(post._id)">                   
+                  </td>
+                </tr>
+            </tbody>
+        </table>  
+        </nav>
+    </template>
+
+    <template id="content2UI">
+        <nav aria-label="...">
+          <img src="/image/20190713mypicture.png" height="120" width="90" alt="my picture">
+          <h3>
+          ○姓名：		黃振德		○性別：		男<br>			 
+          ○現職：		農業部 技監參事室 技監(2020年6月起)<br>
+          ○職系：		農業技術		<br>○職等：簡任第12職等年功俸4級<br>
+          ○生年：		1960年		<br>○籍貫：臺南市(前台灣省台南縣)<br>	
+          ○住址：		新北市永和區保生路<br>	
+          ○家庭：		已婚；二女（分別1993年及1996年生）<br>		
+          ○手機：		0937514348		<br>○E-mail:cchuang6767@gmail.com
+        </h3> 
+        </nav>
+    </template>
+
+    <template id="sidebarUI">
+        <nav aria-label="...">
+          <!--  
+          <div class="sidepart" id="callbell">
+                {{statusreport}}<br>
+                {{promote}}
+                <form action="/career/request/bellcall" method="get">
+                <input type="submit" id="bell" value="服務鈴" class="btn btn-info">
+            </form>
+            </div> 
+            -->    
+            <div class="sidepart" id="messageboard">
+                <table>
+                <tr>
+                <form action="/career/message/add1" method="post">
+                <label>歡迎指教：</label>
+                <td>
+                <textarea name="a25message" placeholder="請輸入您的指教或提問..."></textarea>
+                </td>
+                <tr>
+                <td>
+                <label>如何回復您：</label>
+                <input type="text" name="a10writer" placeholder="請留連絡電話或email或稱呼...">
+                <input type="hidden" name="a05ipofvisitor" class="form-control" id="ipofvisitor" :value="ipofvisitor">
+                </td>
+                </tr>
+                <tr>
+                <td>
+                <input type="submit" value="送出" style="float:right" >
+                </td>
+                </form>
+                </tr>
+                </table>
+            </div>
+            <!--
+            <div class="sidepart" id="loginarea">
+                <table>
+                    <tr><td>會員專區</td></tr>
+                    <tr id="rowinputid">
+                        <td>    
+                        <form action="/career/user/clientlogin" method="post">
+                        <label>會員帳號：</label>
+                        </td>
+                        <td>
+                        <input type="text" name="account" required/>
+                        </td>
+                    </tr>
+                    <tr id="rowinputpw">
+                        <td>
+                        <label>會員密碼：</label>
+                        </td>
+                        <td>
+                        <input type="password" name="password"/>
+                        </td>
+                    </tr>
+                    <tr id="rowsubmitid">
+                        <td>
+                        <input type="hidden" name="statusreport" class="form-control" id="msg1" value="由會員登入後進入本頁">        
+                        <input type="submit" value="確認" style="float:right" >
+                        </form>
+                        </td>
+                    </tr>
+                    <tr id="rownoid">
+                        <td><span>
+                        <form action="/career/user/getpassword" method="get">
+                        <input type="submit" value="忘記密碼？">
+                        </form>
+                        <form action="/career/guestinfo/register" method="get">
+                        <input type="submit" value="註冊新帳號">
+                        </form>
+                        </span></td>
+                    </tr>
+                    </table>   
+            </div>
+            -->
+        </nav>
+    </template>
+<!--
+    <template id="contacterUI">
+        <nav aria-label="...">
+            <div id="contactpart">
+         <div class="contactinfo" id="address"> 本社地址：{{address}}</div>
+         <div class="contactinfo" id="tel">服務專線：{{tel}}</div>
+         <div class="contactinfo" id="tel">服務電郵：{{email}}</div>
+        </div>    
+        </nav>
+    </template>
+-->
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUK0WDGT2ba1GiTWXv910l5e0Hza7y-U&callback=initMap" async defer></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        profile:"基本資料",
+        resume:"學經歷專長",
+        paper:"著作清單",
+        download:"免費下載",
+        /*bycate:"依企管分類",
+        bydomain:"依知識領域",
+        bycourse:"依課程類型",        
+        aboutus:"知識整理",
+        ideal:"服務理念",
+        adventage:"本社優勢",
+        organize:"組織架構",
+        perform:"服務實績",
+        CSR:"企業社會責任",
+        user:"貴客",
+        */
+       resumeurl:"",
+       paperurl:"",
+       downloadurl:"",
+        statusreport:'<%- statusreport %>'
+        /*   
+        nowdate:"",
+        nowtime:"",
+        temperature:0,
+        nasdaqIndex:0,
+        dowJonesIndex:0
+        */
+      }
+    },
+    mounted: function(){
+      this.resumeurl="/career/outerweb/resume/"+this.personID;
+       this.paperurl="/career/outerweb/paper/"+this.personID;
+       this.downloadurl="/career/outerweb/download/"+this.personID
+      /*
+        var now=new Date();
+        this.nowdate=now.getFullYear()+"/"+now.getMonth()+"/"+now.getDate();
+        this.nowtime=now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+        this.nasdaqIndex=this.indexfin[0];
+        this.dowJonesIndex=this.indexfin[1];
+        this.initMap();
+        
+        
+      // 定義 Google API URL
+        const API_URL = 'https://www.google.com/finance/info?q=';
+
+        // 取得 Nasdaq 指數
+        axios.get(API_URL + 'NASDAQ:^IXIC')
+        .then(response1 => {
+        // 取得指數資訊
+            const data1 = response1.data;
+            this.nasdaqIndex = data1[0].l;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        // 取得 Dow Jones 指數
+        axios.get(API_URL + 'INDEXDJX:.DJI')
+        .then(response2 => {
+            // 取得指數資訊
+            const data2 = response2.data;
+            this.dowJonesIndex = data2[0].l
+            })
+        .catch(error => {
+            console.error(error);
+        })
+        */
+    },
+    methods:{
+        initMap:function(){
+            if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude: lat, longitude: lon } = position.coords;
+              this.getWeather(lat, lon);
+            },
+            (error) => {
+              console.error(`Error: ${error}`);
+            }
+          );
+        } else {
+          console.error("Geolocation is not supported by this browser.");
+        }   
+        },
+        getWeather: async function(lat, lon){
+            try {
+          const { data } = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=846ae5e6d68202d65dc98a39e84e844a`
+          );
+            console.log("got temperature: "+data.main.temp);        
+          this.temperature = data.main.temp} catch (error) {
+          console.error(error);
+        }   
+        }   
+    },
+    template:"#banderUI"
+  });
+  Vue.component("sidebar",{
+    props:{},
+    data(){
+      return{
+        statusreport:'<%- statusreport %>',
+        promote:"我們依您的需求提供多種專業的整合服務！",
+        ipofvisitor:{},
+      inputerUIkey:0
+      } 
+    },
+    mounted: function(){
+        const API_URL = 'https://api.ipify.org?format=json';
+
+        // 取得 IP 位址
+        const response =axios.get(API_URL);
+        this.ipofvisitor= response.data
+
+    },
+    methods:{
+      
+    },
+    template:"#sidebarUI"
+  });
+  Vue.component("contacter",{
+    props:{},
+    data(){
+      return {
+        address:"新北市永和區",
+        tel:"02-29293551",
+        email:"service@deep.com"
+      }   
+    },
+    methods:{
+      
+    },
+    template:"#contacterUI"
+    });
+  Vue.component("content1",{
+    props:{},
+    data(){
+      return{
+        perPage:8,
+          perRound:10,
+          maxRow:1,
+          maxPage:1,
+          maxRound:1,
+          modRow:1,
+          modPage:1,
+          currentIndex:1,
+          currentPage:1,
+          currentRound:1,
+          indexLength:1,
+          previousRound:false,
+          firstPage:false,
+          nextRound:false,
+          endPage:false,
+          fullPage:false,
+          pageIndex:[],
+          showIndex:[],
+          activeIndex:[],
+          postShow:[],
+          indexLength:0,
+        postlist:JSON.parse(decodeURIComponent('<%=postlist%>')),
+          items1:{
+            item0:"內容類別",
+            item1:"公告者ID",
+            item2:"公告日期時間",
+            item3:"公告標題",
+            item4:"公告內容",
+            item5:"公告對象(user group)",
+            item6:"呈現方式",
+            item7:"預定下架時間",
+            item99:"管理註記"     
+      }
+      }      
+    },
+    mounted:function(){
+        this.maxRow=this.postlist.length;
+          this.maxPage=Math.floor(this.maxRow/this.perPage)+1;
+          this.maxRound=Math.floor(this.maxPage/this.perRound)+1;
+          this.modRow=this.maxRow%this.perPage;
+          this.modPage=this.maxPage%this.perRound;
+          console.log("mounted !!")
+          this.goFirstPage() 
+          
+      },
+    methods:{
+        lookone:function(id){
+          let querytext="?statusreport='由布告列表的檢視按鈕進入本頁'";
+          let url1='/career/post/lookpage/'+id+querytext;
+          window.location=url1;
+        },
+        getShowData:function(index){
+          this.currentIndex=index;
+          this.activeIndex.splice(0);
+          this.pageIndex.splice(0);
+          this.showIndex.splice(0);
+          for(let i=0;i<this.indexLength;i++){
+              this.pageIndex.push(((this.currentRound-1)*this.perRound)+i+1);
+              this.showIndex.push(true);
+              this.activeIndex.push(false)
+          }
+          this.activeIndex[index]=true;
+          for(let i=this.indexlength;i<this.perRound;i++){
+              this.showIndex.push(false)
+          };
+          this.currentPage=this.pageIndex[index]
+          console.log("currentPage is:"+this.currentPage)
+          this.fullPage=(this.maxRow>=(this.currentPage*this.perPage))?true:false;
+          this.postShow.splice(0);
+          let startRow=(this.currentPage-1)*this.perPage;
+            console.log("startRow is:"+startRow)          
+          let rowNo=this.fullPage?this.perPage:this.modRow;
+          console.log("rowNo is:"+rowNo);
+          //this.postShow=[];
+          this.postShow=this.postlist.slice(startRow,startRow+rowNo)
+          //this.postShow=this.postlist.slice(8,3)
+          console.log("11st postlist:"+this.postlist[10])          
+          console.log("1st postShow:"+this.postShow[0])
+          
+        },
+        goFirstPage:function(){
+          this.currentRound=1;
+          this.indexLength=(this.maxPage>this.perRound)?this.perRound:this.modPage;
+          this.previousRound=false;
+          this.firstPage=false;
+          this.nextRound=(this.maxPage<(this.perRound+1))?false:true;
+          this.endPage=(this.maxPage<(this.perRound+1))?false:true;
+          this.currentIndex=0;
+          this.getShowData(this.currentIndex)        
+        },
+        goEndPage:function(){
+          this.currentRound=this.maxRound;
+          this.indexLength=(this.modPage==0)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=false;
+          this.endPage=false;
+          this.currentIndex=this.indexLength-1;
+          this.getShowData(this.currentIndex) 
+        },
+        goPreviousRound:function(){
+          if(this.currentRound>1){
+          this.currentRound--;
+          this.currentIndex=0;
+          this.indexLength=this.perRound;
+          this.previousRound=this.currentRound>1?true:false;
+          this.firstPage=this.currentRound>1?true:false;
+          this.nextRound=true;
+          this.endPage=true;
+          this.getShowData(this.currentIndex)
+          }else{
+              console.log("There is no previous round!!")
+              this.goFirstpage()
+          }
+        },
+        goNextRound:function(){
+          if(this.currentRound<this.maxRound){
+          this.currentRound++;
+          this.currentIndex=0;
+          this.indexLength=(this.maxPage>this.currentRound*this.perRound)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.endPage=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.getShowData(this.currentIndex)
+          }else{
+            console.log("There is no next round!!")
+            this.goEndPage()
+          }
+        } 
+    },
+    template:"#content1UI"
+  });
+  Vue.component("content2",{
+    props:{},
+    data(){
+      return{
+        /*
+        perPage:8,
+          perRound:10,
+          maxRow:1,
+          maxPage:1,
+          maxRound:1,
+          modRow:1,
+          modPage:1,
+          currentIndex:1,
+          currentPage:1,
+          currentRound:1,
+          indexLength:1,
+          previousRound:false,
+          firstPage:false,
+          nextRound:false,
+          endPage:false,
+          fullPage:false,
+          pageIndex:[],
+          showIndex:[],
+          activeIndex:[],
+          knowledgeShow:[],
+          indexLength:0, 
+        knowledgelist:"",
+          items2:{
+            item0:"知識領域",
+            item1:"分類代碼",
+            item2:"材料標題",
+            item3:"檔案主檔名",
+            item4:"檔案附檔名",
+            item5:"類別",
+            item6:"上傳者ID",
+            item7:"上傳日期",
+            item8:"揭露等級",
+            item9:"是否提供下載"
+          }
+          */
+      }      
+    },
+    mounted:function(){
+      /*
+        this.maxRow=this.knowledgelist.length;
+          this.maxPage=Math.floor(this.maxRow/this.perPage)+1;
+          this.maxRound=Math.floor(this.maxPage/this.perRound)+1;
+          this.modRow=this.maxRow%this.perPage;
+          this.modPage=this.maxPage%this.perRound;
+          this.goFirstPage() 
+          */
+      },
+    methods:{
+      /*
+        lookoneknowledge:function(id){
+          let querytext="?statusreport='由knowledge資料清單頁的檢視按鈕進入本頁'";
+          let url2='/career/knowledge/lookpage/'+id+querytext;
+          window.location=url2;
+        },
+        getShowData:function(index){
+          this.currentIndex=index;
+          this.activeIndex.splice(0);
+          this.pageIndex.splice(0);
+          this.showIndex.splice(0);
+          for(let i=0;i<this.indexLength;i++){
+              this.pageIndex.push(((this.currentRound-1)*this.perRound)+i+1);
+              this.showIndex.push(true);
+              this.activeIndex.push(false)
+          }
+          this.activeIndex[index]=true;
+          for(let i=this.indexlength;i<this.perRound;i++){
+              this.showIndex.push(false)
+          };
+          this.currentPage=this.pageIndex[index]
+          console.log("currentPage is:"+this.currentPage)
+          this.fullPage=(this.maxRow>=(this.currentPage*this.perPage))?true:false;
+          this.knowledgeShow.splice(0);
+          let startRow=(this.currentPage-1)*this.perPage;
+            console.log("startRow is:"+startRow)          
+          let rowNo=this.fullPage?this.perPage:this.modRow;
+          console.log("rowNo is:"+rowNo);
+          //this.knowledgeShow=[];
+          this.knowledgeShow=this.knowledgelist.slice(startRow,startRow+rowNo)
+          //this.knowledgeShow=this.knowledgelist.slice(8,3)
+          console.log("11st knowledgelist:"+this.knowledgelist[10])          
+          console.log("1st knowledgeShow:"+this.knowledgeShow[0])
+          
+        },
+        goFirstPage:function(){
+          this.currentRound=1;
+          this.indexLength=(this.maxPage>this.perRound)?this.perRound:this.modPage;
+          this.previousRound=false;
+          this.firstPage=false;
+          this.nextRound=(this.maxPage<(this.perRound+1))?false:true;
+          this.endPage=(this.maxPage<(this.perRound+1))?false:true;
+          this.currentIndex=0;
+          this.getShowData(this.currentIndex)        
+        },
+        goEndPage:function(){
+          this.currentRound=this.maxRound;
+          this.indexLength=(this.modPage==0)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=false;
+          this.endPage=false;
+          this.currentIndex=this.indexLength-1;
+          this.getShowData(this.currentIndex) 
+        },
+        goPreviousRound:function(){
+          if(this.currentRound>1){
+          this.currentRound--;
+          this.currentIndex=0;
+          this.indexLength=this.perRound;
+          this.previousRound=this.currentRound>1?true:false;
+          this.firstPage=this.currentRound>1?true:false;
+          this.nextRound=true;
+          this.endPage=true;
+          this.getShowData(this.currentIndex)
+          }else{
+              console.log("There is no previous round!!")
+              this.goFirstpage()
+          }
+        },
+        goNextRound:function(){
+          if(this.currentRound<this.maxRound){
+          this.currentRound++;
+          this.currentIndex=0;
+          this.indexLength=(this.maxPage>this.currentRound*this.perRound)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.endPage=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.getShowData(this.currentIndex)
+          }else{
+            console.log("There is no next round!!")
+            this.goEndPage()
+          }
+        } 
+        */ 
+    },
+    template:"#content2UI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        
+        components:{
+          "bander":bander,
+          "outputer":outputer,
+          "inputer":inputer
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+
+  </body>
+</html>

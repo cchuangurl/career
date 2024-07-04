@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+body {
+  background-color: #d6d6d3;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+     justify-content: center;
+     align-items:center;
+  margin: 0;
+}
+fieldset {
+   background-color: #29a906;
+   background-size: contain;
+	 height: 420px;
+  	 width: 480px;
+	 border:0px;
+	 padding:0px;
+	 margin:0px;
+	 border-radius:10px;
+	/*  display: flex;
+	 	flex-direction:column;
+	 	justify-content: flex-start;
+	 	align-items:center;	 */
+	 }
+
+table {
+	margin-top:50px;
+	margin-left:50px;
+	}
+
+caption {
+	text-align:center;
+	font-size:24px;
+	color:blue;
+	}
+
+#rowwelcome {
+	text-align:center;
+  width:150px;
+	font-size:20px;
+	color:brown;
+	}
+
+#rownickname {
+	text-align:center;
+	font-size:26px;
+	color:blue;
+	}
+#rowtitle {
+	text-align:center;
+	font-size:22px;
+	color:red;
+	}
+
+#rowinputid {
+	text-align:left;
+	font-size:20px;
+	color:black;
+	}
+
+#rowinputpw {
+	text-align:left;
+	font-size:20px;
+	color:black;
+	}
+
+#rowsubmitid {
+	text-align:left;
+	font-size:20px;
+	color:black;
+	}
+
+#rownoid {
+	text-align:left;
+	font-size:20px;
+	color:black;
+	}
+/* #welcome {
+	text-align:center;
+}
+#login {
+	display: flex;
+     justify-content:center;
+}
+.unusual {
+	left:150px;
+} */
+</style>
+<title>個人名片系統</title>
+</head>
+<body>
+<fieldset>
+<table>
+<caption>
+    <div>雖世殊事異</div>
+    </div>所以興懷若合一契</div>
+</caption>
+<tr>
+    <td id="rowwelcome">歡迎光臨</td>
+    <td id="rownickname">個人名片系統!!</td>
+</tr>
+<tr id="rowtitle">
+    <td></td>
+    <td>個人名片系統</td>
+</tr>
+<form action="/career/branch" method="post">
+<tr id="rowinputid">
+    <td>
+    <label>使用者帳號：</label>
+    </td>
+    <td>
+    <input type="text" name="account" required/>
+    </td>
+</tr>
+<tr id="rowinputpw">
+    <td>
+    <label>使用者密碼：</label>
+    </td>
+    <td>
+    <input type="password" name="password"/>
+    </td>
+</tr>
+<tr id="rowsubmitid">
+    <td>
+    <input type="hidden" name="statusreport" class="form-control" id="msg1" value="由帳號登入後進入本頁">
+    <input type="submit" value="確認" style="float:right" >
+    </td>
+</tr>
+</form>
+<tr id="rownoid">
+    <td>
+    <form action="/career/user/getpassword" method="get">
+    <input type="submit" value="忘記密碼？">
+    </form>
+    </td>
+    <td>
+    <form action="/career/branch/register" method="get">
+    <input type="submit" value="註冊新帳號">
+    </form>
+    </span></td>
+</tr>
+</table>
+</fieldset>
+</body>
+</html>

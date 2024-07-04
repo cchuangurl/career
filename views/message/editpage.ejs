@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="/javascripts/jquery-3.4.1.js"></script>
+<style type="text/css">
+body {
+  background-color: #d6d6d3;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+     flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#e5f8cd;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+</style>
+
+  <title>修正指定之message</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>
+        <inputer></inputer>
+        <!-- <outputer></outputer> -->
+    </div>
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" :href="listpageurl">{{listpage}}</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#">{{edit1}} <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">{{editbatch}}</a>
+            </li>
+          </ul>
+          <span class="navbar-text">
+            {{statusreport}}
+          </span>
+        </div>
+      </nav>
+    </template>
+    
+    <template id="inputerUI" >
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">修正{{message.a05name}}之資料</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{card_subtitle}}</h6>
+          <form :action="updateurl" method="post">
+            <div class="form-group" :key="inputerUIkey">
+                <label for="formGroupExampleInput2">{{items.item0}}</label>
+                <input type="text" :name="names.name0" class="form-control" id="formGroupExampleInput0" :value="message.a05ipofwriter">
+  
+                <label for="formGroupExampleInput2">{{items.item1}}</label>
+                <input type="text" :name="names.name1" class="form-control" id="formGroupExampleInput1" :value="message.a10writer">
+             
+                <label for="formGroupExampleInput2">{{items.item2}}</label>
+                <input type="text" :name="names.name2" class="form-control" id="formGroupExampleInput2" :value="message.a15dateofmsg">
+              
+                <label for="formGroupExampleInput2">{{items.item3}}</label>
+                <input type="text" :name="names.name3" class="form-control" id="formGroupExampleInput3" :value="message.a20titleofmsg">
+              
+                <label for="formGroupExampleInput2">{{items.item4}}</label>
+                <input type="text" :name="names.name4" class="form-control" id="formGroupExampleInput4" :value="message.a25message">
+             
+                <label for="formGroupExampleInput2">{{items.item5}}</label>
+                <select :name="names.name5" class="form-select">
+                  <optgroup v-for="(messae,index) of messagelist" :key="message._id">
+                  <option :value="message._id" :selected="messageindex[index]">{{message.a10writer}}曾建議：{{message.a20titleofmsg}}</option>
+                  </optgroup>
+                  </select>
+                <br>     
+              
+                <label for="formGroupExampleInput2">{{items.item6}}</label>
+                <input type="text" :name="names.name6" class="form-control" id="formGroupExampleInput6" :value="message.a35codethis">
+              
+                <label for="formGroupExampleInput2">{{items.item7}}</label>
+                <select :name="names.name7" class="form-select">
+                  <optgroup v-for="(user,index) of userlist" :key="user._id" >            
+                  <option :value="user._id" :selected="userindex[index]">{{user.a25group}}:{{user.a15account}}</option>            
+                  </optgroup>  
+                  </select>             
+                  <br>      
+              
+                <label for="formGroupExampleInput2">{{items.item8}}</label>
+                <input type="text" :name="names.name8" class="form-control" id="formGroupExampleInput8" :value="message.a45response">
+              
+                <label for="formGroupExampleInput2">{{items.item9}}</label>
+                <select :name="names.name0" class="form-select"">
+                  <optgroup v-for="(followact,index) of followacts" :key="followact._id" >                
+                  <option :value="followact.a25code" :selected="actindex[index]">{{followact.a30mean}}</option>
+                  </optgroup>
+                  </select>
+                <br>  
+              
+              <input type="hidden" name="statusreport" class="form-control" id="msg1" value="由修正message後進入本頁">
+              <input type="hidden" name="status" class="form-control" id="msg2" value="0">
+              <input type="submit" id="button1" value="確定送出" class="btn btn-info">
+            </div>
+          </form>
+          <input type="submit" id="button2" value="重新輸入" class="btn btn-info" @click="rerender()">
+          <!-- <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div> 
+    </template>
+
+ 
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        listpage:"回前頁",
+        input1:"手動新增1筆",
+        inputbatch:"批次輸入",
+        crawl:"從網路抓取",
+        statusreport:'<%- statusreport %>',
+        personID:'<%- personID %>',
+        listpageurl:""        
+      }
+    },
+    mounted:function(){
+      this.listpageurl="/career/message/"+this.personID
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("inputer",{
+    props:{},
+    data(){
+      return {
+        card_title:"",
+        card_subtitle:"請修正以下各項資料:",
+        items:{
+          item:"ID",
+          item0:"留言者IP:",
+            item1:"留言者:",
+            item2:"留言日期時間:",
+            item3:"留言標題:",
+            item4:"留言內容:",
+            item5:"同人前則留言代碼:",
+            item6:"本則留言代碼:",
+            item7:"回應者:",
+            item8:"回應內容:",
+            item9:"後續追踪:",
+            item99:"特別註記:"
+      },
+      names:{
+        name0:"a05ipofwriter",
+        name1:"a10writer",
+        name2:"a15dateofmsg",
+        name3:"a20titleofmsg",
+        name4:"a25message",
+        name5:"a30codelast",
+        name6:"a35codethis",
+        name7:"a40responsor",
+        name8:"a45response",
+        name9:"a50followact"     
+      },
+      message:JSON.parse(decodeURIComponent('<%=message%>')),
+      messagelist:JSON.parse(decodeURIComponent('<%=messagelist%>')),        
+      termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+        userlist:JSON.parse(decodeURIComponent('<%=userlist%>')),
+        followacts:[],
+        userindex:[],
+        messageindex:[],
+        actindex:[],
+      inputerUIkey:0,
+      personID: '<%- personID %>',
+      updateurl:""
+      }//EOF return
+    },//EOF data()
+    mounted:function(){
+        this.updateurl="/career/message/update/"+this.personID;
+    
+        for(message of this.messagelist){
+            if(message.a20field=="a50followact"){
+                this.followacts.push(message)
+            }
+        }
+        for(lastmessage of this.messagelist){
+            if(lastmessage._id==this.message.a30codelast){
+                this.messageindex.push(true)
+            }else{
+                this.messageindex.push(false)
+            }
+        }        
+        for(user of this.userlist){
+            if(user._id==this.message.a40responsor){
+                this.userindex.push(true)
+            }else{
+                this.userindex.push(false)
+            }
+        } 
+        for(act of this.followacts){
+            if(act.a25code==this.message.a50followact){
+                this.actindex.push(true)
+            }else{
+                this.actindex.push(false)
+            }
+        } 
+    }, 
+    methods:{
+        rerender:function() {
+      this.inputerUIkey += 1;
+      console.log("inputerUIkey:"+this.inputerUIkey) 
+    }
+    }, 
+      
+    template:"#inputerUI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        components:{
+
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+
+  </body>
+</html>

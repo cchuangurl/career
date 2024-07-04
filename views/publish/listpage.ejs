@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!-- <script src="/javascripts/jquery-3.4.1.js"></script> -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<style type="text/css">
+body {
+background-color: rgb(205, 226, 253);
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#cff8c5;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+.page-item {
+    margin-right:12px
+}
+.page-item[active=true]{
+    font-weight: bold;
+    text-decoration:underline
+}
+</style>
+
+  <title>出版訊息資料管理</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>
+        <outputer></outputer>
+        <!-- <inputer></inputer> -->
+    </div>
+
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" :href="outerweburl">{{outerweb}}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" :href="datamanageurl">{{otherdata}}</a>
+            </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/career/">{{entry}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link  active" href="#">{{modeltype}}<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/career/role/">{{startuse}}</a>
+          </ul>
+          <span class="navbar-text">
+            <font size="1">{{statusreport}}</font>
+          </span>
+        </div>
+      </nav>
+    </template>
+
+    <template id="outputerUI">
+        <nav aria-label="...">
+          <table>
+            <tr>
+            <td>
+              <form  :action="inputpageurl" method="get" >
+                <input type="hidden" name="statusreport" value="由單筆手動新增按鈕進來">
+                <input type="hidden" name="status" value="0">
+                <input type="submit" value="單筆手動新增">
+                </form>
+                </td>
+                <td>
+                  <form  :action="inputbatchurl" method="get" >
+                 資料主檔名：<input type="text" name="datafile" required>
+                 <input type="hidden" name="statusreport" value="由批次新增進入本頁">
+                 <input type="hidden" name="status" value="0">
+                 <input type="submit" value="批次新增">
+             </form>
+             </td>
+
+            <td>
+            （/public目錄下.csv檔）
+            </td>
+            <td>
+            <span class="navbar-text">
+                <font size="1">{{statusreport}}</font>
+              </span>
+            </td>
+            </tr>
+            </table>
+
+          <table>
+          <tr class="pagination">
+            <td class="page-item" v-show="firstPage" @click="goFirstPage()">回第1頁</td>
+            <td class="page-item" v-show="previousRound" @click="goPreviousRound()">上{{perRound}}頁</td>
+            <div class="page index"  >
+                <!--  未來可精進的寫法
+                    <li class="page-item" v-for="page in 10">
+                        <a class="page-link" href>{{page}}></a>
+                    </li>
+                -->
+            <td class="page-item" :active="activeIndex[0]" v-show="showIndex[0]" @click="getShowData(0)">{{pageIndex[0]}}</td>
+            <td class="page-item" :active="activeIndex[1]" v-show="showIndex[1]" @click="getShowData(1)">{{pageIndex[1]}}</td>
+            <td class="page-item" :active="activeIndex[2]" v-show="showIndex[2]" @click="getShowData(2)">{{pageIndex[2]}}</td>
+            <td class="page-item" :active="activeIndex[3]" v-show="showIndex[3]" @click="getShowData(3)">{{pageIndex[3]}}</td>
+            <td class="page-item" :active="activeIndex[4]" v-show="showIndex[4]" @click="getShowData(4)">{{pageIndex[4]}}</td>
+            <td class="page-item" :active="activeIndex[5]" v-show="showIndex[5]" @click="getShowData(5)">{{pageIndex[5]}}</td>
+            <td class="page-item" :active="activeIndex[6]" v-show="showIndex[6]" @click="getShowData(6)">{{pageIndex[6]}}</td>
+            <td class="page-item" :active="activeIndex[7]" v-show="showIndex[7]" @click="getShowData(7)">{{pageIndex[7]}}</td>
+            <td class="page-item" :active="activeIndex[8]" v-show="showIndex[8]" @click="getShowData(8)">{{pageIndex[8]}}</td>
+            <td class="page-item" :active="activeIndex[9]" v-show="showIndex[9]" @click="getShowData(9)">{{pageIndex[9]}}</td>
+        </div>
+            <td class="page-item" v-show="nextRound" @click="goNextRound()">下{{perRound}}頁</td>
+            <td class="page-item" v-show="endPage" @click="goEndPage()">到最末頁</td>
+          </tr>
+          </table>
+        <table border="1" class="table table-striped">
+            <thead>
+            <tr>
+              <th>{{items.item0}}</th>
+              <th>{{items.item2}}</th>
+                <th>{{items.item3}}</th>
+                <!--<th>{{items.item4}}</th>
+                <th>{{items.item5}}</th>
+               <th>特別註記</th> -->
+            </tr>
+            </thead>
+            <tbody id="publishlist">
+              <!-- <tr v-for="publish of publishshow" :key="publish._id"> -->
+                <tr v-for="publish of publishShow" :key="publish._id">
+                <td>{{publish.a05explicit}}</td>
+                <td>{{publish.a15year}}</td>
+                <td>{{publish.a20title}}</td>
+                <!-- statusreport="由已擷取資料組清單頁進入本頁"> -->
+
+                  <td>
+                    <input type="submit" value="檢視或編輯" @click="editone(publish._id)">
+                  </td>
+                  <td>
+                    <input type="submit" value="刪除" @click="deleteone(publish._id)">
+                  </td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <tr class="pagination">
+              <td class="page-item" v-show="firstPage" @click="goFirstPage()">回第1頁</td>
+              <td class="page-item" v-show="previousRound" @click="goPreviousRound()">上{{perRound}}頁</td>
+              <div class="page index"  >
+              <td class="page-item" :active="activeIndex[0]" v-show="showIndex[0]" @click="getShowData(0)">{{pageIndex[0]}}</td>
+              <td class="page-item" :active="activeIndex[1]" v-show="showIndex[1]" @click="getShowData(1)">{{pageIndex[1]}}</td>
+              <td class="page-item" :active="activeIndex[2]" v-show="showIndex[2]" @click="getShowData(2)">{{pageIndex[2]}}</td>
+              <td class="page-item" :active="activeIndex[3]" v-show="showIndex[3]" @click="getShowData(3)">{{pageIndex[3]}}</td>
+              <td class="page-item" :active="activeIndex[4]" v-show="showIndex[4]" @click="getShowData(4)">{{pageIndex[4]}}</td>
+              <td class="page-item" :active="activeIndex[5]" v-show="showIndex[5]" @click="getShowData(5)">{{pageIndex[5]}}</td>
+              <td class="page-item" :active="activeIndex[6]" v-show="showIndex[6]" @click="getShowData(6)">{{pageIndex[6]}}</td>
+              <td class="page-item" :active="activeIndex[7]" v-show="showIndex[7]" @click="getShowData(7)">{{pageIndex[7]}}</td>
+              <td class="page-item" :active="activeIndex[8]" v-show="showIndex[8]" @click="getShowData(8)">{{pageIndex[8]}}</td>
+              <td class="page-item" :active="activeIndex[9]" v-show="showIndex[9]" @click="getShowData(9)">{{pageIndex[9]}}</td>
+          </div>
+              <td class="page-item" v-show="nextRound" @click="goNextRound()">下{{perRound}}頁</td>
+              <td class="page-item" v-show="endPage" @click="goEndPage()">到最末頁</td>
+            </tr>
+            </table>
+      </nav>
+      </template>
+
+      <template id="outputerUI">
+
+      </template>
+
+  <!-- Vue CDN-->
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.bootcss.com/qs/6.5.1/qs.min.js"></script>
+  <script>
+  Vue.component("bander",{
+      props:{},
+      data(){
+        return {
+            brand:"career",
+            outerweb:"基本個資",
+        otherdata:"管理其他資料",
+        entry:"重新登入",
+        modeltype:"知識資料表維管",
+        personID:'<%- personID %>',
+        statusreport:'<%- statusreport %>',
+        outerweburl:"",
+        datamanageurl:""
+        }
+      },
+      mounted:function(){
+        this.outerweburl="/career/branch/goouterweb/"+this.personID;
+        this.datamanageurl="/career/branch/gomaintainer/"+this.personID
+      },
+      methods:{
+
+      },
+      template:"#banderUI"
+    });
+    Vue.component("inputer",{
+      props:{},
+      data(){
+        return {
+        }
+      },
+      methods:{
+
+      },
+      template:"#inputerUI"
+    });
+    Vue.component("outputer",{
+      props:{},
+      data(){
+        return{
+          perPage:8,
+          perRound:10,
+          maxRow:1,
+          maxPage:1,
+          maxRound:1,
+          modRow:1,
+          modPage:1,
+          currentIndex:0,
+          currentPage:1,
+          currentRound:1,
+          indexLength:1,
+          previousRound:false,
+          firstPage:false,
+          nextRound:false,
+          endPage:false,
+          fullPage:false,
+          pageIndex:[],
+          showIndex:[],
+          activeIndex:[],
+          publishShow:[],
+          statusreport:'<%- JSON.stringify(statusreport) %>',
+          personID:'<%- personID %>',
+          inputpageurl:"",
+          inputbatchurl:"",
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),
+        items:{
+          item0:"對應的knowledge",
+            item1:"共同作者",
+            item2:"出版或完稿年",
+            item3:"標題",
+            item4:"刊物或研討會名",
+            item5:"彙編或總集",
+            item6:"編輯者",
+            item7:"篇",
+            item8:"卷",
+            item9:"期",
+            item10:"起頁",
+            item11:"末頁",
+            item12:"出版商",
+            item13:"網址",
+            item14:"城市",
+            item99:"特別註記"
+            }
+        }
+      },
+      mounted:function(){
+        this.inputpageurl="/career/publish/inputpage/"+this.personID;
+        this.inputbatchurl="/career/publish/inputbatch/"+this.personID;
+        this.maxRow=this.publishlist.length;
+        this.modRow=this.maxRow%this.perPage;
+        this.maxPage=this.modRow==0?this.maxRow/this.perPage:Math.floor(this.maxRow/this.perPage)+1;
+        this.modPage=this.maxPage%this.perRound;
+        this.maxRound=this.modPage==0?this.maxPage/this.perRound:Math.floor(this.maxPage/this.perRound)+1;
+        this.goFirstPage()
+
+      },
+      methods:{
+        editone:function(id){
+          let querytext="?statusreport=由publish資料清單頁的編輯按鈕進入本頁";
+          let url2='/career/publish/editpage/'+this.personID+"/"+id+querytext;
+          window.location=url2;
+        },
+        deleteone:function(id){
+          let querytext="?statusreport=由publish資料清單頁的刪除按鈕進入本頁";
+          let url3='/career/publish/delete/'+this.personID+"/"+id+querytext;
+          window.location=url3
+           },
+
+        getShowData:function(index){
+          this.currentIndex=index;
+          this.activeIndex.splice(0);
+          this.pageIndex.splice(0);
+          this.showIndex.splice(0);
+          for(let i=0;i<this.indexLength;i++){
+              this.pageIndex.push(((this.currentRound-1)*this.perRound)+i+1);
+              this.showIndex.push(true);
+              this.activeIndex.push(false)
+          }
+          this.activeIndex[index]=true;
+          for(let i=this.indexlength;i<this.perRound;i++){
+              this.showIndex.push(false)
+          };
+          this.currentPage=this.pageIndex[index]
+          console.log("currentPage is:"+this.currentPage)
+          this.fullPage=(this.maxRow>=(this.currentPage*this.perPage))?true:false;
+          this.publishShow.splice(0);
+          let startRow=(this.currentPage-1)*this.perPage;
+            console.log("startRow is:"+startRow)
+          let rowNo=this.fullPage?this.perPage:this.modRow;
+          console.log("rowNo is:"+rowNo);
+          //this.publishShow=[];
+          this.publishShow=this.publishlist.slice(startRow,startRow+rowNo)
+          //this.publishShow=this.publishlist.slice(8,3)
+          console.log("11st publishlist:"+this.publishlist[10])
+          console.log("1st publishShow:"+this.publishShow[0])
+
+        },
+        goFirstPage:function(){
+          this.currentRound=1;
+          this.indexLength=(this.maxPage>this.perRound)?this.perRound:this.modPage;
+          this.previousRound=false;
+          this.firstPage=false;
+          this.nextRound=(this.maxPage<(this.perRound+1))?false:true;
+          this.endPage=(this.maxPage<(this.perRound+1))?false:true;
+          this.currentIndex=0;
+          this.getShowData(this.currentIndex)
+        },
+        goEndPage:function(){
+          this.currentRound=this.maxRound;
+          this.indexLength=(this.modPage==0)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=false;
+          this.endPage=false;
+          this.currentIndex=this.indexLength-1;
+          this.getShowData(this.currentIndex)
+        },
+        goPreviousRound:function(){
+          if(this.currentRound>1){
+          this.currentRound--;
+          this.currentIndex=0;
+          this.indexLength=this.perRound;
+          this.previousRound=this.currentRound>1?true:false;
+          this.firstPage=this.currentRound>1?true:false;
+          this.nextRound=true;
+          this.endPage=true;
+          this.getShowData(this.currentIndex)
+          }else{
+              console.log("There is no previous round!!")
+              this.goFirstpage()
+          }
+        },
+        goNextRound:function(){
+          if(this.currentRound<this.maxRound){
+          this.currentRound++;
+          this.currentIndex=0;
+          this.indexLength=(this.maxPage>this.currentRound*this.perRound)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.endPage=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.getShowData(this.currentIndex)
+          }else{
+            console.log("There is no next round!!")
+            this.goEndPage()
+          }
+        }
+      },
+    template:"#outputerUI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+
+        components:{
+          "bander":bander,
+          "outputer":outputer,
+          "inputer":inputer
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        }
+    })
+</script>
+
+
+  </body>
+</html>

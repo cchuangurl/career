@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!-- <script src="/javascripts/jquery-3.4.1.js"></script> -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<style type="text/css">
+body {  
+background-color: rgb(205, 226, 253);
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#cff8c5;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+</style>
+
+  <title>js程式碼測試</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>        
+        <outputer></outputer>
+        <!-- <inputer></inputer> -->
+    </div>
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+       {{statusreport}}
+      </nav>
+    </template>
+     
+    <template id="outputerUI">
+        <nav aria-label="...">
+        <input type="label" value="請輸入根目錄Id:">
+        <input type="text" v-mode:value="folderid">
+         <input type="button" value="測試功能" @clik="getdirvelist()"> 
+      </nav>
+      </template>
+  
+      <template id="outputerUI">
+  
+      </template>
+  
+  <!-- Vue CDN-->
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.bootcss.com/qs/6.5.1/qs.min.js"></script>
+  <script>
+  Vue.component("bander",{
+      props:{},
+      data(){
+        return {
+            statusreport:'<%- JSON.stringify(statusreport) %>'            
+                   }
+      },
+      methods:{
+  
+      },
+      template:"#banderUI"
+    });
+    Vue.component("inputer",{
+      props:{},
+      data(){
+        return {
+        }   
+      },
+      methods:{
+  
+      },
+      template:"#inputerUI"
+    });
+    Vue.component("outputer",{
+      props:{},
+      data(){
+        return{
+          folderid:""
+        }      
+      },
+      mounted:function(){
+        
+      },
+      methods:{
+         getdrivelist:function(){
+        //本程式複製自臺南市新營國小新營學習網的Porlin筆記
+
+            //修改這一行，點雲端檔目錄，在網址上出現的   id  
+        var folderId = this.folderid; 
+
+        //加入選單功能
+        function createMenu(){
+        var menuEntries = [ {name: "更新全部檔案", functionName:"listAll"}];
+        var sh = SpreadsheetApp.getActiveSpreadsheet();
+        sh.addMenu("*檔案整理",menuEntries);   
+        }
+
+
+        // 主程式  
+        function listAll(){
+        //目錄 id , 是否列出目錄 , 是否再進入子目錄
+        getFolderTree_data(folderId, true , true); 
+        };
+
+
+        // 取得目錄樹狀結構
+        function getFolderTree_data(folderId, onlyFile , listSub) {
+        
+        try {
+            // 目錄的 id
+            var parentFolder = DriveApp.getFolderById(folderId);
+            var parentName = parentFolder.getName() ;
+        
+            var file,  sheet = SpreadsheetApp.getActiveSheet();
+            sheet.clear();
+            sheet.appendRow(["檔名","下載" , "目錄", "日期"]);
+
+            var data = []   ;
+            getChildFolders_data (parentName, parentFolder, data ,  onlyFile , listSub);
+            //Logger.log(data) ;
+
+            //把檔案列表放入 sheet 中
+            var range = sheet.getRange(2,1, data.length ,4);
+            range.setValues(data) ;
+
+            //第一行鎖住不排序
+            sheet.setFrozenRows(1);
+            //時間排序
+            //range.sort([{column: 4, ascending: false}]);
+
+        } catch (e) {
+            Logger.log(e.toString());
+        }
+        };
+
+
+        // 取得下方資料
+        function getChildFolders_data(parentName, parent, data,  onlyFile , listSub) {
+        
+        //子目錄
+        var childFolders = parent.getFolders();
+
+        while (childFolders.hasNext()) {
+            var childFolder = childFolders.next();
+            //Logger.log("Folder Name: " + childFolder.getName());
+            if (!onlyFile) {
+            //檔案日期
+            var file_date = Utilities.formatDate(childFolder.getLastUpdated(), "GMT", "yyyy-MM-dd");
+            
+            //連結
+            //var gid = 'https://drive.google.com/drive/folders/' + childFolder.getId() ;
+            var file_link = '=HyperLink("' + childFolder.getUrl()+ '"," link ")';
+
+            var file_data =[] ;
+            file_data=[ 
+                childFolder.getName(),
+                file_link ,
+                parentName ,
+                file_date 
+            ];
+            data.push(file_data) ;
+            Logger.log("Folder Name: " + childFolder.getName());
+            }
+
+
+            // 再找子目錄
+            if (listSub ) {
+            getChildFolders_data(parentName + "/" + childFolder.getName(), childFolder, data ,onlyFile ,listSub );
+            //Logger.log("...Folder Name: " + childFolder.getName());
+            }  
+            //Logger.log(data) ;
+        }
+        
+        // 目錄下的檔案
+        var files = parent.getFiles();
+        while (files.hasNext()) {
+            var childFile = files.next();
+            //Logger.log("File Name: " + childFile.getName());
+            if (childFile.getName() != '檔案列表')  {
+            //檔案日期
+            var file_date = Utilities.formatDate(childFile.getLastUpdated(), "GMT", "yyyy-MM-dd");
+            
+            //連結
+            //var gid = 'https://drive.google.com/u/0/uc?id=' + childFile.getId() +'&export=download';
+            var file_link = '=HyperLink("' + childFile.getUrl()+ '"," link ")';
+
+            //檔案資料
+            var file_data =[] ;
+            file_data=[ 
+                childFile.getName(),
+                file_link ,
+                parentName ,
+                file_date 
+            ];
+            data.push(file_data) ;
+            }
+
+        }
+
+        };
+         }
+      },
+    template:"#outputerUI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        
+        components:{
+          "bander":bander,
+          "outputer":outputer,
+          "inputer":inputer
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+
+  </body>
+</html>
