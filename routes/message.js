@@ -18,6 +18,11 @@ router.get('/editpage/:id/:id2', async (ctx, next)=> {
 router.get('/inputbatch/:id', async (ctx, next)=> {
     await messageController.batchinput(ctx,next)
 });
+//接收guest留言
+router.post('/addbyguest', async (ctx, next)=> {
+    await messageController.getmessage(ctx,next)
+});
+
 //依參數id2取得資料
 router.get('/:id/:id2', async(ctx, next)=> {
 	await messageController.retrieve(ctx)

@@ -203,7 +203,7 @@ background-color: rgb(213, 218, 210);
             <div class="sidepart" id="messageboard">
                 <table>
                 <tr>
-                <form action="/career/message/add1" method="post">
+                <form :action="addbyguesturl" method="post">
                 <label>歡迎指教：</label>
                 <td>
                 <textarea name="a25message" placeholder="請輸入您的指教或提問..."></textarea>
@@ -302,10 +302,12 @@ Vue.component("bander",{
         CSR:"企業社會責任",
         user:"貴客",
         */
-       resumeurl:"",
+       
+        resumeurl:"",
        paperurl:"",
        downloadurl:"",
-        statusreport:'<%- statusreport %>'
+        statusreport:'<%- statusreport %>',
+        personID:'<%- personID %>'
         /*   
         nowdate:"",
         nowtime:"",
@@ -316,9 +318,10 @@ Vue.component("bander",{
       }
     },
     mounted: function(){
-      this.resumeurl="/career/outerweb/resume/"+this.personID;
-       this.paperurl="/career/outerweb/paper/"+this.personID;
-       this.downloadurl="/career/outerweb/download/"+this.personID
+      querytxt="?statusreport=由個人基本資料首頁進到本頁";
+      this.resumeurl="/career/outerweb/resumetype/"+this.personID+querytxt;
+       this.paperurl="/career/outerweb/papertype/"+this.personID+querytxt;
+       this.downloadurl="/career/outerweb/freefiletype/"+this.personID+querytxt
       /*
         var now=new Date();
         this.nowdate=now.getFullYear()+"/"+now.getMonth()+"/"+now.getDate();
@@ -387,14 +390,17 @@ Vue.component("bander",{
     data(){
       return{
         statusreport:'<%- statusreport %>',
-        promote:"我們依您的需求提供多種專業的整合服務！",
+        promote:"歡迎批評指教及連絡！",
+        addbyguesturl:"",
+        personID:'<%- personID %>',
         ipofvisitor:{},
       inputerUIkey:0
       } 
     },
     mounted: function(){
-        const API_URL = 'https://api.ipify.org?format=json';
-
+      this.addbyguesturl="/career/message/addbyguest/"+this.personID;
+    
+      const API_URL = 'https://api.ipify.org?format=json';
         // 取得 IP 位址
         const response =axios.get(API_URL);
         this.ipofvisitor= response.data
@@ -445,6 +451,7 @@ Vue.component("bander",{
           postShow:[],
           indexLength:0,
         postlist:JSON.parse(decodeURIComponent('<%=postlist%>')),
+        personID:'<%- personID %>',
           items1:{
             item0:"內容類別",
             item1:"公告者ID",
@@ -469,9 +476,9 @@ Vue.component("bander",{
           
       },
     methods:{
-        lookone:function(id){
+        lookonepost:function(id){
           let querytext="?statusreport='由布告列表的檢視按鈕進入本頁'";
-          let url1='/career/post/lookpage/'+id+querytext;
+          let url1='/career/post/lookone/'+this.personID+"/"+id+querytext;
           window.location=url1;
         },
         getShowData:function(index){

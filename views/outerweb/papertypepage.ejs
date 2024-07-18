@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<style type="text/css">
+body {  
+background-color: rgb(248, 243, 243);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+
+#sidearea{  
+background-color: rgb(213, 218, 210);
+  height:720px;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.sidepart{
+    height:240px;
+    padding: 10px;
+    border-radius:10px
+}
+#bellcall{
+    background:#f5f5d6   
+}
+#messageboard{
+    background:#d6f5de
+}
+#loginarea{
+    background:#f8f8a6
+}
+#contactpart{
+    background:#d6f5de ;
+    width:100vw;
+    height:100px;
+    
+}
+.contactinfo {
+    margin-left:100px
+}
+#bulletin {
+    background:#def3f8;
+    height:720px;
+    }
+#sharezone {
+    background:#f8e8c5;
+    height:720px;
+    }
+#tablefy{
+    display: inline-block;
+  flex-direction:row;
+	 justify-content: flex-start;
+     align-items:left;
+     margin:10px
+}
+.navbar{background:#d6eff5;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+
+</style>
+
+  <title>著作類別頁</title>
+  </head>
+  <body>
+    <div id="show_div">
+        <div class="row">
+            <bander></bander>
+        </div>
+        <div class="row" align="justify">
+            <div class="col-lg-3 col-md-6 col-sm-12" id="sidearea">
+                <sidebar></sidebar> </div>
+            <div class="col-lg-9 col-md-6 col-sm-12">
+              <content0></content0>
+              <!--
+                <div class="row" align="justify">
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="bulletin">
+                        <content2></content2>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="sharezone">
+                        <content1></content1>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+        <!--
+        <div class="row" align="justify">
+            <contacter></contacter>
+        </div>
+        --> 
+    </div>
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" :href="homepageurl">{{profile}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="resumeurl">{{resume}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="#">{{paper}}<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="downloadurl">{{download}}</a>
+              </li>
+              
+          </ul>
+          <span class="navbar-text">
+            <font size="1">{{statusreport}}</font>
+          </span>
+        </div>
+      </nav>
+    </template>
+    <template id="content0UI">
+        <nav aria-label="...">
+          <div class="row" id="tablefy" v-for="table of tables" :key="table._id">
+            <form  :action="table.route" method="get">
+              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">
+              <input type="submit" :value="table.label" class="btn btn-info">
+            </form>
+          </div>          
+        </nav>
+    </template>
+
+    <template id="sidebarUI">
+        <nav aria-label="...">
+          <!--  
+          <div class="sidepart" id="callbell">
+                {{statusreport}}<br>
+                {{promote}}
+                <form action="/career/request/bellcall" method="get">
+                <input type="submit" id="bell" value="服務鈴" class="btn btn-info">
+            </form>
+            </div> 
+            -->    
+            <div class="sidepart" id="messageboard">
+                <table>
+                <tr>
+                <form :action="addbyguesturl" method="post">
+                <label>{{promote}}</label>
+                <td>
+                <textarea name="a25message" placeholder="請輸入您的指教或提問..."></textarea>
+                </td>
+                <tr>
+                <td>
+                <label>如何回復您：</label>
+                <input type="text" name="a10writer" placeholder="請留連絡電話或email或稱呼...">
+                <input type="hidden" name="a05ipofvisitor" class="form-control" id="ipofvisitor" :value="ipofvisitor">
+                </td>
+                </tr>
+                <tr>
+                <td>
+                <input type="submit" value="送出" style="float:right" >
+                </td>
+                </form>
+                </tr>
+                </table>
+            </div>
+            
+        </nav>
+    </template>
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUK0WDGT2ba1GiTWXv910l5e0Hza7y-U&callback=initMap" async defer></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        profile:"基本資料",
+        resume:"學經歷專長",
+        paper:"著作清單",
+        download:"免費下載",
+        homepageurl:"",
+        resumeurl:"",
+       //paperurl:"",
+       downloadurl:"",
+        statusreport:'<%- statusreport %>',
+        personID:'<%- personID %>'
+      }
+    },
+    mounted: function(){
+      querytxt="?statusreport=由著作類別頁進到本頁";
+      this.homepageurl="/career/branch/goouterweb/"+this.personID+querytxt;
+       this.resumeurl="/career/outerweb/resumetype/"+this.personID+querytxt;
+       this.downloadurl="/career/outerweb/freefiletype/"+this.personID+querytxt
+      
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("sidebar",{
+    props:{},
+    data(){
+      return{
+        //statusreport:'<%- statusreport %>',
+        promote:"歡迎批評指教及連絡！",
+        addbyguesturl:"",
+        personID:'<%- personID %>',
+        ipofvisitor:{},
+      inputerUIkey:0
+      } 
+    },
+    mounted: function(){
+      this.addbyguesturl="/career/message/addbyguest/"+this.personID;
+    
+      const API_URL = 'https://api.ipify.org?format=json';
+        // 取得 IP 位址
+        const response =axios.get(API_URL);
+        this.ipofvisitor= response.data
+
+    },
+    methods:{
+      
+    },
+    template:"#sidebarUI"
+  });
+
+  Vue.component("content0",{
+    props:{},
+    data(){
+      return{
+          //statusreport:'<%- statusreport %>',
+          termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+          personID:'<%- personID %>',
+          explicits:[],
+          tables:[]
+        }   
+    },
+    mounted:function(){
+      for(term of this.termlist){
+        if(term.a20field=="a30explicit"){
+          this.explicits.push(term)
+        }
+      }
+      this.explicits.sort((a,b)=>{
+            return parseFloat(a.a25code)-parseFloat(b.a25code)
+        })
+      let substr1="/career/outerweb/paper/";
+      for(explicit of this.explicits){
+        let tempobj=new Object();
+        tempobj['route']=substr1+explicit.a25code+'/'+this.personID;
+        tempobj['label']=explicit.a30mean;
+        console.log(tempobj.label);
+        this.tables.push(tempobj)
+      }   
+      },
+    methods:{
+       
+    },
+    template:"#content0UI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        
+        components:{
+          "bander":bander,
+          "outputer":outputer,
+          "inputer":inputer
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+
+  </body>
+</html>

@@ -6,7 +6,6 @@ module.exports = {
 async dispatch(ctx, next) {
   console.log("進入branch controller的dispatch");
   statusreport="由系統的暫用統一入口進入本頁";
-  /*
   var {account}=ctx.request.body;
   var group;
   var pwaroute, personID;
@@ -18,9 +17,10 @@ async dispatch(ctx, next) {
       personID=userx.a10personID;
       switch(group){
         case "admin":pwaroute="/career/branch/gomaintainer";break;
+        case "developer":pwaroute="/career/branch/gomaintainer";break;
         case "management":pwaroute="/career/branch/gomaintainer";break;
         case "guest":pwaroute="/career/branch/goouterweb";break;
-        default:pwarouter="/career/branch/goouterweb";
+        default:pwarouter="/career/branch/goouterweb";personID="6689df70a49fa62c3249b7db";
       }
       await ctx.redirect(pwaroute+"/"+personID)
   })
@@ -28,8 +28,6 @@ async dispatch(ctx, next) {
       console.log("User.findOne() failed !!");
       console.log(err)
   })
-  */
-  await ctx.redirect("/career/branch/gomaintainer/"+"6363c5c3a747f60d3e71a72d")
 },
 //送出使用手冊檔案供下載
 async seemenu(ctx, next) {
@@ -47,6 +45,36 @@ async outerweb(ctx, next) {
   console.log("進入branch controller的outerweb");
   statusreport="歡迎蒞臨瀏覽";
   var personID=ctx.params.id;
+  var postlist;
+  await Post.find({})    
+    .then(async posts=>{;
+        console.log("1st post:"+posts[0])
+        console.log("No. of post:"+posts.length)
+        let postchosen=new Array();
+        for(let post of posts){
+            //if(post.a35reader=="guest"||post.a35reader=="all"){
+                postchosen.push(post)
+            //}
+        }
+        console.log("No. of postchosen:"+postchosen.length);
+        postlist=encodeURIComponent(JSON.stringify(postchosen));
+        console.log("type of postlist:"+typeof(postlist));
+    })
+    .catch(err=>{
+        console.log("Post.find({}) failed !!");
+        console.log(err)
+    })
+  await ctx.render("branch/homepage" ,{
+      statusreport,
+      personID,
+      postlist
+  })
+},
+//到outerweb2
+async outerweb2(ctx, next) {
+  console.log("進入branch controller的outerweb");
+  statusreport==ctx.query.statusreport;
+  var personID="";
   var postlist;
   await Post.find({})    
     .then(async posts=>{;

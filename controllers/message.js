@@ -160,7 +160,41 @@ async editpage(ctx, next) {
             console.log(err)
         })
 },
-
+//接收guest留言
+async getmessage(ctx, next) {
+    var got_message = ctx.request.body;
+    var personID=ctx.params.id
+    console.log(got_message);
+    let messagedate=new Date();
+    var titleofmsg;
+    if(got_message.a25message.length()>12){
+        titleofmsg=got_message.a25message.substring(0,11)
+    }else{
+        titleofmsg=got_message.a25message
+    }
+    new_message=new Message({
+        a05ipofwriter:got_message.a05ipofvisitor,
+        a10writer:got_message.a10writer,
+        a15dateofmsg:messagedate,
+        a20titleofmsg:titleofmsg,
+        a25message:got_message.a25message,
+        a30codelast:"",
+        a35codethis:titleofmsg,
+        a40responsor:"6672e0d2b3c5338504379cf9",
+        a45response:"",
+        a50followact:got_message.a50followact
+    })
+    console.log("revised body:"+new_message);
+    await new_message.save()
+    .then(()=>{
+        console.log("Saving new_message....");
+    statusreport="您的指教敬悉，將儘速回應您。謝謝！！";
+    ctx.redirect("/career/branch/gooutweb/"+personID+"?statusreport="+statusreport)
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+},
 //依參數id取得資料
 retrieve(req,res){
 
