@@ -19,8 +19,8 @@ router.get('/inputbatch/:id', async (ctx, next)=> {
     await postController.batchinput(ctx,next)
 });
 //依參數id2取得資料
-router.get('/:id/:id2', async(ctx, next)=> {
-	await postController.retrieve(ctx)
+router.get('/lookone/:id/:id2', async(ctx, next)=> {
+	await postController.lookone(ctx)
 });
 //依參數no取得一筆資料
 router.get('/find/:id/:no', async(ctx, next)=> {

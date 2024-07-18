@@ -135,9 +135,46 @@ async editpage(ctx, next) {
         })
 },
 
-//依參數id取得資料
-retrieve(req,res){
-
+//依參數id檢視1筆資料
+async lookone(ctx, next) {
+    var statusreport=ctx.query.statusreport;
+    console.log("gotten query:"+statusreport);
+    console.log("postID:"+ctx.params.id2);
+    console.log("entered post.findById(ctx.params.id2)!!");
+    var personID=ctx.params.id;
+    if(statusreport===undefined){
+        statusreport="status未傳成功!"
+    }
+    var termlist;
+    await Term.find({a15model:"post"}).then(async terms=>{
+      console.log("type of terms:"+typeof(terms));
+      console.log("type of 1st term:"+typeof(terms[0]));
+      console.log("1st term:"+terms[0])
+      console.log("No. of term:"+terms.length)
+      termlist=encodeURIComponent(JSON.stringify(terms));
+      console.log("type of termlist:"+typeof(termlist));
+      })
+      .catch(err=>{
+          console.log("Term.find({}) failed !!");
+          console.log(err)
+      })
+    await Post.findById(ctx.params.id2)
+        .then(async postx=>{
+            console.log("Postx:"+postx);
+            let post=encodeURIComponent(JSON.stringify(postx));
+            console.log("post:"+post);
+            console.log("type of post:"+typeof(post));
+            await ctx.render("post/lookpage",{
+                termlist,
+                post,
+                statusreport,
+                personID
+            })
+        })
+        .catch(err=>{
+            console.log("Post.findById(ctx.params.id2) failed !!");
+            console.log(err)
+        })
 },
 //依參數no取得一筆資料
 findByNo(req,res){

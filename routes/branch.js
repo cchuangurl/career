@@ -15,9 +15,14 @@ router.get('/menu', async (ctx, next)=> {
   console.log("有讀到menu router")
   await branchController.seemenu(ctx,next)
 });
-//到outerweb
+//到outerweb(外部首頁含個人基本資料)
 router.get('/goouterweb/:id', async (ctx, next)=> {
   await branchController.outerweb(ctx,next)
+});
+
+//到outerweb2
+router.get('/goouterweb2', async (ctx, next)=> {
+  await branchController.outerweb2(ctx,next)
 });
 //到Maintainerweb
 router.get('/gomaintainer/:id', async (ctx, next)=> {

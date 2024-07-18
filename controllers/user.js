@@ -230,7 +230,7 @@ async batchinput(ctx, next){
             sequence=sequence.then(function(){
                 var new_user = new User({
                     a05status:userj[0],
-                    a10infoID:userj[1],
+                    a10personID:userj[1],
                     a15account:userj[2],
                     a20password:userj[3],
                     a25group:userj[4],

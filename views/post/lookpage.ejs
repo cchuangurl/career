@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<style type="text/css">
+body {
+  background-color: #d6d6d3;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+     flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#e5f8cd;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+</style>
+
+  <title>檢視指定之post</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>
+        <inputer></inputer>
+        <!-- <outputer></outputer> -->
+    </div>
+
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" :href="homepageurl">{{homepage}}</a>
+            </li>
+            <!--
+            <li class="nav-item active">
+              <a class="nav-link" href="#">{{edit1}} <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">{{editbatch}}</a>
+            </li>
+            -->
+          </ul>
+          <!--
+          <span class="navbar-text">
+            {{statusreport}}
+          </span>
+          -->
+        </div>
+      </nav>
+    </template>
+
+    <template id="inputerUI" >
+      <div class="card" style="width: 36rem;">
+        <div class="card-body">
+          <h5 class="card-title">檢視{{post.a25code}}之資料</h5>
+          <h5 class="card-subtitle mb-2 text-muted">{{card_subtitle}}</h5>
+            <label for="formGroupExampleInput2">{{items.item0}}:<h6>{{posttype}}</h6></label><br>
+            
+            <label for="formGroupExampleInput2">{{items.item2}}:<h6>{{post.a15postdate}}</h6></label><br>
+
+            <label for="formGroupExampleInput2">{{items.item3}}:<h6>{{post.a20posttitle}}</h6></label><br>
+
+            <label for="formGroupExampleInput2">{{items.item4}}:<h6>{{post.a25postcontent}}</h6></label><br>
+
+            <label for="formGroupExampleInput2">{{items.item7}}:<h6>{{post.a40datetodown}}</h6></label>
+            </div>
+            <!-- 
+          <input type="submit" id="button2" value="重新輸入" class="btn btn-info" @click="rerender()">
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div>
+    </template>
+
+
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        homepage:"回前頁",
+        input1:"手動新增1筆",
+        inputbatch:"批次輸入",
+        crawl:"從網路抓取",
+        //statusreport:'<%- statusreport %>',
+        personID:'<%- personID %>',
+        homepageurl:""        
+      }
+    },
+    mounted:function(){
+      querytxt="?statusreport='由檢視公告頁回到本頁'";
+      this.homepageurl="/career/branch/goouterweb/"+this.personID+querytxt
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("inputer",{
+    props:{},
+    data(){
+      return {
+        card_title:"",
+        card_subtitle:"本項公告資料如下:",
+        items:{
+          item:"ID",
+          item0:"內容類別",
+          item1:"公告者ID",
+          item2:"公告日期時間",
+          item3:"公告標題",
+          item4:"公告內容",
+          item5:"公告對象(user group)",
+          item6:"呈現方式",
+          item7:"預定下架時間",
+          item99:"特別註記"
+          },
+        names:{
+          name0:"a05posttype",
+          name1:"a10poster",
+          name2:"a15postdate",
+          name3:"a20posttitle",
+          name4:"a25postcontent",
+          name5:"a30reader",
+          name6:"a35showtype",
+          name7:"a40datetodown"
+            },
+      termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+      post:JSON.parse(decodeURIComponent('<%=post%>')),
+      inputerUIkey:0,
+      personID: '<%- personID %>',
+      posttype:""
+      }//EOF return
+    },//EOF data()
+    mounted:function(){
+      for(term of this.termlist){
+        if(term.a20field=="a05posttype"&&term.a25code==this.post.a05posttype){
+          this.posttype=term.a30mean
+        }
+      }      
+    },
+    methods:{
+        rerender:function() {
+      this.inputerUIkey += 1;
+      console.log("inputerUIkey:"+this.inputerUIkey)
+    }
+    },
+
+    template:"#inputerUI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        components:{
+
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        }
+    })
+</script>
+
+
+  </body>
+</html>
