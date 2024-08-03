@@ -58,7 +58,7 @@ background-color: rgb(213, 218, 210);
     background:#f8e8c5;
     height:720px;
     }
-#tablefy{
+#tablefy1,#tablefy2,#tablefy3{
     display: inline-block;
   flex-direction:row;
 	 justify-content: flex-start;
@@ -135,12 +135,38 @@ background-color: rgb(213, 218, 210);
     </template>
     <template id="content0UI">
         <nav aria-label="...">
-          <div class="row" id="tablefy" v-for="table of tables" :key="table._id">
-            <form  :action="table.route" method="get">
-              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">
-              <input type="submit" :value="table.label" class="btn btn-info">
+          <H2>依呈現的媒體分</H2>
+          <div class="row" id="tablefy1" v-for="table of tables1" :key="table._id">
+            <form  :action="typeurl" method="get">
+              <input type="hidden" name="classby" value="explicit">
+              <input type="hidden" name="papertype" :value="table.papertype">
+              <input type="hidden" name="typelabel" :value="table.label">
+              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
+              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
+            </form>
+          </div>
+          <hr style="height:30px">
+          <H2>依課程種類分</H2>
+          <div class="row" id="tablefy2" v-for="table of tables2" :key="table._id">
+            <form  :action="typeurl" method="get">
+              <input type="hidden" name="classby" value="course">
+              <input type="hidden" name="papertype" :value="table.papertype">
+              <input type="hidden" name="typelabel" :value="table.label">
+              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
+              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
             </form>
           </div>          
+          <hr style="height:30px">
+          <H2>依企管類別分</H2>
+          <div class="row" id="tablefy3" v-for="table of tables3" :key="table._id">
+            <form  :action="typeurl" method="get">
+              <input type="hidden" name="classby" value="category">
+              <input type="hidden" name="papertype" :value="table.papertype">
+              <input type="hidden" name="typelabel" :value="table.label">
+              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
+              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
+            </form>
+          </div>
         </nav>
     </template>
 
@@ -247,29 +273,74 @@ Vue.component("bander",{
     data(){
       return{
           //statusreport:'<%- statusreport %>',
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
           personID:'<%- personID %>',
+          typeurl:"",
           explicits:[],
-          tables:[]
+          courses:[],
+          categorys:[],
+          tables1:[],
+          tables2:[],
+          tables3:[]
         }   
     },
     mounted:function(){
+      this.typeurl="/career/outerweb/paper/gosublist/"+this.personID;
       for(term of this.termlist){
         if(term.a20field=="a30explicit"){
           this.explicits.push(term)
         }
       }
+      for(term of this.termlist){
+        if(term.a20field=="a35category"){
+          this.categorys.push(term)
+        }
+      }
+      for(term of this.termlist){
+        if(term.a20field=="a40course"){
+          this.courses.push(term)
+        }
+      }
+      for(explicit of this.explicits){
+        let typecode=explicit.a25code;
+        let typecount=this.knowledgelist.filter(ele=>ele.a30explicit==typecode).length;
+        if(typecount>0){
+        let tempobj=new Object();
+        tempobj['papertype']=typecode;
+        tempobj['label']=explicit.a30mean;
+        tempobj['count']=typecount;
+        console.log(tempobj.label);
+        this.tables1.push(tempobj)
+        }
+      }
+      for(course of this.courses){
+        let typecode=course.a25code;
+        let typecount=this.knowledgelist.filter(ele=>ele.a40course==typecode).length;
+        if(typecount>0){
+        let tempobj=new Object();
+        tempobj['papertype']=typecode;
+        tempobj['label']=course.a30mean;
+        tempobj['count']=typecount;
+        console.log(tempobj.label);
+        this.tables2.push(tempobj)
+        }
+      }
+      for(category of this.categorys){
+        let typecode=category.a25code;
+        let typecount=this.knowledgelist.filter(ele=>ele.a35category==typecode).length;
+        if(typecount>0){
+        let tempobj=new Object();
+        tempobj['papertype']=typecode;
+        tempobj['label']=category.a30mean;
+        tempobj['count']=typecount;
+        console.log(tempobj.label);
+        this.tables3.push(tempobj)
+        }
+      }      
       this.explicits.sort((a,b)=>{
             return parseFloat(a.a25code)-parseFloat(b.a25code)
-        })
-      let substr1="/career/outerweb/paper/";
-      for(explicit of this.explicits){
-        let tempobj=new Object();
-        tempobj['route']=substr1+explicit.a25code+'/'+this.personID;
-        tempobj['label']=explicit.a30mean;
-        console.log(tempobj.label);
-        this.tables.push(tempobj)
-      }   
+        })   
       },
     methods:{
        

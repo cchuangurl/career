@@ -108,15 +108,7 @@ body {
                 </optgroup>  
                 </select>             
                 <br>
-
-              <label for="formGroupExampleInput2">{{items.item7}}</label>
-              <select :name="names.7" class="form-select">
-                <optgroup v-for="publish of publishlist" :key="publish._id" >            
-                <option :value="publish._id">{{publish.a20title}}</option>
-                </optgroup>  
-                </select>             
-                <br>
-
+              
               <label for="formGroupExampleInput2">{{items.item8}}</label>
               <input type="text" :name="names.name5" class="form-control" id="formGroupExampleInput8" :placeholder="holders.holder8">
 
@@ -183,7 +175,6 @@ Vue.component("bander",{
           item4:"外顯形式",
           item5:"企管類別",
           item6:"課程別",
-          item7:"出版資訊ID",
           item8:"上傳日期",
           item9:"揭露等級(user group)",
           item10:"是否提供下載",
@@ -197,7 +188,6 @@ Vue.component("bander",{
           name4:"a30explicit",
           name5:"a35category",
           name6:"a40course",
-          name7:"a45publish",
           name8:"a50date",
           name9:"a55reveal",
           name10:"a60is4download"
@@ -210,7 +200,6 @@ Vue.component("bander",{
           holder4:"字串,如名詞字典選項",
           holder5:"字串,如名詞字典選項",
           holder6:"字串,",
-          holder7:"物件識別碼,",
           holder8:"日期時間,",
           holder9:"字串,如名詞字典選項",
           holder10:"邏輯值,",

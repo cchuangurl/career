@@ -109,16 +109,8 @@ body {
               </select>
             <br>  
           
-            <label for="formGroupExampleInput2">{{items.item7}}</label>
-            <input type="text" :name="names.name7" class="form-control" id="formGroupExampleInput7" :value="knowledge.a30mean">
-
             <label for="formGroupExampleInput2">{{items.item8}}</label>
-            <select :name="names.name8" class="form-select">
-              <optgroup v-for="(publish,index) of publishlist" :key="publish._id" >            
-              <option :value="publish._id" :selected="publishindex[index]">{{publish.a20title}}</option>            
-              </optgroup>  
-              </select>             
-              <br>
+            <input type="text" :name="names.name8" class="form-control" id="formGroupExampleInput8" :value="knowledge.a50date>
 
             <label for="formGroupExampleInput2">{{items.item9}}</label>
             <select :name="names.name9" class="form-select"">
@@ -180,7 +172,6 @@ Vue.component("bander",{
           item4:"外顯形式",
           item5:"企管類別",
           item6:"課程別",
-          item7:"出版資訊ID",
           item8:"上傳日期",
           item9:"揭露等級(user group)",
           item10:"是否提供下載",
@@ -194,7 +185,6 @@ Vue.component("bander",{
           name4:"a30explicit",
           name5:"a35category",
           name6:"a40course",
-          name7:"a45publish",
           name8:"a50date",
           name9:"a55reveal",
           name10:"a60is4download"

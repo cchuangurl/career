@@ -11,8 +11,7 @@ var KnowledgeSchema = new Schema(
     a30explicit:{type:String,required:false},
     a35category:{type:String,required:false},
     a40course:{type:String,required:false},
-    a45publish:{type:Schema.Types.ObjectID,required:false},
-    a50date:{type:Date,required:true},
+    a50date:{type:Date,required:false},
     a55reveal:{type:String,required:false},
     a60is4download:{type:Boolean,required:false},
     a99footnote:{type:String,required:false}

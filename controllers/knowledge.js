@@ -180,7 +180,7 @@ async batchinput(ctx, next){
         input: fs.createReadStream(filepath+datafile+'.csv')
     });
     var lineno=0;
-    var columnno=12;
+    var columnno=11;
     var knowledgeArray;
     var tempstore=new Array(columnno);
     for (let i=0;i<columnno;i++){
@@ -236,11 +236,10 @@ async batchinput(ctx, next){
                     a30explicit:knowledgej[4],
                     a35category:knowledgej[5],
                     a40course:knowledgej[6],
-                    a45publish:knowledgej[7],
-                    a50date:knowledgej[8],
-                    a55reveal:knowledgej[9],
-                    a60is4download:knowledgej[10],
-                    a99footnote:knowledgej[11]
+                    a50date:knowledgej[7],
+                    a55reveal:knowledgej[8],
+                    a60is4download:knowledgej[9],
+                    a99footnote:knowledgej[10]
                 });//EOF new knowledge
                     saveone(new_knowledge)
                 .catch(err=>{

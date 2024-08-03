@@ -8,6 +8,10 @@ router.get('/resumetype/:id', async (ctx, next)=> {
 router.get('/papertype/:id', async (ctx, next)=> {
   await outerwebController.showpapertype(ctx,next)
 });
+//到某著作類別清單頁
+router.get('/paper/gosublist/:id', async (ctx, next)=> {
+  await outerwebController.showsublist(ctx,next)
+});
 //到免費下載類別頁
 router.get('/freefiletype/:id', async (ctx, next)=> {
   await outerwebController.showfreefiletype(ctx,next)
