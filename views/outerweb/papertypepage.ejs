@@ -135,7 +135,7 @@ background-color: rgb(213, 218, 210);
     </template>
     <template id="content0UI">
         <nav aria-label="...">
-          <H2>依呈現的媒體分</H2>
+          <H3>依呈現的媒體分</H3>
           <div class="row" id="tablefy1" v-for="table of tables1" :key="table._id">
             <form  :action="typeurl" method="get">
               <input type="hidden" name="classby" value="explicit">
@@ -146,7 +146,7 @@ background-color: rgb(213, 218, 210);
             </form>
           </div>
           <hr style="height:30px">
-          <H2>依課程種類分</H2>
+          <H3>依課程種類分</H3>
           <div class="row" id="tablefy2" v-for="table of tables2" :key="table._id">
             <form  :action="typeurl" method="get">
               <input type="hidden" name="classby" value="course">
@@ -157,7 +157,7 @@ background-color: rgb(213, 218, 210);
             </form>
           </div>          
           <hr style="height:30px">
-          <H2>依企管類別分</H2>
+          <H3>依企管類別分</H3>
           <div class="row" id="tablefy3" v-for="table of tables3" :key="table._id">
             <form  :action="typeurl" method="get">
               <input type="hidden" name="classby" value="category">
