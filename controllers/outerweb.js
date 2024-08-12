@@ -62,7 +62,11 @@ async showsublist(ctx, next) {
   var typelabel=ctx.query.typelabel;
   var statusreport=ctx.query.statusreport;
   var personID=ctx.params.id;
+  var typename;
   var knowledgelist;
+  await Term.find({$and:[{a15mode:"knowledge"},{a25code:papertype}]}).then(async term=>{
+    typename=term.a30mean
+  })
   await Knowledge.find({$or:[{a30explicit:papertype},{a35category:papertype},{a40course:papertype}]})
     .then(async knowledges=>{
     console.log("type of knowledges:"+typeof(knowledges));
@@ -76,6 +80,7 @@ async showsublist(ctx, next) {
       knowledgelist,
       classby,
       papertype,
+      typename,
       typelabel,
       statusreport,
       personID

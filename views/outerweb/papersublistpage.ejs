@@ -138,6 +138,7 @@ background-color: rgb(213, 218, 210);
     </template>
     <template id="content0UI">
         <nav aria-label="...">
+          <h2>{{typename}}</h2>
           <table>
             <tr class="pagination">
               <td class="page-item" v-show="firstPage" @click="goFirstPage()">回第1頁</td>
@@ -162,7 +163,7 @@ background-color: rgb(213, 218, 210);
               <td class="page-item" v-show="nextRound" @click="goNextRound()">下{{perRound}}頁</td>
               <td class="page-item" v-show="endPage" @click="goEndPage()">到最末頁</td>
             </tr>
-            </table>
+            </table>            
           <table border="1" class="table table-striped">
               <thead>
               <tr>
@@ -337,6 +338,7 @@ Vue.component("bander",{
           knowledgeShow:[],
         //statusreport:'<%- statusreport %>',
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          typename:'<%- typename %>',
           personID:'<%- personID %>',
           items:{
             item0:"知識領域(staff expertize)",
