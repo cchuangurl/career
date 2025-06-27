@@ -2,6 +2,7 @@
 const Knowledge = require('../models/index').knowledge;
 const Publish = require('../models/index').publish;
 const Term = require('../models/index').term;
+const {Storage}=require('@google-cloud/storage')
 module.exports = {
 //列出清單list(req,res)
 async list(ctx,next){
@@ -300,5 +301,44 @@ async update(ctx,next){
         console.log("Knowledge.findOneAndUpdate() failed !!")
         console.log(err)
     })
+},
+//依參數id下戴一個檔案
+async downloadone(ctx,next){
+    console.log("進入knowledge controller的downloadone");
+  var classby=ctx.query.classby;
+  var papertype=ctx.query.papertype;
+  console.log("著作類別代碼: "+papertype);
+  var typelabel=ctx.query.typelabel;
+  var statusreport=ctx.query.statusreport;
+  var personID=ctx.params.id;
+  var knowledgeID=ctx.params.id2;
+  var filename;
+  const storage=new Storage({
+    projectId:"deep0-340312",
+    keyFilename:"./public/json/deep0-340312-ac0308c9dc4b.json"
+    });
+  const bucketName='cchuang-deep1';
+      await Knowledge.findById(knowledgeID).then(async knowledgex=>{
+        filename=knowledgex.a20filename+"."+knowledgex.a25alias
+        })
+        .catch(err=>{
+            console.log("Knowledge.findById({}) failed !!");
+            console.log(err)
+        })
+  /*
+  const file=storage.bucket(bucketName).file(filename);
+  let tempbucketurl="https://storage.cloud.google.com/"+bucketName;
+  const bucketUrl=JSON.stringify(tempbucketurl);
+  console.log(bucketUrl);
+  */
+  try{
+    //ctx.attachment(filename);
+    //await koaSend(ctx, file.name, {root:bucketUrl});
+    //console.log("Storage連接成功")
+    await storage.bucket(bucketName).file(filename).download()
+    }catch(error){
+        console.log("download file failed !!");
+        console.log(error)
+    }   
 }
 }//EOF export

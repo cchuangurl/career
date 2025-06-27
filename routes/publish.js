@@ -14,6 +14,10 @@ router.get('/editpage/:id/:id2', async (ctx, next)=> {
     console.log("get id:"+ctx.params.id2)
     await publishController.editpage(ctx,next)
 });
+//依參數id2取得資料
+router.get('/lookone/:id/:id2', async(ctx, next)=> {
+	await publishController.lookone(ctx)
+});
 //批次新增資料
 router.get('/inputbatch/:id', async (ctx, next)=> {
     await publishController.batchinput(ctx,next)

@@ -39,4 +39,8 @@ router.get('/delete/:id/:id2', async (ctx, next)=> {
 router.post('/update/:id', async (ctx, next)=> {
 	await knowledgeController.update(ctx)
 });
+//依參數id2下戴一個檔案
+router.get('/download1/:id/:id2', async(ctx, next)=> {
+	await knowledgeController.downloadone(ctx)
+});
 module.exports = router;

@@ -34,7 +34,8 @@
     "morgan": "^1.10.0",
     "request": "^2.88.2",
     "vue": "^3.2.30",
-    "vue-axios": "^3.4.1"
+    "vue-axios": "^3.4.1",
+    "vue-router": "^3.6.5"
   },
   "devDependencies": {
     "babel-eslint": "7.1.1",

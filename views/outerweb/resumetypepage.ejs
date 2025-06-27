@@ -82,8 +82,10 @@ background-color: rgb(213, 218, 210);
             <bander></bander>
         </div>
         <div class="row" align="justify">
+          <!--
             <div class="col-lg-3 col-md-6 col-sm-12" id="sidearea">
                 <sidebar></sidebar> </div>
+                -->
             <div class="col-lg-9 col-md-6 col-sm-12">
               <content0></content0>
               <!--
@@ -114,7 +116,7 @@ background-color: rgb(213, 218, 210);
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" :href="homepageurl">{{profile}}</a>
+                <a class="nav-link" href="/">{{profile}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" href="#">{{resume}}<span class="sr-only">(current)</span></a>
@@ -122,14 +124,17 @@ background-color: rgb(213, 218, 210);
               <li class="nav-item">
                 <a class="nav-link" :href="paperurl">{{paper}}</a>
               </li>
+              <!--
               <li class="nav-item">
                 <a class="nav-link" :href="downloadurl">{{download}}</a>
               </li>
-              
+              -->
           </ul>
+          <!--
           <span class="navbar-text">
             <font size="1">{{statusreport}}</font>
           </span>
+          -->
         </div>
       </nav>
     </template>
@@ -232,6 +237,7 @@ background-color: rgb(213, 218, 210);
             學術及行政榮譽
             </li>
             <ul id="honor">
+            <li>中華民國農學團體優秀農業基層人員獎(2023年)</li>
             <li>行政院農業委員會模範公務人員(2013年) </li>
             <li>行政院傑出研究獎優等獎(2006年) </li>
             <li>中國農村經濟學會碩士論文獎優等獎(1987年) </li>
@@ -250,10 +256,11 @@ background-color: rgb(213, 218, 210);
             主要兼任職務</li>
             </li>
             <ul id="parttime">
-            <li>文化大學 勞工行政系 兼任副教授(2021年)</li>
-            <li>世新大學 經濟學系 兼任副教授(2005年至2010年)</li>
-            <li>輔仁大學 食品營養學系 兼任講師、兼任副教授(1993年至1995年)</li>
-            <li>醒吾商業專科學校 觀光系 兼任講師(1989年至1995年)</li>
+            <li>文化大學 勞工行政系 兼任副教授(2021年9月至2022年1月)</li>
+            <li>世新大學 經濟學系 兼任副教授(2005年9月至2010年6月)</li>
+            <li>國立屏東商業專科學校 夜間部主任(1995年8月至1997年7月) </li>
+            <li>輔仁大學 食品營養學系 兼任講師、兼任副教授(1993年9月至1995年1月)</li>
+            <li>醒吾商業專科學校 觀光系 兼任講師(1988年9月至1995年1月)</li>
             </ul>
             <li>
             參與之社團
@@ -262,7 +269,7 @@ background-color: rgb(213, 218, 210);
             <li>社團法人臺灣農村經濟學會 第33、34、35、36屆理事(2019年至2025年)</li>
             <li>社團法人台灣農業經營學會 第11、12、13、14屆理事(2018年至2024年)</li>
             <li>社團法人臺灣大學農業經濟系校友會 第4屆理事(2021年至2023年)、第5屆常務監事(2023年至2025年)</li>
-            <li>財團法人台灣區蠶業發展基金會 董事(2015年至2017年)</li>
+            <li>財團法人台灣區蠶業發展基金會 監察人(2015年至2017年)</li>
             </ul>
             <li id="otherevent">
             其他記事
@@ -327,15 +334,14 @@ Vue.component("bander",{
         //resumeurl:"",
        paperurl:"",
        downloadurl:"",
-        statusreport:'<%- statusreport %>',
-        personID:'<%- personID %>'
+        statusreport:'<%- statusreport %>'
       }
     },
     mounted: function(){
       querytxt="?statusreport=由學經歷類別頁進到本頁";
-      this.homepageurl="/career/branch/goouterweb/"+this.personID+querytxt;
-       this.paperurl="/career/outerweb/papertype/"+this.personID+querytxt;
-       this.downloadurl="/career/outerweb/freefiletype/"+this.personID+querytxt
+      this.homepageurl="/career/branch/goouterweb/"+querytxt;
+       this.paperurl="/career/outerweb/papertype/"+querytxt;
+       this.downloadurl="/career/outerweb/freefiletype/"+querytxt
       
     },
     methods:{
@@ -350,13 +356,12 @@ Vue.component("bander",{
         //statusreport:'<%- statusreport %>',
         promote:"歡迎批評指教及連絡！",
         addbyguesturl:"",
-        personID:'<%- personID %>',
         ipofvisitor:{},
       inputerUIkey:0
       } 
     },
     mounted: function(){
-      this.addbyguesturl="/career/message/addbyguest/"+this.personID;
+      this.addbyguesturl="/career/message/addbyguest/";
     
       const API_URL = 'https://api.ipify.org?format=json';
         // 取得 IP 位址
@@ -375,7 +380,6 @@ Vue.component("bander",{
     data(){
       return{
           //statusreport:'<%- statusreport %>',
-          personID:'<%- personID %>',
           tables:[
           {"route":"#diploma",
             "label":"主要學歷"

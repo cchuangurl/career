@@ -20,7 +20,7 @@ async dispatch(ctx, next) {
         case "developer":pwaroute="/career/branch/gomaintainer";break;
         case "management":pwaroute="/career/branch/gomaintainer";break;
         case "guest":pwaroute="/career/branch/goouterweb";break;
-        default:pwarouter="/career/branch/goouterweb";personID="6689df70a49fa62c3249b7db";
+        default:pwaroute="/career/branch/goouterweb";personID="6689df70a49fa62c3249b7db";
       }
       await ctx.redirect(pwaroute+"/"+personID)
   })

@@ -19,6 +19,7 @@ console.log('資料庫URL:'+`mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}
 console.log('連線資料庫中。。。');
 const DATABASEURL=`mongodb+srv://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_HOST}/${process.env.MONGO_INITDB_ROOT_DATABASE1}?retryWrites=true&w=majority`;
 //const DATABASEURL=`mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_HOST}:27017/${process.env.MONGO_INITDB_ROOT_DATABASE1}?authSource=admin`;
+mongoose.set('strictQuery',false);
 mongoose.connect(DATABASEURL,{
 //useNewUrlPaser: true,
 //useUnifieldTopology:true
@@ -30,7 +31,7 @@ mongoose.Promise = global.Promise;
 var dbconnect = mongoose.connection;
 dbconnect.on('error', console.error.bind(console, 'MongoDB connection error:'));
 dbconnect.once('open',function(){
-console.log('資料庫dbcarbon連線成功');
+console.log('資料庫dbcareer連線成功');
 });
 
 //將資料夾內的.js檔案依序實例，並註冊在同一物件之中。
@@ -44,7 +45,7 @@ fs.readdirSync(__dirname)
         const model =require('./'+fileName);
         db[fileName] = model;
     });
-
+//判斷非同步是否完成，完成後放入物件中。
 Object.keys(db).forEach((modelName) => {
     if (db[modelName].associate) {
         db[modelName].associate(db);

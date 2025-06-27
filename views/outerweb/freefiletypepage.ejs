@@ -58,7 +58,7 @@ background-color: rgb(213, 218, 210);
     background:#f8e8c5;
     height:720px;
     }
-#tablefy{
+#tablefy1,#tablefy2,#tablefy3{
     display: inline-block;
   flex-direction:row;
 	 justify-content: flex-start;
@@ -74,7 +74,7 @@ background-color: rgb(213, 218, 210);
 
 </style>
 
-  <title>學經歷類別頁</title>
+  <title>免費下載類別頁</title>
   </head>
   <body>
     <div id="show_div">
@@ -117,13 +117,13 @@ background-color: rgb(213, 218, 210);
                 <a class="nav-link" :href="homepageurl">{{profile}}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="#">{{resume}}<span class="sr-only">(current)</span></a>
+                <a class="nav-link" :href="resumeurl">{{resume}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :href="paperurl">{{paper}}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" :href="downloadurl">{{download}}</a>
+                <a class="nav-link active" href="#">{{download}}<span class="sr-only">(current)</span></a>
               </li>
               
           </ul>
@@ -135,12 +135,38 @@ background-color: rgb(213, 218, 210);
     </template>
     <template id="content0UI">
         <nav aria-label="...">
-          <div class="row" id="tablefy" v-for="table of tables" :key="table._id">
-            <form  :action="table.route" method="get">
-              <input type="hidden" name="statusreport" value="由學經歷類別按鈕進入本頁">
-              <input type="submit" :value="table.label" class="btn btn-info">
+          <H3>依呈現的媒體分</H3>
+          <div class="row" id="tablefy1" v-for="table of tables1" :key="table._id">
+            <form  :action="typeurl" method="get">
+              <input type="hidden" name="classby" value="explicit">
+              <input type="hidden" name="papertype" :value="table.papertype">
+              <input type="hidden" name="typelabel" :value="table.label">
+              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
+              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
+            </form>
+          </div>
+          <hr style="height:30px">
+          <H3>依課程種類分</H3>
+          <div class="row" id="tablefy2" v-for="table of tables2" :key="table._id">
+            <form  :action="typeurl" method="get">
+              <input type="hidden" name="classby" value="course">
+              <input type="hidden" name="papertype" :value="table.papertype">
+              <input type="hidden" name="typelabel" :value="table.label">
+              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
+              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
             </form>
           </div>          
+          <hr style="height:30px">
+          <H3>依企管類別分</H3>
+          <div class="row" id="tablefy3" v-for="table of tables3" :key="table._id">
+            <form  :action="typeurl" method="get">
+              <input type="hidden" name="classby" value="category">
+              <input type="hidden" name="papertype" :value="table.papertype">
+              <input type="hidden" name="typelabel" :value="table.label">
+              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
+              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
+            </form>
+          </div>
         </nav>
     </template>
 
@@ -196,18 +222,17 @@ Vue.component("bander",{
         paper:"著作清單",
         download:"免費下載",
         homepageurl:"",
-        //resumeurl:"",
-       paperurl:"",
-       downloadurl:"",
+        resumeurl:"",
+        paperurl:"",
         statusreport:'<%- statusreport %>',
         personID:'<%- personID %>'
       }
     },
     mounted: function(){
-      querytxt="?statusreport=由學經歷類別頁進到本頁";
-      this.resumeurl="/career/branch/goouterweb/"+this.personID+querytxt;
-       this.paperurl="/career/outerweb/papertype/"+this.personID+querytxt;
-       this.downloadurl="/career/outerweb/freefiletype/"+this.personID+querytxt
+      querytxt="?statusreport=由免費下載類別頁進到本頁";
+      this.homepageurl="/career/branch/goouterweb/"+this.personID+querytxt;
+       this.resumeurl="/career/outerweb/resumetype/"+this.personID+querytxt;
+       this.paperurl="/career/outerweb/papertype/"+this.personID+querytxt
       
     },
     methods:{
@@ -247,45 +272,74 @@ Vue.component("bander",{
     data(){
       return{
           //statusreport:'<%- statusreport %>',
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
           personID:'<%- personID %>',
-          tables:[
-            {"route":"/career/outerweb/diploma",
-            "label":"主要學歷"
-            },
-            {"route":"/career/outerweb/certificate",
-            "label":"就業考試"
-            },
-            {"route":"/career/outerweb/job",
-            "label":"正職經歷"
-            },
-            {"route":"/career/outerweb/expertise",
-            "label":"工作及學術專長"
-            },
-            {"route":"/career/outerweb/training",
-            "label":"重要訓練"
-            },
-            {"route":"/career/outerweb/language",
-            "label":"語文能力與檢定"
-            },
-            {"route":"/career/outerweb/award",
-            "label":"主要獎項榮譽"
-            },
-            {"route":"/career/outerweb/parttime",
-            "label":"主要兼任職務"
-            },
-            {"route":"/career/outerweb/society",
-            "label":"參與之社團"
-            },
-            {"route":"/career/outerweb/event",
-            "label":"其他記事"
-            }
-            ]
+          typeurl:"",
+          explicits:[],
+          courses:[],
+          categorys:[],
+          tables1:[],
+          tables2:[],
+          tables3:[]
         }   
     },
     mounted:function(){
-      for(table of this.tables)
-        table.route=table.route+'/'+this.personID;
-        console.log("revise route: "+table.route)      
+      this.typeurl="/career/outerweb/paper/godownload/"+this.personID;
+      for(term of this.termlist){
+        if(term.a20field=="a30explicit"){
+          this.explicits.push(term)
+        }
+      }
+      for(term of this.termlist){
+        if(term.a20field=="a35category"){
+          this.categorys.push(term)
+        }
+      }
+      for(term of this.termlist){
+        if(term.a20field=="a40course"){
+          this.courses.push(term)
+        }
+      }
+      for(explicit of this.explicits){
+        let typecode=explicit.a25code;
+        let typecount=this.knowledgelist.filter(ele=>ele.a30explicit==typecode&&ele.a60is4download==true).length;
+        if(typecount>0){
+        let tempobj=new Object();
+        tempobj['papertype']=typecode;
+        tempobj['label']=explicit.a30mean;
+        tempobj['count']=typecount;
+        console.log(tempobj.label);
+        this.tables1.push(tempobj)
+        }
+      }
+      for(course of this.courses){
+        let typecode=course.a25code;        
+        let typecount=this.knowledgelist.filter(ele=>ele.a40course==typecode&&ele.a60is4download==true).length;
+        if(typecount>0){
+        let tempobj=new Object();
+        tempobj['papertype']=typecode;
+        tempobj['label']=course.a30mean;
+        tempobj['count']=typecount;
+        console.log(tempobj.label);
+        this.tables2.push(tempobj)
+        }
+      }
+      for(category of this.categorys){
+        let typecode=category.a25code;
+        let typecount=this.knowledgelist.filter(ele=>ele.a35category==typecode&&ele.a60is4download==true).length;
+        if(typecount>0){
+        let tempobj=new Object();
+        tempobj['papertype']=typecode;
+        tempobj['label']=category.a30mean;
+        tempobj['count']=typecount;
+        console.log(tempobj.label);
+        this.tables3.push(tempobj)
+        }
+      }      
+      this.explicits.sort((a,b)=>{
+            return parseFloat(a.a25code)-parseFloat(b.a25code)
+        })   
       },
     methods:{
        

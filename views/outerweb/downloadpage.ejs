@@ -74,7 +74,7 @@ background-color: rgb(213, 218, 210);
 
 </style>
 
-  <title>細類別著作清單</title>
+  <title>本類可下載著作清單</title>
   </head>
   <body>
     <div id="show_div">
@@ -162,33 +162,25 @@ background-color: rgb(213, 218, 210);
           </div>
               <td class="page-item" v-show="nextRound" @click="goNextRound()">下{{perRound}}頁</td>
               <td class="page-item" v-show="endPage" @click="goEndPage()">到最末頁</td>
-            </tr>
-            </table>            
-            <table border="1" class="table table-striped">              
+            </tr>            
+            </table>
+                        <table border="1" class="table table-striped">              
               <thead>
               <tr>
-                <th>{{items.item2}}</th>
-                  <th>{{items.item3}}</th>
-                  <th>{{items.item4}}</th>
-                  <th>{{items.item8}}：{{items.item9}}</th>
-                 <!--<th>特別註記</th> -->
+                <th>{{items.item0}}</th>
+                  <th>{{items.item1}}</th>
               </tr>
               </thead>
-              <tbody id="publishlist">
-                <!-- <tr v-for="publish of publishshow" :key="publish._id"> -->
-                  <tr v-for="publish of publishShow" :key="publish._id">
-                  <td>{{publish.a15year}}</td>
-                  <td>{{publish.a20title}}</td>
-                  <td>{{publish.a25book}}</td>
-                  <td>{{publish.a45volumn}}：{{publish.a50issue}}</td>
-                  <!-- statusreport="由已擷取資料組清單頁進入本頁"> -->
-  
+              <tbody id="knowledgelist">
+                  <tr v-for="knowledge of knowledgeShow" :key="knowledge._id">
+                  <td>{{knowledge.a05domain}}</td>
+                  <td>{{knowledge.a15describe}}</td>  
                     <td>
-                      <input type="submit" value="檢視" @click="showone(publish._id)">
+                      <input type="submit" value="下戴" @click="download(knowledge._id)">
                     </td>                    
                   </tr>
               </tbody>
-          </table>
+          </table>        
           <table>
               <tr class="pagination">
                 <td class="page-item" v-show="firstPage" @click="goFirstPage()">回第1頁</td>
@@ -337,30 +329,24 @@ Vue.component("bander",{
           showIndex:[],
           activeIndex:[],
           knowledges:[],
-          publishs:[],
-          publishShow:[],
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),
+          knowledgeShow:[],
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           classby:'<%- classby %>',
           papertype:'<%- papertype %>',
           typelabel:'<%- typelabel %>',
           personID:'<%- personID %>',
           items:{
-            item0:"對應的knowledge",
-            item1:"共同作者",
-            item2:"出版或完稿年",
-            item3:"標題",
-            item4:"刊物或研討會名",
-            item5:"彙編或總集",
-            item6:"編輯者",
-            item7:"篇",
-            item8:"卷",
-            item9:"期",
-            item10:"起頁",
-            item11:"末頁",
-            item12:"出版商",
-            item13:"網址",
-            item14:"城市",
+            item0:"知識領域(staff expertize)",
+            item1:"材料標題",
+            item2:"檔案主檔名",
+            item3:"檔案附檔名",
+            item4:"外顯形式",
+            item5:"企管類別",
+            item6:"課程別",
+            item7:"出版資訊ID",
+            item8:"上傳日期",
+            item9:"揭露等級(user group)",
+            item10:"是否提供下載",
             item99:"特別註記"
             }
         }   
@@ -371,29 +357,25 @@ Vue.component("bander",{
       for(knowledge of this.knowledgelist){
         switch(this.classby){
         case "explicit":
-          if(knowledge.a30explicit==this.papertype){
+          if(knowledge.a30explicit==this.papertype&&knowledge.a60is4download==true){
             this.knowledges.push(knowledge);
             break
           }
         case "category":
-          if(knowledge.a35category==this.papertype){
+          if(knowledge.a35category==this.papertype&&knowledge.a60is4download==true){
             this.knowledges.push(knowledge);
             break
           }
         case "course":
-          if(knowledge.a40course==this.papertype){
+          if(knowledge.a40course==this.papertype&&knowledge.a60is4download==true){
             this.knowledges.push(knowledge);
             break
           }
           default:break
       }
     }
-      for(knowledge of this.knowledges){
-        let pickpublish=this.publishlist.find(publish=>publish.a05knowledgeID==knowledge._id);
-        this.publishs.push(pickpublish);
-        console.log("no of publishs:"+this.publishs.length)
-      }
-      this.maxRow=this.publishs.length;
+    
+      this.maxRow=this.knowledges.length;
         this.modRow=this.maxRow%this.perPage;
         this.maxPage=this.modRow==0?this.maxRow/this.perPage:Math.floor(this.maxRow/this.perPage)+1;
         this.modPage=this.maxPage%this.perRound;
@@ -401,11 +383,11 @@ Vue.component("bander",{
         this.goFirstPage()
       },
     methods:{
-      showone:function(id){
-        let querytext="?statusreport=由某類別一篇的檢視按鈕進入本頁";
+      download:function(id){
+        let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
         let querytext2="&classby="+this.classby+"&papetype="+this.papertype+"&typelabel="+this.typelabel;
-          let url2='/career/publish/lookone/'+this.personID+"/"+id+querytext;
-          window.location=url2;
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id+querytext+querytext2;
+          window.location.href=url3;
       },
       getShowData:function(index){
           this.currentIndex=index;
@@ -424,15 +406,14 @@ Vue.component("bander",{
           this.currentPage=this.pageIndex[index]
           console.log("currentPage is:"+this.currentPage)
           this.fullPage=(this.maxRow>=(this.currentPage*this.perPage))?true:false;
-          this.publishShow.splice(0);
+          this.knowledgeShow.splice(0);
           let startRow=(this.currentPage-1)*this.perPage;
             console.log("startRow is:"+startRow)
           let rowNo=this.fullPage?this.perPage:this.modRow;
           console.log("rowNo is:"+rowNo);
-          //this.publishShow=[];
-          this.publishShow=this.publishs.slice(startRow,startRow+rowNo)
-          console.log("11st publishs:"+this.publishs[10])
-          console.log("1st publishShow:"+this.publishShow[0])
+          this.knowledgeShow=this.knowledges.slice(startRow,startRow+rowNo)
+          console.log("11st knowledges:"+this.knowledges[10])
+          console.log("1st knowledgeShow:"+this.knowledgeShow[0])
 
         },
         goFirstPage:function(){

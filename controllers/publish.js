@@ -1,6 +1,7 @@
 //載入相對應的model
 const Publish = require('../models/index').publish;
 const Knowledge = require('../models/index').knowledge;
+const Term = require('../models/index').term;
 module.exports = {
 //列出清單list(req,res)
 async list(ctx,next){
@@ -80,7 +81,7 @@ async editpage(ctx, next) {
         console.log("type of 1st knowledge:"+typeof(knowledges[0]));
         console.log("No. of knowledge:"+knowledges.length)
         knowledgelist=encodeURIComponent(JSON.stringify(knowledges));
-        console.log("type of knowledgelist:"+typeof(knowledgehlist));
+        console.log("type of knowledgelist:"+typeof(knowledgelist));
         })
     await Publish.findById(ctx.params.id2)
         .then(async publishx=>{
@@ -100,7 +101,54 @@ async editpage(ctx, next) {
             console.log(err)
         })
 },
-
+//依參數id檢視1筆資料
+async lookone(ctx, next) {
+    var statusreport=ctx.query.statusreport;
+    console.log("gotten query:"+statusreport);
+    var classby=ctx.query.classby;
+    var papertype=ctx.query.papertype;
+    console.log("著作類別代碼: "+papertype);
+    var typelabel=ctx.query.typelabel;
+    console.log("publishID:"+ctx.params.id2);
+    console.log("entered Publish.findById(ctx.params.id2)!!");
+    var personID=ctx.params.id;
+    if(statusreport===undefined){
+        statusreport="status未傳成功!"
+    }
+    var termlist;
+    await Term.find({a15model:"publish"}).then(async terms=>{
+      console.log("type of terms:"+typeof(terms));
+      console.log("type of 1st term:"+typeof(terms[0]));
+      console.log("1st term:"+terms[0])
+      console.log("No. of term:"+terms.length)
+      termlist=encodeURIComponent(JSON.stringify(terms));
+      console.log("type of termlist:"+typeof(termlist));
+      })
+      .catch(err=>{
+          console.log("Term.find({}) failed !!");
+          console.log(err)
+      })
+    await Publish.findById(ctx.params.id2)
+        .then(async publishx=>{
+            console.log("publishx:"+publishx);
+            let publish=encodeURIComponent(JSON.stringify(publishx));
+            console.log("publish:"+publish);
+            console.log("type of publish:"+typeof(publish));
+            await ctx.render("publish/look1page",{
+                termlist,
+                publish,
+                classby,
+                papertype,
+                typelabel,
+                statusreport,
+                personID
+            })
+        })
+        .catch(err=>{
+            console.log("Post.findById(ctx.params.id2) failed !!");
+            console.log(err)
+        })
+},
 //依參數id取得資料
 retrieve(req,res){
 
@@ -148,6 +196,7 @@ async batchinput(ctx, next){
     var lineno=0;
     var columnno=16;
     var publishArray;
+    var knowledgelist;
     var tempstore=new Array(columnno);
     for (let i=0;i<columnno;i++){
         tempstore[i]=new Array();
@@ -155,15 +204,26 @@ async batchinput(ctx, next){
     let readfile=(()=>{
         console.log("reading..."+datafile+".csv");
         return new Promise((resolve,reject)=>{
-    //當讀入一行資料時
-    lineReader.on('line', function(data) {
+        //當讀入一行資料時
+        lineReader.on('line', function(data) {
         var values = data.split(',');
         for (let i=0;i<columnno;i++){
             tempstore[i][lineno]=values[i].trim();
         }
         lineno++;
         console.log("read line:"+data)
-    });//EOF lineReader.on
+        });//EOF lineReader.on
+        Knowledge.find({}).then(async knowledges=>{
+            //console.log("found s:"+knowledgess);
+            console.log("type of knowledges:"+typeof(knowledges));
+            console.log("type of 1st knowledge:"+typeof(knowledges[0]));
+            console.log("No. of knowledge:"+knowledges.length)
+            knowledgelist=knowledges;
+            })
+            .catch(err=>{
+                console.log("Knowledge.find({}) failed !!");
+                console.log(err)
+            })
     resolve();
             })//EOF promise
     })//EOF readfile
@@ -194,8 +254,16 @@ async batchinput(ctx, next){
         let sequence=Promise.resolve();
         publishArray.forEach(function(publishj){
             sequence=sequence.then(function(){
+                var knowledgeID;
+                let temp=knowledgelist.find(knowledge=>knowledge.a15describe==publishj[3]);
+                if(temp==null||temp==undefined){
+                    console.log("did not find the knowledge ID of "+publishj[3]);
+                    knowledgeID=publishj.a05knowledgeID
+                }else{
+                    knowledgeID=temp._id
+                }
                 var new_publish = new Publish({
-                    a05knowledgeID:req.body.a05knowledgeID,
+                    a05knowledgeID:knowledgeID,
                     a10coauthor:publishj[1],
                     a15year:publishj[2],
                     a20title:publishj[3],
@@ -221,7 +289,7 @@ async batchinput(ctx, next){
             resolve();
         })//EOF promise
         })//EOF savedata
-    await readfile()
+    await readfile()     
     .then(()=>{
         setTimeout(savedata,3000)
     })

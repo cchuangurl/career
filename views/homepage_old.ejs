@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<style type="text/css">
+body {  
+background-color: rgb(248, 243, 243);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+
+#sidearea{  
+background-color: rgb(213, 218, 210);
+  height:720px;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.sidepart{
+    height:240px;
+    padding: 10px;
+    border-radius:10px
+}
+#bellcall{
+    background:#f5f5d6   
+}
+#messageboard{
+    background:#d6f5de
+}
+#loginarea{
+    background:#f8f8a6
+}
+#contactpart{
+    background:#d6f5de ;
+    width:100vw;
+    height:100px;
+    
+}
+.contactinfo {
+    margin-left:100px
+}
+#bulletin {
+    background:#def3f8;
+    height:720px;
+    }
+#viewzone {
+    background:#f8e8c5;
+    height:720px;
+    }
+.navbar{background:#d6eff5;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+
+</style>
+
+  <title>基本資料</title>
+  </head>
+  <body>
+    <div id="app">
+        <div class="row">
+            <bander></bander>
+        </div>
+        <div class="row" align="justify">
+                    <div class="col-lg-9 col-md-9 col-sm-12" id="viewzone">
+                      <P id="linkpart">
+                        <router-link to="/">名片</router-link>
+                        <router-link to="/notice">近期訊息</router-link>
+                      </P>
+                        <router-view></router-view>
+                    </div>
+        </div>         
+    </div>
+
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">{{profile}}<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="resumeurl">{{resume}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="paperurl">{{paper}}</a>
+              </li> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" :href="registerurl">{{register}}</a>
+            </li>         
+          </ul>
+        </div>
+      </nav>
+    </template>
+
+    <template id="content2UI">
+        <nav aria-label="...">
+          <img src="/image/20190713mypicture.png" height="120" width="90" alt="my picture">
+          <h4>
+            <ul>
+          <li>姓名：		黃振德		○性別：		男</li>			 
+          <li>現職：		(退休公務員)</li>
+          <li>生年：		1960年		</li>	
+          <li>住址：		新北市永和區保生路</li>
+          <li>手機：		09**514348		</li>
+          <li>E-mail:cchuang6767@gmail.com</li>
+        </ul>
+        </h4> 
+        </nav>
+    </template>
+    <template id="content1UI">
+      <nav aria-label="...">
+        尚無新的訊息
+      </nav>
+      </template>
+
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<!-- Vue Router CDN-->
+<script src="https://unpkg.com/vue-router@3.1.3/dist/vue-router.js"></script>
+<!--
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUK0WDGT2ba1GiTWXv910l5e0Hza7y-U&callback=initMap" async defer></script>
+  -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        profile:"基本資料",
+        resume:"學經歷專長",
+        paper:"著作清單",
+        register:"想瞭解更多",
+        resumeurl:"",
+       paperurl:"",
+       registerurl:"",
+
+      }
+    },
+    mounted: function(){
+      querytxt="?statusreport=由個人基本資料首頁進到本頁";
+      this.resumeurl="/career/outerweb/resumetype/"+querytxt;
+       this.paperurl="/career/outerweb/papertype/"+querytxt;
+       this.registerurl="/career/outerweb/register/"+querytxt;
+       
+      /*
+        var now=new Date();
+        this.nowdate=now.getFullYear()+"/"+now.getMonth()+"/"+now.getDate();
+        this.nowtime=now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+        this.nasdaqIndex=this.indexfin[0];
+        this.dowJonesIndex=this.indexfin[1];
+        this.initMap();
+        
+        
+      // 定義 Google API URL
+        const API_URL = 'https://www.google.com/finance/info?q=';
+
+        // 取得 Nasdaq 指數
+        axios.get(API_URL + 'NASDAQ:^IXIC')
+        .then(response1 => {
+        // 取得指數資訊
+            const data1 = response1.data;
+            this.nasdaqIndex = data1[0].l;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        // 取得 Dow Jones 指數
+        axios.get(API_URL + 'INDEXDJX:.DJI')
+        .then(response2 => {
+            // 取得指數資訊
+            const data2 = response2.data;
+            this.dowJonesIndex = data2[0].l
+            })
+        .catch(error => {
+            console.error(error);
+        })
+        */
+    },
+    methods:{
+        initMap:function(){
+            if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude: lat, longitude: lon } = position.coords;
+              this.getWeather(lat, lon);
+            },
+            (error) => {
+              console.error(`Error: ${error}`);
+            }
+          );
+        } else {
+          console.error("Geolocation is not supported by this browser.");
+        }   
+        },
+        getWeather: async function(lat, lon){
+            try {
+          const { data } = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=846ae5e6d68202d65dc98a39e84e844a`
+          );
+            console.log("got temperature: "+data.main.temp);        
+          this.temperature = data.main.temp} catch (error) {
+          console.error(error);
+        }   
+        }   
+    },
+    template:"#banderUI"
+  });
+  Vue.component("sidebar",{
+    props:{},
+    data(){
+      return{
+        promote:"歡迎批評指教及連絡！",
+        addbyguesturl:"",
+        ipofvisitor:{},
+      inputerUIkey:0
+      } 
+    },
+    mounted: function(){
+      this.addbyguesturl="/career/message/addbyguest/"+this.personID;
+    
+      const API_URL = 'https://api.ipify.org?format=json';
+        // 取得 IP 位址
+        const response =axios.get(API_URL);
+        this.ipofvisitor= response.data
+
+    },
+    methods:{
+      
+    },
+    template:"#sidebarUI"
+  });
+  Vue.component("contacter",{
+    props:{},
+    data(){
+      return {
+        address:"新北市永和區",
+        tel:"02-29293551",
+        email:"service@deep.com"
+      }   
+    },
+    methods:{
+      
+    },
+    template:"#contacterUI"
+    });
+  Vue.component("content1",{
+    /*
+    props:{},
+    data(){
+      return{
+          
+        perPage:8,
+          perRound:10,
+          maxRow:1,
+          maxPage:1,
+          maxRound:1,
+          modRow:1,
+          modPage:1,
+          currentIndex:1,
+          currentPage:1,
+          currentRound:1,
+          indexLength:1,
+          previousRound:false,
+          firstPage:false,
+          nextRound:false,
+          endPage:false,
+          fullPage:false,
+          pageIndex:[],
+          showIndex:[],
+          activeIndex:[],
+          postShow:[],
+          indexLength:0,
+        
+          items1:{
+            item0:"內容類別",
+            item1:"公告者ID",
+            item2:"公告日期時間",
+            item3:"公告標題",
+            item4:"公告內容",
+            item5:"公告對象(user group)",
+            item6:"呈現方式",
+            item7:"預定下架時間",
+            item99:"管理註記"     
+      }
+      } 
+      *     
+    },
+    mounted:function(){
+        this.maxRow=this.postlist.length;
+          this.maxPage=Math.floor(this.maxRow/this.perPage)+1;
+          this.maxRound=Math.floor(this.maxPage/this.perRound)+1;
+          this.modRow=this.maxRow%this.perPage;
+          this.modPage=this.maxPage%this.perRound;
+          console.log("mounted !!")
+          this.goFirstPage() 
+          
+      },
+    methods:{
+        lookonepost:function(id){
+          let querytext="?statusreport='由布告列表的檢視按鈕進入本頁'";
+          let url1='/career/post/lookone/'+id+querytext;
+          window.location=url1;
+        },
+        getShowData:function(index){
+          this.currentIndex=index;
+          this.activeIndex.splice(0);
+          this.pageIndex.splice(0);
+          this.showIndex.splice(0);
+          for(let i=0;i<this.indexLength;i++){
+              this.pageIndex.push(((this.currentRound-1)*this.perRound)+i+1);
+              this.showIndex.push(true);
+              this.activeIndex.push(false)
+          }
+          this.activeIndex[index]=true;
+          for(let i=this.indexlength;i<this.perRound;i++){
+              this.showIndex.push(false)
+          };
+          this.currentPage=this.pageIndex[index]
+          console.log("currentPage is:"+this.currentPage)
+          this.fullPage=(this.maxRow>=(this.currentPage*this.perPage))?true:false;
+          this.postShow.splice(0);
+          let startRow=(this.currentPage-1)*this.perPage;
+            console.log("startRow is:"+startRow)          
+          let rowNo=this.fullPage?this.perPage:this.modRow;
+          console.log("rowNo is:"+rowNo);
+          //this.postShow=[];
+          this.postShow=this.postlist.slice(startRow,startRow+rowNo)
+          //this.postShow=this.postlist.slice(8,3)
+          console.log("11st postlist:"+this.postlist[10])          
+          console.log("1st postShow:"+this.postShow[0])
+          
+        },
+        goFirstPage:function(){
+          this.currentRound=1;
+          this.indexLength=(this.maxPage>this.perRound)?this.perRound:this.modPage;
+          this.previousRound=false;
+          this.firstPage=false;
+          this.nextRound=(this.maxPage<(this.perRound+1))?false:true;
+          this.endPage=(this.maxPage<(this.perRound+1))?false:true;
+          this.currentIndex=0;
+          this.getShowData(this.currentIndex)        
+        },
+        goEndPage:function(){
+          this.currentRound=this.maxRound;
+          this.indexLength=(this.modPage==0)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=false;
+          this.endPage=false;
+          this.currentIndex=this.indexLength-1;
+          this.getShowData(this.currentIndex) 
+        },
+        goPreviousRound:function(){
+          if(this.currentRound>1){
+          this.currentRound--;
+          this.currentIndex=0;
+          this.indexLength=this.perRound;
+          this.previousRound=this.currentRound>1?true:false;
+          this.firstPage=this.currentRound>1?true:false;
+          this.nextRound=true;
+          this.endPage=true;
+          this.getShowData(this.currentIndex)
+          }else{
+              console.log("There is no previous round!!")
+              this.goFirstpage()
+          }
+        },
+        goNextRound:function(){
+          if(this.currentRound<this.maxRound){
+          this.currentRound++;
+          this.currentIndex=0;
+          this.indexLength=(this.maxPage>this.currentRound*this.perRound)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.endPage=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.getShowData(this.currentIndex)
+          }else{
+            console.log("There is no next round!!")
+            this.goEndPage()
+          }
+        } 
+    },
+    */
+    template:"#content1UI"
+  });
+  Vue.component("content2",{
+    props:{},
+    data(){
+      return{
+        /*
+        perPage:8,
+          perRound:10,
+          maxRow:1,
+          maxPage:1,
+          maxRound:1,
+          modRow:1,
+          modPage:1,
+          currentIndex:1,
+          currentPage:1,
+          currentRound:1,
+          indexLength:1,
+          previousRound:false,
+          firstPage:false,
+          nextRound:false,
+          endPage:false,
+          fullPage:false,
+          pageIndex:[],
+          showIndex:[],
+          activeIndex:[],
+          knowledgeShow:[],
+          indexLength:0, 
+        knowledgelist:"",
+          items2:{
+            item0:"知識領域",
+            item1:"分類代碼",
+            item2:"材料標題",
+            item3:"檔案主檔名",
+            item4:"檔案附檔名",
+            item5:"類別",
+            item6:"上傳者ID",
+            item7:"上傳日期",
+            item8:"揭露等級",
+            item9:"是否提供下載"
+          }
+          */
+      }      
+    },
+    mounted:function(){
+      /*
+        this.maxRow=this.knowledgelist.length;
+          this.maxPage=Math.floor(this.maxRow/this.perPage)+1;
+          this.maxRound=Math.floor(this.maxPage/this.perRound)+1;
+          this.modRow=this.maxRow%this.perPage;
+          this.modPage=this.maxPage%this.perRound;
+          this.goFirstPage() 
+          */
+      },
+    methods:{
+      /*
+        lookoneknowledge:function(id){
+          let querytext="?statusreport='由knowledge資料清單頁的檢視按鈕進入本頁'";
+          let url2='/career/knowledge/lookpage/'+id+querytext;
+          window.location=url2;
+        },
+        getShowData:function(index){
+          this.currentIndex=index;
+          this.activeIndex.splice(0);
+          this.pageIndex.splice(0);
+          this.showIndex.splice(0);
+          for(let i=0;i<this.indexLength;i++){
+              this.pageIndex.push(((this.currentRound-1)*this.perRound)+i+1);
+              this.showIndex.push(true);
+              this.activeIndex.push(false)
+          }
+          this.activeIndex[index]=true;
+          for(let i=this.indexlength;i<this.perRound;i++){
+              this.showIndex.push(false)
+          };
+          this.currentPage=this.pageIndex[index]
+          console.log("currentPage is:"+this.currentPage)
+          this.fullPage=(this.maxRow>=(this.currentPage*this.perPage))?true:false;
+          this.knowledgeShow.splice(0);
+          let startRow=(this.currentPage-1)*this.perPage;
+            console.log("startRow is:"+startRow)          
+          let rowNo=this.fullPage?this.perPage:this.modRow;
+          console.log("rowNo is:"+rowNo);
+          //this.knowledgeShow=[];
+          this.knowledgeShow=this.knowledgelist.slice(startRow,startRow+rowNo)
+          //this.knowledgeShow=this.knowledgelist.slice(8,3)
+          console.log("11st knowledgelist:"+this.knowledgelist[10])          
+          console.log("1st knowledgeShow:"+this.knowledgeShow[0])
+          
+        },
+        goFirstPage:function(){
+          this.currentRound=1;
+          this.indexLength=(this.maxPage>this.perRound)?this.perRound:this.modPage;
+          this.previousRound=false;
+          this.firstPage=false;
+          this.nextRound=(this.maxPage<(this.perRound+1))?false:true;
+          this.endPage=(this.maxPage<(this.perRound+1))?false:true;
+          this.currentIndex=0;
+          this.getShowData(this.currentIndex)        
+        },
+        goEndPage:function(){
+          this.currentRound=this.maxRound;
+          this.indexLength=(this.modPage==0)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=false;
+          this.endPage=false;
+          this.currentIndex=this.indexLength-1;
+          this.getShowData(this.currentIndex) 
+        },
+        goPreviousRound:function(){
+          if(this.currentRound>1){
+          this.currentRound--;
+          this.currentIndex=0;
+          this.indexLength=this.perRound;
+          this.previousRound=this.currentRound>1?true:false;
+          this.firstPage=this.currentRound>1?true:false;
+          this.nextRound=true;
+          this.endPage=true;
+          this.getShowData(this.currentIndex)
+          }else{
+              console.log("There is no previous round!!")
+              this.goFirstpage()
+          }
+        },
+        goNextRound:function(){
+          if(this.currentRound<this.maxRound){
+          this.currentRound++;
+          this.currentIndex=0;
+          this.indexLength=(this.maxPage>this.currentRound*this.perRound)?this.perRound:this.modPage;
+          this.previousRound=true;
+          this.firstPage=true;
+          this.nextRound=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.endPage=(this.maxPage>this.currentRound*this.perRound)?true:false;
+          this.getShowData(this.currentIndex)
+          }else{
+            console.log("There is no next round!!")
+            this.goEndPage()
+          }
+        } 
+        */ 
+    },
+    template:"#content2UI"
+  });
+    const content2={
+      template:"#content2UI"
+    };
+    const content1={
+      template:"#content1UI"
+    };
+    const routes=[
+      {path:"/",component:content2},
+      {path:"/notice",component:content1}
+    ]
+  
+  
+    const router = new VueRouter({
+      mode: 'history',
+      routes:routes
+    });
+    const app = new Vue({
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        el:"#app",
+        router,
+
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        
+        components:{
+          "bander":bander,
+          "outputer":outputer,
+          "inputer":inputer
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+
+  </body>
+</html>

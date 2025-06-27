@@ -11,6 +11,7 @@ var koa = require('koa')
   //, bodyparser=require("koa-body")
   , koarouter=require("@koa/router");
   const koabody= require('koa-body').default;
+  const Post = require('./models/index').post;
   //import { koabody } from 'koa-body';
 //var index = require('./routes/index');
 //var users = require('./routes/users');
@@ -42,7 +43,7 @@ app.use(json());
 app.use(logger());
 //app.use(koa.urlencoded({ extended: false }));
 //app.use(cookieParser());
-//app.use(koastatic('https://storage.googleapis.com/cchuang_deep1/public'));
+//app.use(koastatic('https://storage.googleapis.com/cchuang_deep1'));
 app.use(koastatic(__dirname+'/public'));
 //console.log("content of allRouters 1:"+allRouters['post']);
 var router=new koarouter();
@@ -52,8 +53,29 @@ indexRouter.get('/', async (ctx, next) =>{
     console.log(" indextRouter executing!!");
     //next();
     //ctx.body="display test!!"
-    await ctx.render('entry')
-      });
+    var postlist;
+  await Post.find({})    
+    .then(async posts=>{;
+        console.log("1st post:"+posts[0])
+        console.log("No. of post:"+posts.length)
+        let postchosen=new Array();
+        for(let post of posts){
+            //if(post.a35reader=="guest"||post.a35reader=="all"){
+                postchosen.push(post)
+            //}
+        }
+        console.log("No. of postchosen:"+postchosen.length);
+        postlist=encodeURIComponent(JSON.stringify(postchosen));
+        console.log("type of postlist:"+typeof(postlist));
+    })
+    .catch(err=>{
+        console.log("Post.find({}) failed !!");
+        console.log(err)
+    })
+    await ctx.render('entry',{
+      postlist    
+      })
+    });
 //router.use('/', indexRouter.routes(), indexRouter.allowedMehtods());
 router.use('/', indexRouter.routes());
 

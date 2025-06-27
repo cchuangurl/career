@@ -131,20 +131,20 @@ background-color: rgb(205, 226, 253);
         <table border="1" class="table table-striped">
             <thead>
             <tr>
-              <th>{{items.item0}}</th>
               <th>{{items.item2}}</th>
                 <th>{{items.item3}}</th>
-                <!--<th>{{items.item4}}</th>
-                <th>{{items.item5}}</th>
-               <th>特別註記</th> -->
+                <th>{{items.item4}}</th>
+                <th>{{items.item8}}：{{items.item9}}</th>
+               <!--<th>特別註記</th> -->
             </tr>
             </thead>
             <tbody id="publishlist">
               <!-- <tr v-for="publish of publishshow" :key="publish._id"> -->
                 <tr v-for="publish of publishShow" :key="publish._id">
-                <td>{{publish.a05explicit}}</td>
                 <td>{{publish.a15year}}</td>
                 <td>{{publish.a20title}}</td>
+                <td>{{publish.a25book}}</td>
+                <td>{{publish.a45volumn}}：{{publish.a50issue}}</td>
                 <!-- statusreport="由已擷取資料組清單頁進入本頁"> -->
 
                   <td>
@@ -196,7 +196,7 @@ background-color: rgb(205, 226, 253);
             outerweb:"基本個資",
         otherdata:"管理其他資料",
         entry:"重新登入",
-        modeltype:"知識資料表維管",
+        modeltype:"著作外顯資料表維管",
         personID:'<%- personID %>',
         statusreport:'<%- statusreport %>',
         outerweburl:"",
