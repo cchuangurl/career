@@ -79,14 +79,13 @@ background-color: rgb(248, 243, 243);
                 <a class="nav-link active" href="#">{{profile}}<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" :href="resumeurl">{{resume}}</a>
+                <a class="nav-link" :href="experteeurl">{{expertee}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :href="paperurl">{{paper}}</a>
-              </li> 
-            </li>
+              </li>
             <li class="nav-item">
-              <a class="nav-link" :href="registerurl">{{register}}</a>
+              <a class="nav-link" :href="moreinfourl">{{moreinfo}}</a>
             </li>         
           </ul>
         </div>
@@ -127,7 +126,8 @@ background-color: rgb(248, 243, 243);
         <li>屏東商業技術學院 副教授</li>
         <li style="color:blue">臺灣大學農業經濟學研究所 博士</li>
       </ul>
-      </h5> 
+      </h5>
+      <input type="submit" value="詳細學經歷" class="btn btn-primary" @click="remind()">
       </nav>
       </template>
       <template id="content3UI">
@@ -159,20 +159,20 @@ Vue.component("bander",{
       return {
         brand:"Career",
         profile:"基本資料",
-        resume:"學經歷專長",
-        paper:"著作清單",
-        register:"想瞭解更多",
-        resumeurl:"",
+        expertee:"專長領域",
+        paper:"著作數量",
+        moreinfo:"想瞭解更多",
+        experteeurl:"",
        paperurl:"",
-       registerurl:"",
+       moreinfourl:""
 
       }
     },
     mounted: function(){
       querytxt="?statusreport=由個人基本資料首頁進到本頁";
-      this.resumeurl="/career/outerweb/resumetype/"+querytxt;
-       this.paperurl="/career/outerweb/papertype/"+querytxt;
-       this.registerurl="/career/branch/register/"+querytxt;
+      this.experteeurl="/career/outerweb/expertee/"+querytxt;
+       this.paperurl="/career/outerweb/paper/"+querytxt;
+       this.moreinfourl="/career/branch/signin/"+querytxt;
       },
     methods:{
            
@@ -217,6 +217,12 @@ Vue.component("bander",{
       template:"#content1UI"
     };
     const content2={
+      methods:{
+        remind:function(){
+          alert("如要看著作清單及下載著作檔案!!請由「瞭解更多」登入為好友, 謝謝.");
+          $("#formGroupExampleInput2").focus()
+        }
+      },
       template:"#content2UI"
     };
     const content3={

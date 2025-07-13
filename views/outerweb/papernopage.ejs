@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<style type="text/css">
+body {  
+background-color: rgb(248, 243, 243);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.fix-top{
+  position: fixed;
+  top: 0;
+  z-index:20;
+}
+.spa-tab{
+    position: fixed; 
+    top: 50px;
+    z-index:15;
+}
+#tablefy{
+    display: inline-block;
+  flex-direction:row;
+	 justify-content: flex-start;
+     align-items:left;
+     margin:10px
+}
+#bulletin {
+    background:#def3f8;
+    height:720px;
+    }
+#viewzone {
+background:#f8e8c5;
+top: 100px;
+height:720px;
+z-index: 10;
+}
+.navbar{background:#d6eff5;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+
+</style>
+
+  <title>著作數量頁</title>
+  </head>
+  <body>
+    <div id="vm">
+        <div class="row">
+            <bander></bander>
+        </div>
+        <div class="row">
+          <subbander></subbander>
+      </div>
+      <div class="row" align="justify">
+                  <div class="col-lg-9 col-md-9 col-sm-12" id="viewzone">                    
+                      <router-view></router-view>
+                  </div>
+      </div>        
+    </div>
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light fix-top">
+        <a class="navbar-brand" href="/">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">{{profile}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="experteeurl">{{expertee}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="paperurl">{{paper}}</a>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link" :href="moreinfourl">{{moreinfo}}</a>
+            </li> 
+          </ul>
+          <!--
+          <span class="navbar-text">
+            <font size="1">{{statusreport}}</font>
+          </span>
+          -->
+          
+        </div>
+      </nav>
+    </template>
+    <template id="subbanderUI">
+      <nav class="spa-tab">
+        <router-link to="/media"><input type="button" value="媒體別" class="btn btn-secondary"></button></router-link>
+        <router-link to="/course"><input type="button" value="課程別" class="btn btn-secondary"></button></router-link>
+        <router-link to="/manage"><input type="button" value="企管分類" class="btn btn-secondary"></button></router-link>
+      </nav>
+      </template>
+    <template id="content1UI">
+      <nav aria-label="...">
+        <div class="row" id="tablefy" v-for="table of tables1" :key="table._id">           
+            <input type="submit" :value="table.label" class="btn btn-info" @click="remind()">({{table.count}})
+        </div> 
+      </nav>
+      </template>
+      <template id="content2UI">
+        <nav aria-label="...">
+          <div class="row" id="tablefy" v-for="table of tables2" :key="table._id">           
+              <input type="submit" :value="table.label" class="btn btn-info" @click="remind()">({{table.count}})
+          </div> 
+        </nav>
+        </template>
+        <template id="content3UI">
+          <nav aria-label="...">
+            <div class="row" id="tablefy" v-for="table of tables3" :key="table._id">           
+                <input type="submit" :value="table.label" class="btn btn-info" @click="remind()">({{table.count}})
+            </div> 
+          </nav>
+          </template>
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<!-- Vue Router CDN-->
+<script src="https://unpkg.com/vue-router@3.1.3/dist/vue-router.js"></script>
+<!--
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUK0WDGT2ba1GiTWXv910l5e0Hza7y-U&callback=initMap" async defer></script>
+        -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        profile:"基本資料",
+        expertee:"專長領域",
+        paper:"著作數量",
+        moreinfo:"想瞭解更多",
+        experteeurl:"",
+       paperurl:"",
+       moreinfourl:""
+      }
+    },
+    mounted: function(){
+      querytxt="?statusreport=由個人基本資料首頁進到本頁";
+      this.experteeurl="/career/outerweb/expertee/"+querytxt;
+       this.paperurl="/career/outerweb/papertype/"+querytxt;
+       this.moreinfourl="/career/branch/signin/"+querytxt;
+      
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("sidebar",{
+    props:{},
+    data(){
+      return{
+        //statusreport:'<%- statusreport %>',
+        promote:"歡迎批評指教及連絡！",
+        addbyguesturl:"",
+        ipofvisitor:{},
+      inputerUIkey:0
+      } 
+    },
+    mounted: function(){
+      this.addbyguesturl="/career/message/addbyguest/";
+    
+      const API_URL = 'https://api.ipify.org?format=json';
+        // 取得 IP 位址
+        const response =axios.get(API_URL);
+        this.ipofvisitor= response.data
+
+    },
+    methods:{
+      
+    },
+    template:"#sidebarUI"
+  });
+  Vue.component("subbander",{
+    props:{},
+    data(){
+      return{
+        
+      }
+    },
+    mounted:function(){
+      
+    },
+    methods:{
+      
+    },
+    template:"#subbanderUI" 
+  });
+
+  const content1={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+          explicits:[],
+          tables1:[]
+    }
+      }, 
+      mounted:function(){
+        for(term of this.termlist){
+          if(term.a20field=="a30explicit"){
+            this.explicits.push(term)
+          }
+        }
+        for(explicit of this.explicits){
+          let typecode=explicit.a25code;
+          let typecount=this.knowledgelist.filter(ele=>ele.a30explicit==typecode).length;
+          if(typecount>0){
+          let tempobj=new Object();
+          tempobj['papertype']=typecode;
+          tempobj['label']=explicit.a30mean;
+          tempobj['count']=typecount;
+          console.log(tempobj.label);
+          this.tables1.push(tempobj)
+          }
+        }
+        this.explicits.sort((a,b)=>{
+          return parseFloat(a.a25code)-parseFloat(b.a25code)
+      })            
+      },
+      methods:{
+        remind:function(){
+          alert("如要看著作清單及下載著作檔案!!請由「瞭解更多」登入為好友, 謝謝.");
+          $("#formGroupExampleInput2").focus()
+        }
+      },
+     
+      template:"#content1UI"
+    };
+    const content2={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+          courses:[],
+          tables2:[]
+    }
+      }, 
+      mounted:function(){
+        for(term of this.termlist){
+          if(term.a20field=="a40course"){
+            this.courses.push(term)
+          }
+        }
+        for(course of this.courses){
+          let typecode=course.a25code;        
+          let typecount=this.knowledgelist.filter(ele=>ele.a40course==typecode).length;
+          if(typecount>0){
+          let tempobj=new Object();
+          tempobj['papertype']=typecode;
+          tempobj['label']=course.a30mean;
+          tempobj['count']=typecount;
+          console.log(tempobj.label);
+          this.tables2.push(tempobj)
+          }
+        } 
+      },
+      methods:{
+        remind:function(){
+          alert("如要看著作清單及下載著作檔案!!請由「瞭解更多」登入為好友, 謝謝.");
+          $("#formGroupExampleInput2").focus()
+        }
+      },
+     
+      template:"#content2UI"
+    };
+    const content3={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+          categorys:[],
+          tables3:[]
+    }
+      }, 
+      mounted:function(){
+        for(term of this.termlist){
+          if(term.a20field=="a35category"){
+            this.categorys.push(term)
+          }
+        }
+        for(category of this.categorys){
+          let typecode=category.a25code;
+          let typecount=this.knowledgelist.filter(ele=>ele.a35category==typecode).length;
+          if(typecount>0){
+          let tempobj=new Object();
+          tempobj['papertype']=typecode;
+          tempobj['label']=category.a30mean;
+          tempobj['count']=typecount;
+          console.log(tempobj.label);
+          this.tables3.push(tempobj)
+          }
+        } 
+      },
+      methods:{
+        remind:function(){
+          alert("如要看著作清單及下載著作檔案!!請由「瞭解更多」登入為好友, 謝謝.");
+          $("#formGroupExampleInput2").focus()
+        }
+      },
+     
+      template:"#content3UI"
+    };    
+    const routes=[
+      {path:"/career/outerweb/paper",component:content1},
+      {path:"/media",component:content1},
+      {path:"/course",component:content2},
+      {path:"/manage",component:content3}
+    ]
+  
+  
+    const router = new VueRouter({
+      mode: 'history',
+      routes:routes
+    });
+    new Vue({
+        el:'#vm',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        router,
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        
+        components:{
+          "bander":bander,
+          "outputer":outputer,
+          "inputer":inputer
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+  </body>
+</html>

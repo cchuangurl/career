@@ -1,23 +1,28 @@
 var router = require('@koa/router')();
-const userController = require('../controllers/index').user;
+const personController = require('../controllers/index').person;
 const branchController = require('../controllers/index').branch;
+//到訪客登入或申請頁
+router.get('/signin', async (ctx, next)=> {
+  console.log("有讀到register router")
+  await branchController.signpage(ctx,next)
+});
 //依帳號決定轉頁
 router.post('/', async (ctx, next)=> {
 	await branchController.dispatch(ctx)
 });
 //到訪客註冊頁
-router.get('/register', async (ctx, next)=> {
-  console.log("有讀到register router")
-  await userController.registerpage(ctx,next)
+router.get('/signup', async (ctx, next)=> {
+  console.log("有讀到signup router")
+  await personController.goselfinput(ctx,next)
 });
 //檢視使用手冊
 router.get('/menu', async (ctx, next)=> {
   console.log("有讀到menu router")
   await branchController.seemenu(ctx,next)
 });
-//到outerweb(外部首頁含個人基本資料)
-router.get('/goouterweb/:id', async (ctx, next)=> {
-  await branchController.outerweb(ctx,next)
+//到innerweb(內部首頁含個人基本資料)
+router.get('/goinnerweb/:id', async (ctx, next)=> {
+  await branchController.innerweb(ctx,next)
 });
 
 //到outerweb2

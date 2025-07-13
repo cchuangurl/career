@@ -1,5 +1,6 @@
 //載入相對應的model
 const Person = require('../models/index').person;
+const User = require('../models/index').user;
 module.exports = {
 //列出清單list(req,res)
 async list(ctx,next){
@@ -43,6 +44,17 @@ async inputpage(ctx, next) {
 	await ctx.render("person/inputpage",{
 		statusreport,
         personID
+	})
+},
+//到訪客自增資料頁
+async goselfinput(ctx, next) {
+    var {statusreport}=ctx.request.body;
+    console.log("gotten query:"+statusreport);
+    if(statusreport===undefined){
+        statusreport="status未傳成功!"
+    }
+	await ctx.render("person/inputselfpage",{
+		statusreport
 	})
 },
 //到修正單筆資料頁
@@ -97,6 +109,42 @@ async create(ctx,next){
         console.log("person.save() failed !!")
         console.log(err)
     })
+},
+//寫入訪客註冊資料
+async createguest(ctx,next){
+    var personx=ctx.request.body;
+    personx.a15dateofreg=new Date();
+    //guestinfox.a05ipofvisitor="127.0.0.1";
+    var new_person = new Person(personx);
+    console.log(new_person);
+    await new_person.save()
+    .then(()=>{
+        console.log("Saving new_person....")
+    })
+    .catch((err)=>{
+        console.log("person.save fail!")
+        console.log(err)
+    })
+    await User.find({})
+        .then(async userlist=>{
+            console.log("1st user:"+userlist[0].a10account);
+            let accounts=new Array();
+            for (let user in userlist){
+                accounts.push(user.a10account);
+            }
+            console.log("the no of current user:"+accounts.length);
+            console.log("type of accounts:"+typeof(accounts));
+            let  accountlist=encodeURIComponent(JSON.stringify(accounts));
+            await ctx.render("user/setaccount",{
+                accountlist,
+                statusreport,
+                visitor:personx.a10visitor
+            })
+        })
+        .catch(err=>{
+            console.log("User.find({}) failed !!");
+            console.log(err)
+        })
 },
 //批次新增資料
 async batchinput(ctx, next){

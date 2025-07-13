@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!--
+<script src="https://unpkg.com/jquery@3.4.1/dist/jquery.js"></script>
+-->
+<style type="text/css">
+body {
+  background-color: #d6d6d3;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+     flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#ddedf8;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+</style>
+
+  <title>好友自訂帳號密碼</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>
+        <inputer></inputer>        
+    </div>
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">{{namecard}}</a>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/career/person/editbyguest">{{editbyguest}}</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link active" href="#">{{inputaccount}}<span class="sr-only">(current)</span></a>
+              </li>
+          </ul>
+          <!--
+          <span class="navbar-text">
+            <font size="1">{{statusreport}}</font>
+          </span>
+        -->
+        </div>
+      </nav>
+    </template>
+    
+    <template id="inputerUI" ">
+      <div class="card" style="width: 18rem;" >
+        <div class="card-body">
+          <h5 class="card-title">{{card_title}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{card_subtitle}}</h6>
+        
+            <div class="form-group" :key="inputerUIkey">
+              <label for="formGroupExampleInput2">{{items.item1}}</label>
+              <input type="text" name="account" class="form-control" v-model="account" id="formGroupExampleInput1" :placeholder="holders.holder1">
+            
+              <label for="formGroupExampleInput2">{{items.item2}}</label>
+              <input type="password" name="password" class="form-control" v-model="password" id="formGroupExampleInput2" :placeholder="holders.holder2">
+            
+              <label for="formGroupExampleInput2">{{items.item3}}</label>
+              <input type="text" name="passagain" class="form-control" v-model="passagain" id="formGroupExampleInput3" :placeholder="holders.holder3">
+            
+              <input type="submit" id="button1" value="確定送出" class="btn btn-info" @click="isdouble()">
+            </div>
+          </form>
+          <input type="submit" id="button2" value="重新輸入" class="btn btn-info" @click="rerender()">
+            <!-- <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div>
+    </template>
+
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<!-- Axios CDN-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- jQuery CDN-->
+<script src="https://unpkg.com/jquery@3.4.1/dist/jquery.js"></script>
+<script>
+Vue.component("bander",{
+    
+    data(){
+      return {
+        brand:"Career",
+        namecard:"回名片頁",
+        editbyguest:"回編輯資料頁",
+        inputaccount:"本頁"
+      }
+    },
+    
+    template:"#banderUI"
+  });
+  Vue.component("inputer",{
+    
+    data(){
+      return {
+        card_title:"請自訂帳號與密碼",
+        card_subtitle:"請輸入以下各項資料:",
+        items:{
+            item1:"自訂帳號",
+            item2:"自訂密碼",
+            item3:"再輸入自訂密碼"
+      },
+        holders:{
+            holder0:"字串,英文字母或數字",
+            holder1:"字串,英文字母或數字",
+            holder5:"字串,跟上個輸入需一樣"
+        },
+        accountlist:JSON.parse(decodeURIComponent('<%=accountlist%>')),
+        visitor:'<%=visitor%>',
+        account:"",
+        password:"",
+        passagain:"",
+      inputerUIkey:0
+        
+      } 
+    },
+    methods:{
+        rerender:function() {
+      this.inputerUIkey += 1;
+      console.log("inputerUIkey:"+this.inputerUIkey)  
+        },
+        isdouble:async function(){
+            let url="/career/user/trans2user";
+            let idinfo={
+                "visitor":this.visitor,
+                "account":this.account,
+                "password":this.password
+            }
+            console.log(idinfo);
+            //var idinfo=encodeURIComponent(JSON.stringify(idinfox));
+            if(this.accountlist.indexOf(this.account)<0){
+                if(this.password==this.passagain){
+                    await axios.post(url,idinfo)
+                    .then(async (res) => {
+                      alert("好友設定成功!!請由登入頁登入，謝謝.");
+                      $("#formGroupExampleInput2").focus();
+                      window.location.href="/career/branch/signin"
+                    })
+                    .catch((error) => { console.error(error) })
+                }else{
+                    alert("自設密碼兩次不一致!!請重設, 謝謝.");
+                    $("#formGroupExampleInput2").focus()
+                }
+            }else{
+                alert("帳戶名稱未輸入或已有人使用!!請改用其他名稱, 謝謝.");
+                $("#formGroupExampleInput1").focus()
+            }
+        }
+    }, 
+    
+    template:"#inputerUI"
+  });
+  
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        components:{
+
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+
+  </body>
+</html>

@@ -79,6 +79,82 @@ async inputpage(ctx, next) {
         console.log(err)
     })
   },
+//到好友註冊頁
+async inputpage(ctx, next) {
+    var {statusreport}=ctx.request.body;
+    console.log("gotten query:"+statusreport);
+    if(statusreport===undefined){
+        statusreport="status未傳成功!"
+    }
+    var termlist,personlist;
+    await Term.find({a15model:"user"}).then(async terms=>{
+      console.log("type of terms:"+typeof(terms));
+      console.log("type of 1st term:"+typeof(terms[0]));
+      console.log("1st term:"+terms[0])
+      console.log("No. of term:"+terms.length)
+      termlist=encodeURIComponent(JSON.stringify(terms));
+      console.log("type of termlist:"+typeof(termlist));
+      })
+      .catch(err=>{
+          console.log("Term.find({}) failed !!");
+          console.log(err)
+      })
+    await Person.find({}).then(async persons=>{
+        //console.log("found persons:"+persons);
+        console.log("type of persons:"+typeof(persons));
+        console.log("type of 1st person:"+typeof(persons[0]));
+        //console.log("1st person:"+persons[0].a10stage)
+        console.log("No. of person:"+persons.length)
+        personlist=encodeURIComponent(JSON.stringify(persons));
+        console.log("type of persons:"+typeof(personlist));
+        if(statusreport===undefined){
+            statusreport="未截到status"
+        }
+        await ctx.render("user/signuppage",{
+        //ctx.response.send({
+            personlist,
+            termlist,
+            statusreport
+        })
+    })
+    .catch(err=>{
+        console.log("Person.find({}) failed !!");
+        console.log(err)
+    })
+  },
+//寫入設定註冊帳號
+  async trans2user(ctx,next){
+    //var idinfo=JSON.parse(decodeURIComponent(ctx.request.body.idinfo));
+    var idinfo=ctx.request.body;
+    console.log("idinfo: "+idinfo);
+    var statusreport=ctx.query.statusreport;
+    var userx,personID;    
+    await Person.find({a10visitor:idinfo.visitor})
+    .then(persons=>{
+        personID=persons[0]._id;
+        userx={
+            a05status:"client",
+            a10personID:personID,
+            a15account:idinfo.account,
+            a20password:idinfo.passwod,
+            a25group:"friend"
+        }
+        })
+        .catch((err)=>{
+            console.log("Person.find({visitor}) failed !!");
+            console.log(err)
+        })
+        var new_user=new User(userx);
+        await new_user.save()
+        .then(async ()=>{
+            console.log("Saving new_accoutinfo as user....");
+            //成功註冊會員資料,回應成功訊息
+        })
+        .catch((err)=>{
+            console.log("User.save({}) failed !!");
+            console.log(err)
+        })
+},
 //到修正單筆資料頁
 async editpage(ctx, next) {
     var statusreport=ctx.query.statusreport;

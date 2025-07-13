@@ -31,6 +31,11 @@ router.post('/add/:id', async (ctx, next)=> {
 	console.log(ctx.request.body);
 	await personController.create(ctx)
 });
+//寫入訪客自填資料
+router.post('/addbyguest', async (ctx, next)=> {
+	console.log(ctx.request.body);
+	await personController.createguest(ctx)
+});
 //依參數id刪除資料
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await personController.destroy(ctx)

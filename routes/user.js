@@ -9,6 +9,11 @@ router.get('/:id', async (ctx, next)=> {
 router.get('/inputpage/:id', async (ctx, next)=> {
     await userController.inputpage(ctx,next)
 });
+//寫入設定註冊帳號
+router.post('/trans2user', async (ctx, next)=> {
+	console.log(ctx.request.body);
+	await userController.trans2user(ctx)
+});
 //到修正單筆資料頁
 router.get('/editpage/:id/:id2', async (ctx, next)=> {
     console.log("get id:"+ctx.params.id2)

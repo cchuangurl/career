@@ -5,19 +5,19 @@ const Publish=require('../models/index').publish;
 
 module.exports = {
 
-//到專長領域頁
-async goexpertee(ctx, next) {
-  console.log("進入outerweb controller的goexpertee");
+//到學經歷類別頁
+async showresumetype(ctx, next) {
+  console.log("進入branch controller的showresumetype");
   var statusreport=ctx.query.statusreport;
   //var personID=ctx.params.id;
-  await ctx.render("outerweb/experteepage" ,{
+  await ctx.render("innerweb/resumetypepage" ,{
       statusreport,
       //personID
   })
 },
-//到著作數量頁
-async gopaper(ctx, next) {
-  console.log("進入outerweb controller的gopaper");
+//到著作類別頁
+async showpapertype(ctx, next) {
+  console.log("進入branch controller的showpapertype");
   var statusreport=ctx.query.statusreport;
   //var personID=ctx.params.id;
   var knowledgelist,termlist;
@@ -42,7 +42,7 @@ async gopaper(ctx, next) {
     termlist=encodeURIComponent(JSON.stringify(terms));
     console.log("type of termlist:"+typeof(termlist));
     
-    await ctx.render("outerweb/papernopage" ,{
+    await ctx.render("innerweb/papertypepage" ,{
       knowledgelist,
       termlist,
       statusreport,
@@ -91,7 +91,7 @@ async showsublist(ctx, next) {
     knowledgelist=encodeURIComponent(JSON.stringify(knowledges));
     console.log("type of knowledgelist:"+typeof(knowledgelist));
     
-    await ctx.render("outerweb/papersublistpage" ,{
+    await ctx.render("innerweb/papersublistpage" ,{
       publishlist,
       knowledgelist,
       classby,
@@ -133,7 +133,7 @@ async showfreefiletype(ctx, next) {
     termlist=encodeURIComponent(JSON.stringify(terms));
     console.log("type of termlist:"+typeof(termlist));
  
-      await ctx.render("outerweb/freefiletypepage" ,{
+      await ctx.render("innerweb/freefiletypepage" ,{
         knowledgelist,
         termlist,
         statusreport,
@@ -147,7 +147,7 @@ async showfreefiletype(ctx, next) {
 },
 //到可下載著作清單頁
 async downloadlist(ctx, next) {
-  console.log("進入outerweb controller的downloadlist");
+  console.log("進入innerweb controller的downloadlist");
   var classby=ctx.query.classby;
   var papertype=ctx.query.papertype;
   console.log("著作類別代碼: "+papertype);
@@ -183,7 +183,7 @@ async downloadlist(ctx, next) {
     const pdfno=temppdfUrls.length;
     const pdfUrls=temppdfUrls;
     */    
-    await ctx.render("outerweb/downloadpage" ,{
+    await ctx.render("innerweb/downloadpage" ,{
       //pdfno,
       //pdfUrls,
       knowledgelist,

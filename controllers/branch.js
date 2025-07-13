@@ -2,7 +2,16 @@
 const User = require('../models/index').user;
 const Post = require('../models/index').post;
 module.exports = {
-//依帳號決定轉頁
+  //到訪客登入或申請頁
+async signpage(ctx, next) {
+  console.log("進入branch controller的signpage");
+  statusreport="由外網接到本頁";
+  await ctx.render("branch/signpage" ,{
+      statusreport
+  })
+},
+
+  //依帳號決定轉頁
 async dispatch(ctx, next) {
   console.log("進入branch controller的dispatch");
   statusreport="由系統的暫用統一入口進入本頁";
@@ -18,9 +27,10 @@ async dispatch(ctx, next) {
       switch(group){
         case "admin":pwaroute="/career/branch/gomaintainer";break;
         case "developer":pwaroute="/career/branch/gomaintainer";break;
-        case "management":pwaroute="/career/branch/gomaintainer";break;
-        case "guest":pwaroute="/career/branch/goouterweb";break;
-        default:pwaroute="/career/branch/goouterweb";personID="6689df70a49fa62c3249b7db";
+        case "management":pwaroute="/career/branch/gomaintainer";break;        
+        case "friend":pwaroute="/career/branch/goinnerweb";break;
+        case "guest":pwaroute="/career/branch/goinnerweb";break;
+        default:pwaroute="/career/branch/goinnerweb"
       }
       await ctx.redirect(pwaroute+"/"+personID)
   })
@@ -40,9 +50,9 @@ async seemenu(ctx, next) {
   ctx.attachment(decodeURI(filepath));
   await ctx.send(ctx, filepath)
 },
-//到outerweb
-async outerweb(ctx, next) {
-  console.log("進入branch controller的outerweb");
+//到innerweb
+async innerweb(ctx, next) {
+  console.log("進入branch controller的innerweb");
   statusreport="歡迎蒞臨瀏覽";
   var personID=ctx.params.id;
   var postlist;
@@ -64,7 +74,7 @@ async outerweb(ctx, next) {
         console.log("Post.find({}) failed !!");
         console.log(err)
     })
-  await ctx.render("branch/homepage" ,{
+  await ctx.render("innerweb/resumetypepage" ,{
       statusreport,
       personID,
       postlist
