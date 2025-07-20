@@ -78,7 +78,7 @@ background-color: rgb(248, 243, 243);
                 <a class="nav-link" href="/">{{profile}}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="#">{{expertee}}<span class="sr-only">(current)</span></a>
+                <a class="nav-link active" href="#">{{expertise}}<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :href="paperurl">{{paper}}</a>
@@ -159,7 +159,7 @@ background-color: rgb(248, 243, 243);
     </template>
 <!-- Vue CDN-->
 <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUK0WDGT2ba1GiTWXv910l5e0Hza7y-U&callback=initMap" async defer></script>
+
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 Vue.component("bander",{
@@ -168,7 +168,7 @@ Vue.component("bander",{
       return {
         brand:"Career",
         profile:"基本資料",
-        expertee:"專長領域",
+        expertise:"專長領域",
         paper:"著作數量",
         homepageurl:"",
         //resumeurl:"",

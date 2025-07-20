@@ -6,7 +6,7 @@ router.get('/signin', async (ctx, next)=> {
   console.log("有讀到register router")
   await branchController.signpage(ctx,next)
 });
-//依帳號決定轉頁
+//singin後依帳號決定轉頁
 router.post('/', async (ctx, next)=> {
 	await branchController.dispatch(ctx)
 });
@@ -14,6 +14,11 @@ router.post('/', async (ctx, next)=> {
 router.get('/signup', async (ctx, next)=> {
   console.log("有讀到signup router")
   await personController.goselfinput(ctx,next)
+});
+//到好友登出
+router.get('/logout', async (ctx, next)=> {
+  console.log("有讀到logout router")
+  await branchController.ending(ctx,next)
 });
 //檢視使用手冊
 router.get('/menu', async (ctx, next)=> {

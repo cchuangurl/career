@@ -5,7 +5,7 @@ router.get('/resumetype', async (ctx, next)=> {
   await innerwebController.showresumetype(ctx,next)
 });
 //到著作類別頁
-router.get('/papertype', async (ctx, next)=> {
+router.get('/paper/:id', async (ctx, next)=> {
   await innerwebController.showpapertype(ctx,next)
 });
 //到某著作類別清單頁

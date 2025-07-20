@@ -79,7 +79,7 @@ background-color: rgb(248, 243, 243);
                 <a class="nav-link active" href="#">{{profile}}<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" :href="experteeurl">{{expertee}}</a>
+                <a class="nav-link" :href="expertiseurl">{{expertise}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :href="paperurl">{{paper}}</a>
@@ -132,7 +132,7 @@ background-color: rgb(248, 243, 243);
       </template>
       <template id="content3UI">
         <nav aria-label="...">
-          <div class="card">
+          <div class="card" style="width: 18rem;">
             <div class="card-body" v-for="post of postlist" :key="post._id">
               <h5 class="card-title">{{post.a20posttitle}}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{post.a15postdate}}</h6>
@@ -159,10 +159,10 @@ Vue.component("bander",{
       return {
         brand:"Career",
         profile:"基本資料",
-        expertee:"專長領域",
+        expertise:"專長領域",
         paper:"著作數量",
         moreinfo:"想瞭解更多",
-        experteeurl:"",
+        expertiseurl:"",
        paperurl:"",
        moreinfourl:""
 
@@ -170,7 +170,7 @@ Vue.component("bander",{
     },
     mounted: function(){
       querytxt="?statusreport=由個人基本資料首頁進到本頁";
-      this.experteeurl="/career/outerweb/expertee/"+querytxt;
+      this.expertiseurl="/career/outerweb/expertise/"+querytxt;
        this.paperurl="/career/outerweb/paper/"+querytxt;
        this.moreinfourl="/career/branch/signin/"+querytxt;
       },
@@ -251,7 +251,7 @@ Vue.component("bander",{
       }, 
       mounted:function(){
       this.postlist.sort((a,b)=>{
-            return parseFloat(b.a15postdate)-parseFloat(a.a15postdate)
+            return Date.parse(b.a15postdate)-Date.parse(a.a15postdate)
         })
       },     
       template:"#content3UI"

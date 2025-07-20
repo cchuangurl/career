@@ -119,5 +119,16 @@ async maintainer(ctx, next) {
       statusreport,
       personID
   })
-}
+},
+//處理好友登出
+  async ending(ctx, next) {
+    console.log("進入branch controller的ending");
+    //const logoutSignal = "登出成功！歡迎再光臨！";
+    if (ctx.session) {
+      ctx.session = null;
+    }
+    await ctx.render("branch/byepage"),{
+
+    }
+  }
 }//EOF export

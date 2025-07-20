@@ -82,7 +82,7 @@ z-index: 10;
                 <a class="nav-link" href="/">{{profile}}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" :href="experteeurl">{{expertee}}</a>
+                <a class="nav-link" :href="expertiseurl">{{expertise}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :href="paperurl">{{paper}}</a>
@@ -132,9 +132,7 @@ z-index: 10;
 <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
 <!-- Vue Router CDN-->
 <script src="https://unpkg.com/vue-router@3.1.3/dist/vue-router.js"></script>
-<!--
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUK0WDGT2ba1GiTWXv910l5e0Hza7y-U&callback=initMap" async defer></script>
-        -->
+
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 Vue.component("bander",{
@@ -143,17 +141,17 @@ Vue.component("bander",{
       return {
         brand:"Career",
         profile:"基本資料",
-        expertee:"專長領域",
+        expertise:"專長領域",
         paper:"著作數量",
         moreinfo:"想瞭解更多",
-        experteeurl:"",
+        expertiseurl:"",
        paperurl:"",
        moreinfourl:""
       }
     },
     mounted: function(){
       querytxt="?statusreport=由個人基本資料首頁進到本頁";
-      this.experteeurl="/career/outerweb/expertee/"+querytxt;
+      this.expertiseurl="/career/outerweb/expertise/"+querytxt;
        this.paperurl="/career/outerweb/papertype/"+querytxt;
        this.moreinfourl="/career/branch/signin/"+querytxt;
       

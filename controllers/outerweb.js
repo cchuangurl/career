@@ -6,11 +6,11 @@ const Publish=require('../models/index').publish;
 module.exports = {
 
 //到專長領域頁
-async goexpertee(ctx, next) {
-  console.log("進入outerweb controller的goexpertee");
+async goexpertise(ctx, next) {
+  console.log("進入outerweb controller的goexpertise");
   var statusreport=ctx.query.statusreport;
   //var personID=ctx.params.id;
-  await ctx.render("outerweb/experteepage" ,{
+  await ctx.render("outerweb/expertisepage" ,{
       statusreport,
       //personID
   })

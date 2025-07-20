@@ -74,7 +74,7 @@ background-color: rgb(213, 218, 210);
 
 </style>
 
-  <title>免費下載類別頁</title>
+  <title>著作類別頁</title>
   </head>
   <body>
     <div id="show_div">
@@ -82,8 +82,10 @@ background-color: rgb(213, 218, 210);
             <bander></bander>
         </div>
         <div class="row" align="justify">
+          <!--
             <div class="col-lg-3 col-md-6 col-sm-12" id="sidearea">
                 <sidebar></sidebar> </div>
+                -->
             <div class="col-lg-9 col-md-6 col-sm-12">
               <content0></content0>
               <!--
@@ -114,22 +116,26 @@ background-color: rgb(213, 218, 210);
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" :href="homepageurl">{{profile}}</a>
+                <a class="nav-link" href="/">{{profile}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :href="resumeurl">{{resume}}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" :href="paperurl">{{paper}}</a>
+                <a class="nav-link active" href="#">{{paper}}<span class="sr-only">(current)</span></a>
               </li>
+              <!--
               <li class="nav-item">
-                <a class="nav-link active" href="#">{{download}}<span class="sr-only">(current)</span></a>
+                <a class="nav-link" :href="downloadurl">{{download}}</a>
               </li>
-              
+              -->
           </ul>
+          <!--
           <span class="navbar-text">
             <font size="1">{{statusreport}}</font>
           </span>
+          -->
+          
         </div>
       </nav>
     </template>
@@ -223,16 +229,16 @@ Vue.component("bander",{
         download:"免費下載",
         homepageurl:"",
         resumeurl:"",
-        paperurl:"",
-        statusreport:'<%- statusreport %>',
-        personID:'<%- personID %>'
+       //paperurl:"",
+       downloadurl:"",
+        statusreport:'<%- statusreport %>'
       }
     },
     mounted: function(){
-      querytxt="?statusreport=由免費下載類別頁進到本頁";
-      this.homepageurl="/career/branch/goouterweb/"+this.personID+querytxt;
-       this.resumeurl="/career/outerweb/resumetype/"+this.personID+querytxt;
-       this.paperurl="/career/outerweb/papertype/"+this.personID+querytxt
+      querytxt="?statusreport=由著作類別頁進到本頁";
+      this.homepageurl="/career/branch/goouterweb/"+querytxt;
+       this.resumeurl="/career/outerweb/resumetype/"+querytxt;
+       this.downloadurl="/career/outerweb/freefiletype/"+querytxt
       
     },
     methods:{
@@ -247,13 +253,12 @@ Vue.component("bander",{
         //statusreport:'<%- statusreport %>',
         promote:"歡迎批評指教及連絡！",
         addbyguesturl:"",
-        personID:'<%- personID %>',
         ipofvisitor:{},
       inputerUIkey:0
       } 
     },
     mounted: function(){
-      this.addbyguesturl="/career/message/addbyguest/"+this.personID;
+      this.addbyguesturl="/career/message/addbyguest/";
     
       const API_URL = 'https://api.ipify.org?format=json';
         // 取得 IP 位址
@@ -274,7 +279,6 @@ Vue.component("bander",{
           //statusreport:'<%- statusreport %>',
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
-          personID:'<%- personID %>',
           typeurl:"",
           explicits:[],
           courses:[],
@@ -285,7 +289,7 @@ Vue.component("bander",{
         }   
     },
     mounted:function(){
-      this.typeurl="/career/outerweb/paper/godownload/"+this.personID;
+      this.typeurl="/career/outerweb/paper/gosublist/";
       for(term of this.termlist){
         if(term.a20field=="a30explicit"){
           this.explicits.push(term)
@@ -303,7 +307,7 @@ Vue.component("bander",{
       }
       for(explicit of this.explicits){
         let typecode=explicit.a25code;
-        let typecount=this.knowledgelist.filter(ele=>ele.a30explicit==typecode&&ele.a60is4download==true).length;
+        let typecount=this.knowledgelist.filter(ele=>ele.a30explicit==typecode).length;
         if(typecount>0){
         let tempobj=new Object();
         tempobj['papertype']=typecode;
@@ -315,7 +319,7 @@ Vue.component("bander",{
       }
       for(course of this.courses){
         let typecode=course.a25code;        
-        let typecount=this.knowledgelist.filter(ele=>ele.a40course==typecode&&ele.a60is4download==true).length;
+        let typecount=this.knowledgelist.filter(ele=>ele.a40course==typecode).length;
         if(typecount>0){
         let tempobj=new Object();
         tempobj['papertype']=typecode;
@@ -327,7 +331,7 @@ Vue.component("bander",{
       }
       for(category of this.categorys){
         let typecode=category.a25code;
-        let typecount=this.knowledgelist.filter(ele=>ele.a35category==typecode&&ele.a60is4download==true).length;
+        let typecount=this.knowledgelist.filter(ele=>ele.a35category==typecode).length;
         if(typecount>0){
         let tempobj=new Object();
         tempobj['papertype']=typecode;

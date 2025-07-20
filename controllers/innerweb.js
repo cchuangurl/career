@@ -9,18 +9,31 @@ module.exports = {
 async showresumetype(ctx, next) {
   console.log("進入branch controller的showresumetype");
   var statusreport=ctx.query.statusreport;
-  //var personID=ctx.params.id;
+  var personID=ctx.params.id;
   await ctx.render("innerweb/resumetypepage" ,{
       statusreport,
-      //personID
+      personID
   })
 },
 //到著作類別頁
 async showpapertype(ctx, next) {
   console.log("進入branch controller的showpapertype");
   var statusreport=ctx.query.statusreport;
-  //var personID=ctx.params.id;
-  var knowledgelist,termlist;
+  var personID=ctx.params.id;
+  var knowledgelist,termlist,publishlist;
+  await Publish.find({}).then(async publishs=>{
+    //console.log("found publishs:"+publishs);
+    console.log("type of publishs:"+typeof(publishs));
+    console.log("type of 1st publish:"+typeof(publishs[0]));
+    //console.log("1st publish:"+publishs[0].a20title)
+    console.log("No. of publish:"+publishs.length)
+    publishlist=encodeURIComponent(JSON.stringify(publishs));
+    console.log("type of publishlist:"+typeof(publishlist))
+    })
+    .catch(err=>{
+        console.log("Publish.find({}) failed !!");
+        console.log(err)
+    })  
   await Knowledge.find({})
     .then(async knowledges=>{
     console.log("type of knowledges:"+typeof(knowledges));
@@ -45,8 +58,9 @@ async showpapertype(ctx, next) {
     await ctx.render("innerweb/papertypepage" ,{
       knowledgelist,
       termlist,
+      publishlist,
       statusreport,
-      //personID
+      personID
     })
     })
     .catch(err=>{

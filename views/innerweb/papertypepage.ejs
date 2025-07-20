@@ -17,54 +17,31 @@ background-color: rgb(248, 243, 243);
      align-items:center;
   	margin: 0;
 }
-
-#sidearea{  
-background-color: rgb(213, 218, 210);
-  height:720px;
-  display: flex;
-  flex-direction:column;
-	 justify-content: flex-start;
-     align-items:center;
-  	margin: 0;
+.fix-top{
+  position: fixed;
+  top: 0;
+  z-index:20;
 }
-.sidepart{
-    height:240px;
-    padding: 10px;
-    border-radius:10px
-}
-#bellcall{
-    background:#f5f5d6   
-}
-#messageboard{
-    background:#d6f5de
-}
-#loginarea{
-    background:#f8f8a6
-}
-#contactpart{
-    background:#d6f5de ;
-    width:100vw;
-    height:100px;
-    
-}
-.contactinfo {
-    margin-left:100px
+.spa-tab{
+    position: fixed; 
+    top: 50px;
+    z-index:15;
+} 
+.spa-tab2{
+    position: fixed; 
+    top: 100px;
+    z-index:15;
 }
 #bulletin {
     background:#def3f8;
     height:720px;
     }
-#sharezone {
+#viewzone {
     background:#f8e8c5;
+    top: 150px;
     height:720px;
+    z-index: 10;
     }
-#tablefy1,#tablefy2,#tablefy3{
-    display: inline-block;
-  flex-direction:row;
-	 justify-content: flex-start;
-     align-items:left;
-     margin:10px
-}
 .navbar{background:#d6eff5;}
 .nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
 .nav-link{margin-right:1em !important;}
@@ -74,41 +51,24 @@ background-color: rgb(213, 218, 210);
 
 </style>
 
-  <title>著作類別頁</title>
+  <title>著作類別及清單</title>
   </head>
   <body>
-    <div id="show_div">
+    <div id="vm">
         <div class="row">
             <bander></bander>
         </div>
-        <div class="row" align="justify">
-          <!--
-            <div class="col-lg-3 col-md-6 col-sm-12" id="sidearea">
-                <sidebar></sidebar> </div>
-                -->
-            <div class="col-lg-9 col-md-6 col-sm-12">
-              <content0></content0>
-              <!--
-                <div class="row" align="justify">
-                    <div class="col-lg-6 col-md-6 col-sm-12" id="bulletin">
-                        <content2></content2>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12" id="sharezone">
-                        <content1></content1>
-                    </div>
-                </div>
-                -->
-            </div>
+        <div class="row">
+            <subbander></subbander>
         </div>
-        <!--
-        <div class="row" align="justify">
-            <contacter></contacter>
-        </div>
-        --> 
+        <div class="row">
+          <router-view></router-view>
+      </div>         
     </div>
+
  
     <template id="banderUI">
-      <nav class="navbar navbar-expand-lg navbar-light">
+      <nav class="navbar navbar-expand-lg navbar-light fix-top">
         <a class="navbar-brand" href="/">{{brand}}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -116,106 +76,278 @@ background-color: rgb(213, 218, 210);
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/">{{profile}}</a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link" :href="resumeurl">{{resume}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" href="#">{{paper}}<span class="sr-only">(current)</span></a>
               </li>
-              <!--
               <li class="nav-item">
-                <a class="nav-link" :href="downloadurl">{{download}}</a>
+                <a class="nav-link" :href="shareurl">{{share}}</a>
               </li>
-              -->
+            <li class="nav-item">
+              <a class="nav-link" :href="logouturl">{{logout}}</a>
+            </li>         
           </ul>
-          <!--
-          <span class="navbar-text">
-            <font size="1">{{statusreport}}</font>
-          </span>
-          -->
-          
         </div>
       </nav>
     </template>
-    <template id="content0UI">
-        <nav aria-label="...">
-          <H3>依呈現的媒體分</H3>
-          <div class="row" id="tablefy1" v-for="table of tables1" :key="table._id">
-            <form  :action="typeurl" method="get">
-              <input type="hidden" name="classby" value="explicit">
-              <input type="hidden" name="papertype" :value="table.papertype">
-              <input type="hidden" name="typelabel" :value="table.label">
-              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
-              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
-            </form>
-          </div>
-          <hr style="height:30px">
-          <H3>依課程種類分</H3>
-          <div class="row" id="tablefy2" v-for="table of tables2" :key="table._id">
-            <form  :action="typeurl" method="get">
-              <input type="hidden" name="classby" value="course">
-              <input type="hidden" name="papertype" :value="table.papertype">
-              <input type="hidden" name="typelabel" :value="table.label">
-              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
-              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
-            </form>
-          </div>          
-          <hr style="height:30px">
-          <H3>依企管類別分</H3>
-          <div class="row" id="tablefy3" v-for="table of tables3" :key="table._id">
-            <form  :action="typeurl" method="get">
-              <input type="hidden" name="classby" value="category">
-              <input type="hidden" name="papertype" :value="table.papertype">
-              <input type="hidden" name="typelabel" :value="table.label">
-              <input type="hidden" name="statusreport" value="由著作類別按鈕進入本頁">              
-              <input type="submit" :value="table.label" class="btn btn-info">({{table.count}})
-            </form>
-          </div>
-        </nav>
+    
+  <template id="subbanderUI">
+    <nav class="spa-tab">
+      <router-link to="/paper/magazine"><input type="button" value="文章類" class="btn btn-secondary"></button></router-link>
+      <router-link to="/book/thesis"><input type="button" value="書冊類" class="btn btn-secondary"></button></router-link>
+      <router-link to="/briefing/handout"><input type="button" value="簡報類" class="btn btn-secondary"></button></router-link>    
+      <!--
+      <div class="col-lg-9 col-md-9 col-sm-12">                      
+        <router-view></router-view>
+    </div>
+
+  -->
+    </nav>
     </template>
 
-    <template id="sidebarUI">
-        <nav aria-label="...">
-          <!--  
-          <div class="sidepart" id="callbell">
-                {{statusreport}}<br>
-                {{promote}}
-                <form action="/career/request/bellcall" method="get">
-                <input type="submit" id="bell" value="服務鈴" class="btn btn-info">
-            </form>
-            </div> 
-            -->    
-            <div class="sidepart" id="messageboard">
-                <table>
-                <tr>
-                <form :action="addbyguesturl" method="post">
-                <label>{{promote}}</label>
-                <td>
-                <textarea name="a25message" placeholder="請輸入您的指教或提問..."></textarea>
-                </td>
-                <tr>
-                <td>
-                <label>如何回復您：</label>
-                <input type="text" name="a10writer" placeholder="請留連絡電話或email或稱呼...">
-                <input type="hidden" name="a05ipofvisitor" class="form-control" id="ipofvisitor" :value="ipofvisitor">
-                </td>
-                </tr>
-                <tr>
-                <td>
-                <input type="submit" value="送出" style="float:right" >
-                </td>
-                </form>
-                </tr>
-                </table>
-            </div>
-            
-        </nav>
+    <template id="content1UI">
+      <nav>
+        <div class="spa-tab2">
+        <router-link to="/paper/journal"><input type="button" value="學術期刊" class="btn btn-primary"></button></router-link>
+        <router-link to="/paper/conference"><input type="button" value="研討會" class="btn btn-primary"></button></router-link>
+        <router-link to="/paper/magazine"><input type="button" value="雜誌刊物" class="btn btn-primary"></button></router-link>
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-12" id="viewzone">                      
+          <router-view></router-view>
+      </div>
+      </nav>
     </template>
+    
+      <template id="content2UI">
+        <nav>
+          <div class="spa-tab2">
+          <router-link to="/book/thesis"><input type="button" value="學位論文" class="btn btn-primary"></button></router-link>
+          <router-link to="/book/workreport"><input type="button" value="工作報告" class="btn btn-primary"></button></router-link>
+          <router-link to="/book/picture"><input type="button" value="圖影等" class="btn btn-primary"></button></router-link>
+        </div>        
+          <div class="col-lg-9 col-md-9 col-sm-12" id="viewzone">                      
+            <router-view></router-view>
+        </div>
+        </nav>
+        </template>
+        <template id="content3UI">
+          <nav>
+            <div class="spa-tab2">
+            <router-link to="/briefing/opinion"><input type="button" value="議題觀點" class="btn btn-primary"></button></router-link>
+            <router-link to="/briefing/handout"><input type="button" value="課程講義" class="btn btn-primary"></button></router-link>
+            <router-link to="/briefing/note"><input type="button" value="知識整理" class="btn btn-primary"></button></router-link>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-12" id="viewzone">                      
+              <router-view></router-view>
+          </div>
+          </nav>
+          </template>
+    <template id="journalUI">
+      <nav>
+        <h4>學術期刊文章</h4>
+        <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+            <h5 class="card-title">{{publish.a20title}}</h5>
+            <span>
+            <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+          <h6 v-show="publish.a10coauthor[0]!=''">,與{{publish.a10coauthor[0]}}合著</h6>
+        </span>
+        <span>
+        <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
+        <h6 v-show="publish.a45volumn.length>0">,{{publish.a45volumn}}卷</h6>
+        <h6 v-show="publish.a50issue.length>0">,{{publish.a50issue}}期</h6>
+        <h6 v-show="publish.a55startpage.length>0">,{{publish.a55startpage}}/h6>
+        <h6 v-show="publish.a60endpage.length>0">-{{publish.a60endpage}}頁</h6>
+      </span>
+            <!--
+            <p class="card-text">{{publish.a25publishcontent}}</p>
+          
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          -->
+          </div>
+        </div>
+      </nav>
+      </template>
+    <template id="conferenceUI">
+      <nav>
+        <h4>研討會文章</h4>
+        <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+            <h5 class="card-title">{{publish.a20title}}</h5>
+            <span>
+            <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+          <h6 v-show="publish.a10coauthor[0]!=''">,與{{publish.a10coauthor[0]}}合著</h6>
+        </span>
+        <span>
+        <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
+        
+      </span>
+            <!--
+            <p class="card-text">{{publish.a25publishcontent}}</p>
+          
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          -->
+          </div>
+        </div>
+      </nav>
+      </template>
+    <template id="magazineUI">
+      <nav>
+        <h4>雜誌刊物文章</h4>
+        <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+            <h5 class="card-title">{{publish.a20title}}</h5>
+            <span>
+            <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+          <h6 v-show="publish.a10coauthor[0]!=''">,與{{publish.a10coauthor[0]}}合著</h6>
+        </span>
+        <span>
+        <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
+        <h6 v-show="publish.a45volumn.length>0">,{{publish.a45volumn}}卷</h6>
+        <h6 v-show="publish.a50issue.length>0">,{{publish.a50issue}}期</h6>
+        <h6 v-show="publish.a55startpage.length>0">,{{publish.a55startpage}}</h6>
+        <h6 v-show="publish.a60endpage.length>0">-{{publish.a60endpage}}頁</h6>
+      </span>
+            <!--
+            <p class="card-text">{{publish.a25publishcontent}}</p>
+          
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          -->
+          </div>
+        </div>
+      </nav>
+      </template>
+      
+    <template id="thesisUI">
+      <nav>
+        <h4>學位論文</h4>
+        <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+            <h5 class="card-title">{{publish.a20title}}</h5>
+            <span>
+            <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+         </span>
+        <span>
+        <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
+        <h6 v-show="publish.a65publisher.length>0">,{{publish.a65publisher}}</h6>
+      </span>
+            <!--
+            <p class="card-text">{{publish.a25publishcontent}}</p>
+          
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          -->
+          </div>
+        </div>
+      </nav>
+      </template>
+      <template id="workreportUI">
+        <nav>
+          <h4>工作報告</h4>
+          <div class="card" style="width: 18rem;">
+            <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+              <h5 class="card-title">{{publish.a20title}}</h5>
+              <span>
+              <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+
+          </span>
+          <span>
+          <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
+
+        </span>
+              <!--
+              <p class="card-text">{{publish.a25publishcontent}}</p>
+            
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            -->
+            </div>
+          </div>
+        </nav>
+        </template>
+      <template id="pictureUI">
+        <nav>
+          <h4>圖片影像等其他訊息</h4>
+        </nav>
+        </template>
+        <template id="opinionUI">
+          <nav>
+            <h4>議題觀點</h4>
+            <div class="card" style="width: 18rem;">
+              <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+                <h5 class="card-title">{{publish.a20title}}</h5>
+                <span>
+                <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+
+            </span>
+            <span>
+            <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
+
+          </span>
+                <!--
+                <p class="card-text">{{publish.a25publishcontent}}</p>
+              
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              -->
+              </div>
+            </div>
+          </nav>
+          </template>
+        <template id="handoutUI">
+          <nav>
+            <h4>教學講義簡報</h4>
+            <div class="card" style="width: 18rem;">
+              <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+                <h5 class="card-title">{{publish.a20title}}</h5>
+                <span>
+                <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+
+            </span>
+            <span>
+            <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
+          </span>
+                <!--
+                <p class="card-text">{{publish.a25publishcontent}}</p>
+              
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              -->
+              </div>
+            </div>         
+          </nav>
+          </template>
+        <template id="noteUI">
+          <nav>
+            <h4>知識整理簡報</h4>
+            <div class="card" style="width: 18rem;">
+              <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
+                <h5 class="card-title">{{publish.a20title}}</h5>
+                <span>
+                <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
+
+            </span>
+            <span>
+
+          </span>
+                <!--
+                <p class="card-text">{{publish.a25publishcontent}}</p>
+              
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              -->
+              </div>
+            </div>
+          </nav>
+          </template>
 <!-- Vue CDN-->
 <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUK0WDGT2ba1GiTWXv910l5e0Hza7y-U&callback=initMap" async defer></script>
+<!-- Vue Router CDN-->
+<script src="https://unpkg.com/vue-router@3.1.3/dist/vue-router.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 Vue.component("bander",{
@@ -223,138 +355,342 @@ Vue.component("bander",{
     data(){
       return {
         brand:"Career",
-        profile:"基本資料",
-        resume:"學經歷專長",
+        resume:"基本資料",
+        share:"分享",
+        logout:"登出",
         paper:"著作清單",
-        download:"免費下載",
-        homepageurl:"",
-        resumeurl:"",
-       //paperurl:"",
-       downloadurl:"",
-        statusreport:'<%- statusreport %>'
+        shareurl:"",
+       resumeurl:"",
+       logouturl:""
       }
     },
     mounted: function(){
-      querytxt="?statusreport=由著作類別頁進到本頁";
-      this.homepageurl="/career/branch/goouterweb/"+querytxt;
-       this.resumeurl="/career/outerweb/resumetype/"+querytxt;
-       this.downloadurl="/career/outerweb/freefiletype/"+querytxt
-      
-    },
+      querytxt="?statusreport=由著作清單頁進到本頁";
+      this.shareurl="/career/innerweb/share/"+querytxt;
+       this.resumeurl="/career/innerweb/resume/"+querytxt;
+       this.logouturl="/career/branch/logout/"+querytxt;
+      },
     methods:{
-
+           
     },
     template:"#banderUI"
   });
-  Vue.component("sidebar",{
+  Vue.component("subbander",{
     props:{},
     data(){
       return{
-        //statusreport:'<%- statusreport %>',
-        promote:"歡迎批評指教及連絡！",
-        addbyguesturl:"",
-        ipofvisitor:{},
-      inputerUIkey:0
-      } 
+        
+      }
     },
-    mounted: function(){
-      this.addbyguesturl="/career/message/addbyguest/";
-    
-      const API_URL = 'https://api.ipify.org?format=json';
-        // 取得 IP 位址
-        const response =axios.get(API_URL);
-        this.ipofvisitor= response.data
-
+    mounted:function(){
+      
     },
     methods:{
       
     },
-    template:"#sidebarUI"
+    template:"#subbanderUI" 
   });
-
-  Vue.component("content0",{
+  /*
+ Vue.component("contentx",{
     props:{},
     data(){
       return{
-          //statusreport:'<%- statusreport %>',
-          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
-          typeurl:"",
-          explicits:[],
-          courses:[],
-          categorys:[],
-          tables1:[],
-          tables2:[],
-          tables3:[]
-        }   
-    },
+          
+    }},
     mounted:function(){
-      this.typeurl="/career/outerweb/paper/gosublist/";
-      for(term of this.termlist){
-        if(term.a20field=="a30explicit"){
-          this.explicits.push(term)
-        }
-      }
-      for(term of this.termlist){
-        if(term.a20field=="a35category"){
-          this.categorys.push(term)
-        }
-      }
-      for(term of this.termlist){
-        if(term.a20field=="a40course"){
-          this.courses.push(term)
-        }
-      }
-      for(explicit of this.explicits){
-        let typecode=explicit.a25code;
-        let typecount=this.knowledgelist.filter(ele=>ele.a30explicit==typecode).length;
-        if(typecount>0){
-        let tempobj=new Object();
-        tempobj['papertype']=typecode;
-        tempobj['label']=explicit.a30mean;
-        tempobj['count']=typecount;
-        console.log(tempobj.label);
-        this.tables1.push(tempobj)
-        }
-      }
-      for(course of this.courses){
-        let typecode=course.a25code;        
-        let typecount=this.knowledgelist.filter(ele=>ele.a40course==typecode).length;
-        if(typecount>0){
-        let tempobj=new Object();
-        tempobj['papertype']=typecode;
-        tempobj['label']=course.a30mean;
-        tempobj['count']=typecount;
-        console.log(tempobj.label);
-        this.tables2.push(tempobj)
-        }
-      }
-      for(category of this.categorys){
-        let typecode=category.a25code;
-        let typecount=this.knowledgelist.filter(ele=>ele.a35category==typecode).length;
-        if(typecount>0){
-        let tempobj=new Object();
-        tempobj['papertype']=typecode;
-        tempobj['label']=category.a30mean;
-        tempobj['count']=typecount;
-        console.log(tempobj.label);
-        this.tables3.push(tempobj)
-        }
-      }      
-      this.explicits.sort((a,b)=>{
-            return parseFloat(a.a25code)-parseFloat(b.a25code)
-        })   
       },
     methods:{
-       
+      
     },
-    template:"#content0UI"
+    template:"#contentxUI"
   });
+  
+  */ 
+    const content1={
+      template:"#content1UI"
+    };
+    const content2={
+      methods:{
+        remind:function(){
+          alert("如要看著作清單及下載著作檔案!!請由「瞭解更多」登入為好友, 謝謝.");
+          $("#formGroupExampleInput2").focus()
+        }
+      },
+      template:"#content2UI"
+    };
+    const content3={
+      data(){
+        return{
+          
+      
+    }
+      }, 
+      mounted:function(){
+      },
+      methods:{
+        
+      },
+      
+      template:"#content3UI"
+    };
+    const journal={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="b_journal"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{        
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#journalUI"
+    };
+    const conference={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="c_conference"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{
+        
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#conferenceUI"
+    };
+    const magazine={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="d_periodly"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{
+        
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#magazineUI"
+    };
+    const thesis={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="a_thesis"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{
+        
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#thesisUI"
+    };
+    const workreport={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="e_workreport"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{
+        
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#workreportUI"
+    };
+    const picture={
+      template:"#pictureUI"
+    };
+    const opinion={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="h_opinion"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{
+        
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#opinionUI"
+    };
+    const handout={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="g_handout"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{
+        /*
+          if(a.a15year.substring(0,4)!=b.a15year.substring(0,4)){
+            return Date.parse(a.a15year.substring(0,4)-Date.parse(b.a15year.substring(0,4))
+          )
+        }else{
+        
+          return a.a20title.localeCompare(b.a20title)  
+
+        }
+                    */ 
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#handoutUI"
+    };
+    const note={
+      data(){
+        return{
+          knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
+          publishinfo:[]
+    }
+      }, 
+      mounted:function(){
+        for(knowledge of this.knowledgelist){
+          if(knowledge.a30explicit=="i_note"){
+            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            this.publishinfo.push(tempinfo)
+          }
+        }
+        this.publishinfo.sort((a,b)=>{
+        
+          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+      })
+      },
+      methods:{
+        
+      },
+      template:"#noteUI"
+    };
+
+        
+    const personID='<%- personID %>'
+    const routes=[
+      {path:"/career/innerweb/paertype/"+this.personID,component:content1},
+      {
+        path:"/paper",
+        component:content1,        
+        children:[
+          {path:"journal",component:journal},
+          {path:"conference",component:conference},
+          {path:"magazine",component:magazine}
+        ]
+      },
+      {
+        path:"/book",
+        component:content2,
+        children:[
+          {path:"thesis",component:thesis},
+          {path:"workreport",component:workreport},
+          {path:"picture",component:picture},
+      {
+        path:"/briefing",
+        component:content3,
+        children:[
+          {path:"opinion",component:opinion},
+          {path:"handout",component:handout},
+          {path:"note",component:note}
+        ]
+      }
+        ]
+      }
+    ]
+    
+    const router = new VueRouter({
+      mode: 'history',
+      routes:routes
+    });
     new Vue({
-        el:'#show_div',
-        data:{
+        data:
+        {
+          
           testdata:'有執行到此。。。。'
         },
+        el:"#vm",
+        router,
+
         /* computed:{
 
         },
@@ -386,6 +722,7 @@ Vue.component("bander",{
           console.log("mounted...")
         },
         beforeUpdate:function(){
+          
           console.log("before update...")
         },
         updated:function(){

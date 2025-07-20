@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<style type="text/css">
+body {  
+background-color: rgb(248, 243, 243);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+
+#sidearea{  
+background-color: rgb(213, 218, 210);
+  height:720px;
+  display: flex;
+  flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.sidepart{
+    height:240px;
+    padding: 10px;
+    border-radius:10px
+}
+#bellcall{
+    background:#f5f5d6   
+}
+#messageboard{
+    background:#d6f5de
+}
+#loginarea{
+    background:#f8f8a6
+}
+#contactpart{
+    background:#d6f5de ;
+    width:100vw;
+    height:100px;
+    
+}
+.contactinfo {
+    margin-left:100px
+}
+#bulletin {
+    background:#def3f8;
+    height:720px;
+    }
+#sharezone {
+    background:#f8e8c5;
+    height:720px;
+    }
+#tablefy{
+    display: inline-block;
+  flex-direction:row;
+	 justify-content: flex-start;
+     align-items:left;
+     margin:10px
+}
+.navbar{background:#d6eff5;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+
+</style>
+
+  <title>學經歷類別頁</title>
+  </head>
+  <body>
+    <div id="show_div">
+        <div class="row">
+            <bander></bander>
+        </div>
+        <div class="row" align="justify">
+          <!--
+            <div class="col-lg-3 col-md-6 col-sm-12" id="sidearea">
+                <sidebar></sidebar> </div>
+                -->
+            <div class="col-lg-9 col-md-6 col-sm-12">
+              <content0></content0>
+              <!--
+                <div class="row" align="justify">
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="bulletin">
+                        <content2></content2>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="sharezone">
+                        <content1></content1>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+        <!--
+        <div class="row" align="justify">
+            <contacter></contacter>
+        </div>
+        --> 
+    </div>
+ 
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">{{profile}}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="#">{{resume}}<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="paperurl">{{paper}}</a>
+              </li>
+              <!--
+              <li class="nav-item">
+                <a class="nav-link" :href="downloadurl">{{download}}</a>
+              </li>
+              -->
+          </ul>
+          <!--
+          <span class="navbar-text">
+            <font size="1">{{statusreport}}</font>
+          </span>
+          -->
+        </div>
+      </nav>
+    </template>
+    <template id="content0UI">
+        <nav aria-label="...">
+          <div class="row" id="tablefy" v-for="table of tables" :key="table._id">
+            <!--
+            <form  :action="table.route" method="get">
+              <input type="hidden" name="statusreport" value="由學經歷類別按鈕進入本頁">
+              <input type="submit" :value="table.label" class="btn btn-info">
+            </form>
+            -->
+            <a :href="table.route"><input type="submit" :value="table.label" class="btn btn-info"></a>
+          </div>
+          <ul>
+            <li>
+            學歷
+            </li>
+            <ul id="diploma">
+            <li>臺灣大學農業經濟學研究所博士(1984年6月畢) </li>
+            <li>臺灣大學農業經濟學研究所碩士(1987年6月畢) </li>
+            <li>臺灣大學農業經濟學系學士(1982年6月畢) </li>
+            </ul>
+            <li>
+            職業考試及證書
+            </li>
+            <ul id="certificate">
+            <li>公務人員簡任官證書(2005年) </li>
+            <li>副教授證書(1994年) </li>
+            <li>高等考試統計人員及格(1989年) </li>
+            <li>講師證書(1988年) </li>
+            <li>助教證書(1984年) </li>
+            <li>普通考試統計人員及格(1981年) </li>
+            </ul>
+            <li>
+            正職經歷 (專任部分)
+            </li>
+            <ul id="careerlist">
+            <li>農業部 技監參事室  技監 (2023年8月至2025年2月) </li>
+            <li>行政院農業委員會 技監參事室  技監 (2020年6月至2023年7月) </li>
+            <li>海洋委員會 海洋資源處 處長（2019年7月至2020年6月）</li>
+            <li>行政院農業委員會 主任秘書室 簡任技正 (2019年5月至2019年7月) </li>
+            <li> (借調至)財團法人農業科技研究院 農業政策研究中心 正研究員兼主任(2017年5月至2019年4月) </li>
+            <li>行政院農業委員會 企劃處 副處長（2014年7月至2017年4月）</li>
+            <li>行政院農業委員會 企劃處 簡任技正兼科長（2007年7月至2014年6月）</li>
+            <li>行政院農業委員會 企劃處 簡任技正（2005年10月至2007年7月）</li>
+            <li>行政院農業委員會 企劃處 專員、技正（2000年7月至2005年10月）</li>
+            <li>行政院大陸委員會 經濟處 專員（1999年8月至2000年6月）</li>
+            <li>國立屏東商業技術學院 國際貿易系 專任副教授(1998年8月至1999年7月) </li>
+            <li>國立屏東商業專科學校 國際貿易科 專任副教授(1995年2月至1998年7月) </li>
+            <li>行政院經濟建設委員會 法規小組 科員(1990年3月至1995年1月) </li>
+            <li>行政院主計處 三局 科員(1989年12月至1990年2月) </li>
+            <li>行政院經濟建設委員會 法規小組 副研究員(1987年7月至1989年12月) </li>
+            <li>臺灣大學農業經濟系 助教(1984年8至1987月年7) </li>
+                 <li>國防部 陸軍 預備軍官經理官少尉組長(1983年3月至1984年8月) </li>
+            </ul>
+            <div class="row" id="tablefy" v-for="table of tables" :key="table._id">
+              <!--
+              <form  :action="table.route" method="get">
+                <input type="hidden" name="statusreport" value="由學經歷類別按鈕進入本頁">
+                <input type="submit" :value="table.label" class="btn btn-info">
+              </form>
+              -->
+              <a :href="table.route"><input type="submit" :value="table.label" class="btn btn-info"></a>
+            </div>
+            <li>
+            學術或行政專長 (依曾較長期從事之工作、教學、研究或著作經驗)
+            </li>
+            <ul id="expertise">
+            <li>農業政策研究、分析及規劃</li>
+            <li>行政溝通、組織管理及專案管理</li>
+            <li>土地法規、貿易法規、智財權法規及農業法規</li>
+            <li>國際經貿事務、國際金融</li>
+            <li>兩岸事務</li>
+            <li>農業經濟學、經濟學、統計學及數量方法</li>
+            <li>資訊系統分析、規劃、設計及開發</li>
+            <li>智財管理與知識經濟</li>
+            <li>海洋環境保護、資源保育、海洋產業</li>
+            <li>區塊鏈應用</li>
+            </ul>
+            <li>
+            進修及重要研習
+            </li>
+            <ul id="training">
+            <li>The 140th Regular Session on Agricultural Development and Policy, 國際土地政策研究中心 (September 28- October 26, 2018) </li>
+            <li>行政院98年全球化及管理效能研習營(2009年，共1個月含英國倫敦政經學院3週) </li>
+            <li>行政院93年WTO人才培訓班，訓練機關World Trade Institute。(2004年，1個月) </li>
+            <li>92年外交部WTO專業講習班。(2003年) </li>
+            <li>行政院90年度培訓科技背景跨領域高級人才計畫「智慧財產權、技術移轉、投資評估科技管理研習班」結業(2001年，期程九個月，含赴美國University of Washington三個月之研習) </li>
+            </ul>
+            <li>
+            語文能力
+            </li>
+            <ul id="language">
+            <li>中文：聽、說、讀、寫均佳</li>
+            <li>臺語：聽、說均佳</li>
+            <li>英文：TOEFL 550分(1994年); TOEIC 830分(2008年) </li>
+            </ul>
+            <li>
+            學術及行政榮譽
+            </li>
+            <ul id="honor">
+              <li>農業二等獎章(2025年)</li>
+            <li>中華民國農學團體優秀農業基層人員獎(2023年)</li>
+            <li>行政院農業委員會模範公務人員(2013年) </li>
+            <li>行政院傑出研究獎優等獎(2006年) </li>
+            <li>中國農村經濟學會碩士論文獎優等獎(1987年) </li>
+            <li>中國農村經濟學會學士論文獎優等獎(1982年) </li>
+            </ul>
+            <div class="row" id="tablefy" v-for="table of tables" :key="table._id">
+              <!--
+              <form  :action="table.route" method="get">
+                <input type="hidden" name="statusreport" value="由學經歷類別按鈕進入本頁">
+                <input type="submit" :value="table.label" class="btn btn-info">
+              </form>
+              -->
+              <a :href="table.route"><input type="submit" :value="table.label" class="btn btn-info"></a>
+            </div>
+            <li>
+            主要兼任職務</li>
+            </li>
+            <ul id="parttime">
+            <li>文化大學 勞工行政系 兼任副教授(2021年9月至2022年1月)</li>
+            <li>世新大學 經濟學系 兼任副教授(2005年9月至2010年6月)</li>
+            <li>國立屏東商業專科學校 夜間部主任(1995年8月至1997年7月) </li>
+            <li>輔仁大學 食品營養學系 兼任講師、兼任副教授(1993年9月至1995年1月)</li>
+            <li>醒吾商業專科學校 觀光系 兼任講師(1988年9月至1995年1月)</li>
+            </ul>
+            <li>
+            參與之社團
+            </li>
+            <ul id="society">
+            <li>社團法人臺灣農村經濟學會 第33、34、35、36屆理事(2019年至2025年)</li>
+            <li>社團法人台灣農業經營學會 第11、12、13、14屆理事(2018年至2024年)</li>
+            <li>社團法人臺灣大學農業經濟系校友會 第4屆理事(2021年至2023年)、第5屆常務監事(2023年至2025年)</li>
+            <li>財團法人台灣區蠶業發展基金會 監察人(2015年至2017年)</li>
+            </ul>
+            <li id="otherevent">
+            其他記事
+            </li>
+            </ul>
+                       
+        </nav>
+    </template>
+
+    <template id="sidebarUI">
+        <nav aria-label="...">
+          <!--  
+          <div class="sidepart" id="callbell">
+                {{statusreport}}<br>
+                {{promote}}
+                <form action="/career/request/bellcall" method="get">
+                <input type="submit" id="bell" value="服務鈴" class="btn btn-info">
+            </form>
+            </div> 
+            -->    
+            <div class="sidepart" id="messageboard">
+                <table>
+                <tr>
+                <form :action="addbyguesturl" method="post">
+                <label>{{promote}}</label>
+                <td>
+                <textarea name="a25message" placeholder="請輸入您的指教或提問..."></textarea>
+                </td>
+                <tr>
+                <td>
+                <label>如何回復您：</label>
+                <input type="text" name="a10writer" placeholder="請留連絡電話或email或稱呼...">
+                <input type="hidden" name="a05ipofvisitor" class="form-control" id="ipofvisitor" :value="ipofvisitor">
+                </td>
+                </tr>
+                <tr>
+                <td>
+                <input type="submit" value="送出" style="float:right" >
+                </td>
+                </form>
+                </tr>
+                </table>
+            </div>
+            
+        </nav>
+    </template>
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        profile:"基本資料",
+        resume:"學經歷專長",
+        paper:"著作清單",
+        download:"免費下載",
+        homepageurl:"",
+        //resumeurl:"",
+       paperurl:"",
+       downloadurl:"",
+        statusreport:'<%- statusreport %>'
+      }
+    },
+    mounted: function(){
+      querytxt="?statusreport=由學經歷類別頁進到本頁";
+      this.homepageurl="/career/branch/goouterweb/"+querytxt;
+       this.paperurl="/career/outerweb/papertype/"+querytxt;
+       this.downloadurl="/career/outerweb/freefiletype/"+querytxt
+      
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("sidebar",{
+    props:{},
+    data(){
+      return{
+        //statusreport:'<%- statusreport %>',
+        promote:"歡迎批評指教及連絡！",
+        addbyguesturl:"",
+        ipofvisitor:{},
+      inputerUIkey:0
+      } 
+    },
+    mounted: function(){
+      this.addbyguesturl="/career/message/addbyguest/";
+    
+      const API_URL = 'https://api.ipify.org?format=json';
+        // 取得 IP 位址
+        const response =axios.get(API_URL);
+        this.ipofvisitor= response.data
+
+    },
+    methods:{
+      
+    },
+    template:"#sidebarUI"
+  });
+
+  Vue.component("content0",{
+    props:{},
+    data(){
+      return{
+          //statusreport:'<%- statusreport %>',
+          tables:[
+          {"route":"#diploma",
+            "label":"主要學歷"
+            },
+            {"route":"#certificate",
+            "label":"就業考試"
+            },
+            {"route":"#careerlist",
+            "label":"正職經歷"
+            },
+            {"route":"#expertise",
+            "label":"工作及學術專長"
+            },
+            {"route":"#training",
+            "label":"重要訓練"
+            },
+            {"route":"#language",
+            "label":"語文能力與檢定"
+            },
+            {"route":"#honor",
+            "label":"主要獎項榮譽"
+            },
+            {"route":"#parttime",
+            "label":"主要兼任職務"
+            },
+            {"route":"#society",
+            "label":"參與之社團"
+            },
+            {"route":"#otherevent",
+            "label":"其他記事"
+            }
+            ]
+        }   
+    },
+    mounted:function(){
+      /*
+      for(table of this.tables)
+        table.route=table.route+'/'+this.personID;
+        console.log("revise route: "+table.route) 
+        */     
+      },
+    methods:{
+       
+    },
+    template:"#content0UI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        
+        components:{
+          "bander":bander,
+          "outputer":outputer,
+          "inputer":inputer
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        } 
+    })
+</script>
+
+
+  </body>
+</html>
