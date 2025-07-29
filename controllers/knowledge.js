@@ -3,6 +3,9 @@ const Knowledge = require('../models/index').knowledge;
 const Publish = require('../models/index').publish;
 const Term = require('../models/index').term;
 const {Storage}=require('@google-cloud/storage')
+const fs = require('fs');
+const path = require('path');
+const csv = require('csv-parser');
 module.exports = {
 //列出清單list(req,res)
 async list(ctx,next){
@@ -167,105 +170,50 @@ async batchinput(ctx, next){
     var datafile=ctx.query.datafile;
     console.log("got the name of datafile:"+datafile);
     var personID=ctx.params.id;
-    // 引用需要的模組
-    const fs = require('fs');
-    const path=require("path");
-    const readline = require('readline');
-    // 逐行讀入檔案資料
-    //定義輸出串流
-    //var writeStream = fs.createWriteStream('out.csv');
-
-    //定義讀入串流 (檔案置於/public目錄下)
-    let filepath=path.join(__dirname,"../public/csv/");
-    var lineReader = readline.createInterface({
-        input: fs.createReadStream(filepath+datafile+'.csv')
-    });
-    var lineno=0;
-    var columnno=11;
-    var knowledgeArray;
-    var tempstore=new Array(columnno);
-    for (let i=0;i<columnno;i++){
-        tempstore[i]=new Array();
-    };
-    let readfile=(()=>{
-        console.log("reading..."+datafile+".csv");
-        return new Promise((resolve,reject)=>{
-    //當讀入一行資料時
-    lineReader.on('line', function(data) {
-        var values = data.split(',');
-        for (let i=0;i<columnno;i++){
-            tempstore[i][lineno]=values[i].trim();
-        }
-        lineno++;
-        console.log("read line:"+data)
-    });//EOF lineReader.on
-    resolve();
-            })//EOF promise
-    })//EOF readfile
-    let savedata=(()=>{
-        return new Promise((resolve, reject)=>{
-        knowledgeArray=new Array(lineno);
-
-        let saveone=(async new_knowledge=>{
-                await new_knowledge.save()
-                .then(()=>{
-                    console.log("Saved document:"+new_knowledge.a15describe)
-                    })
-                .catch((err)=>{
-                    console.log("Knowledge.save() failed !!")
-                    console.log(err)
-                })
-        });//EOF saveone
-        for (let k=0;k<lineno;k++){
-            knowledgeArray[k]=new Array(columnno);
-            for (let m=0;m<columnno;m++){
-                knowledgeArray[k][m]=tempstore[m][k]
-                //console.log(knowledgeArray[k])
-            }
-        }
-        console.log("3 second later...");
-        console.log("1st datum of knowledgeArray:"+knowledgeArray[0][0]);
-        console.log("read total lines:"+knowledgeArray.length);
-        let sequence=Promise.resolve();
-        knowledgeArray.forEach(function(knowledgej){
-            sequence=sequence.then(function(){
-                var new_knowledge = new Knowledge({
-                    a05domain:knowledgej[0],
-                    a15describe:knowledgej[1],
-                    a20filename:knowledgej[2],
-                    a25alias:knowledgej[3],
-                    a30explicit:knowledgej[4],
-                    a35category:knowledgej[5],
-                    a40course:knowledgej[6],
-                    a50date:knowledgej[7],
-                    a55reveal:knowledgej[8],
-                    a60is4download:knowledgej[9],
-                    a99footnote:knowledgej[10]
-                });//EOF new knowledge
-                    saveone(new_knowledge)
-                .catch(err=>{
-                    console.log(err)
-                })
-            })//EOF sequence
-            })//EOF forEach
+    let filepath=path.join(__dirname,"../public/csv/",datafile+'.csv');
+    const results = [];
+            // 讀取並解析 CSV 檔案
+    await new Promise((resolve, reject) => {
+        fs.createReadStream(filepath)
+        .pipe(csv())
+        .on('data', (data) => {
+            console.log("value of data:"+data.describe);
+            results.push(data)})
+        .on('end',()=>{
+            console.log("length of results:"+results.length);
+            console.log("value of results:"+results[0].describe);
+            console.log("type of results:"+typeof(results));
+            console.log("value type of results:"+typeof(results.valueOf()));
+            console.log("value of 1st results:"+results[0].describe);
+            console.log("value of 2nd results:"+results[1].date);
+            console.log("the csvdata before parse:"+results)
+            console.log("the csvdata after parse:"+results);
             resolve();
-        })//EOF promise
-        })//EOF savedata
-    await readfile()
-    .then(()=>{
-        setTimeout(savedata,3000)
-    })
-    .then(async ()=>{
-        //console.log("going to list prject....");
-        //ctx.redirect("/career/project/?statusreport="+statusreport)
-        console.log("go back to datamanage1.ejs");
-        statusreport="完成knowledge批次輸入";
-        await ctx.redirect("/career/knowledge/"+personID+"?statusreport="+statusreport)
-    })
-    .catch((err)=>{
-        console.log("ctx.redirect failed !!")
-        console.log(err)
-    })
+        })
+        .on('error', reject);
+    });
+            // 批次儲存到 MongoDB
+    try {
+        await Knowledge.insertMany(
+        results.map(item => ({
+            a05domain:item.domain,
+            a15describe:item.describe,
+            a20filename:item.filename,
+            a25alias:item.alias,
+            a30explicit:item.explicit,
+            a35category:item.category,
+            a40course:item.course,
+            a50date:Date(item.date),
+            a55reveal:item.reveal,
+            a60is4download:Boolean(item.is4download),        
+            a99footnote:item.footnote
+        }))
+        );
+    } catch (error) {
+        console.error('寫入knowledge錯誤:', error);
+        ctx.throw(500, '資料庫寫入失敗');
+    }
+    await ctx.redirect("/career/knowledge/"+personID+"?statusreport="+statusreport)
 },
 //依參數id刪除資料
 async destroy(ctx,next){

@@ -2,6 +2,9 @@
 const Publish = require('../models/index').publish;
 const Knowledge = require('../models/index').knowledge;
 const Term = require('../models/index').term;
+const fs = require('fs');
+const path = require('path');
+const csv = require('csv-parser');
 module.exports = {
 //列出清單list(req,res)
 async list(ctx,next){
@@ -180,130 +183,67 @@ async batchinput(ctx, next){
     var datafile=ctx.query.datafile;
     console.log("got the name of datafile:"+datafile);
     var personID=ctx.params.id;
-    // 引用需要的模組
-    const fs = require('fs');
-    const path=require("path");
-    const readline = require('readline');
-    // 逐行讀入檔案資料
-    //定義輸出串流
-    //var writeStream = fs.createWriteStream('out.csv');
-
-    //定義讀入串流 (檔案置於/public目錄下)
-    let filepath=path.join(__dirname,"../public/csv/");
-    var lineReader = readline.createInterface({
-        input: fs.createReadStream(filepath+datafile+'.csv')
-    });
-    var lineno=0;
-    var columnno=16;
-    var publishArray;
-    var knowledgelist;
-    var tempstore=new Array(columnno);
-    for (let i=0;i<columnno;i++){
-        tempstore[i]=new Array();
-    };
-    let readfile=(()=>{
-        console.log("reading..."+datafile+".csv");
-        return new Promise((resolve,reject)=>{
-        //當讀入一行資料時
-        lineReader.on('line', function(data) {
-        var values = data.split(',');
-        for (let i=0;i<columnno;i++){
-            tempstore[i][lineno]=values[i].trim();
-        }
-        lineno++;
-        console.log("read line:"+data)
-        });//EOF lineReader.on
-        Knowledge.find({}).then(async knowledges=>{
-            //console.log("found s:"+knowledgess);
-            console.log("type of knowledges:"+typeof(knowledges));
-            console.log("type of 1st knowledge:"+typeof(knowledges[0]));
-            console.log("No. of knowledge:"+knowledges.length)
-            knowledgelist=knowledges;
-            })
-            .catch(err=>{
-                console.log("Knowledge.find({}) failed !!");
-                console.log(err)
-            })
-    resolve();
-            })//EOF promise
-    })//EOF readfile
-    let savedata=(()=>{
-        return new Promise((resolve, reject)=>{
-        publishArray=new Array(lineno);
-
-        let saveone=(async new_publish=>{
-                await new_publish.save()
-                .then(()=>{
-                    console.log("Saved document:"+new_publish.a20title)
-                    })
-                .catch((err)=>{
-                    console.log("Publish.save() failed !!")
-                    console.log(err)
-                })
-        });//EOF saveone
-        for (let k=0;k<lineno;k++){
-            publishArray[k]=new Array(columnno);
-            for (let m=0;m<columnno;m++){
-                publishArray[k][m]=tempstore[m][k]
-                //console.log(publishArray[k])
-            }
-        }
-        console.log("3 second later...");
-        console.log("1st datum of publishArray:"+publishArray[0][0]);
-        console.log("read total lines:"+publishArray.length);
-        let sequence=Promise.resolve();
-        publishArray.forEach(function(publishj){
-            sequence=sequence.then(function(){
-                var knowledgeID;
-                let temp=knowledgelist.find(knowledge=>knowledge.a15describe==publishj[3]);
-                if(temp==null||temp==undefined){
-                    console.log("did not find the knowledge ID of "+publishj[3]);
-                    knowledgeID=publishj.a05knowledgeID
-                }else{
-                    knowledgeID=temp._id
-                }
-                var new_publish = new Publish({
-                    a05knowledgeID:knowledgeID,
-                    a10coauthor:publishj[1],
-                    a15year:publishj[2],
-                    a20title:publishj[3],
-                    a25book:publishj[4],
-                    a30collection:publishj[5],
-                    a35editor:publishj[6],
-                    a40part:publishj[7],
-                    a45volumn:publishj[8],
-                    a50issue:publishj[9],
-                    a55startpage:publishj[10],
-                    a60endpage:publishj[11],
-                    a65publisher:publishj[12],
-                    a70website:publishj[13],
-                    a75city:publishj[14],
-                    a99footnote:publishj[15]
-                });//EOF new publish
-                    saveone(new_publish)
-                .catch(err=>{
-                    console.log(err)
-                })
-            })//EOF sequence
-            })//EOF forEach
-            resolve();
-        })//EOF promise
-        })//EOF savedata
-    await readfile()     
-    .then(()=>{
-        setTimeout(savedata,3000)
+    var knowledgelist
+    await Knowledge.find({}).then(async knowledges=>{
+        //console.log("found knowledges:"+knowledges);
+        console.log("type of knowledges:"+typeof(knowledges));
+        console.log("type of 1st knowledge:"+typeof(knowledges[0]));
+        //console.log("1st knowledge:"+knowledges[0].a15describe)
+        console.log("No. of knowledge:"+knowledges.length)
+        knowledgelist=knowledges;
+        console.log("type of knowledges:"+typeof(knowledgelist));
     })
-    .then(async ()=>{
-        //console.log("going to list prject....");
-        //ctx.redirect("/career/project/?statusreport="+statusreport)
-        console.log("go back to datamanage1.ejs");
-        statusreport="完成publish批次輸入";
-        await ctx.redirect("/career/publish/"+personID+"?statusreport="+statusreport)
-    })
-    .catch((err)=>{
-        console.log("ctx.redirect failed !!")
+    .catch(err=>{
+        console.log("Knowledge.find({}) failed !!");
         console.log(err)
-    })
+    });
+    
+        let filepath=path.join(__dirname,"../public/csv/",datafile+'.csv');
+        const results = [];
+                // 讀取並解析 CSV 檔案
+        await new Promise((resolve, reject) => {
+            fs.createReadStream(filepath)
+            .pipe(csv())
+            .on('data', (data) => {
+                //console.log("value of data:"+data.title);
+                results.push(data)})
+            .on('end',()=>{
+                console.log("length of results:"+results.length);
+                console.log("type of results:"+typeof(results));
+                console.log("value type of results:"+typeof(results.valueOf()));
+                console.log("value of 1st results:"+results[0].title);
+                console.log("value of 2nd results:"+results[1].year);
+                resolve();
+            })
+            .on('error', reject);
+        });
+                // 批次儲存到 MongoDB
+        try {
+            await Publish.insertMany(
+            results.map(item => ({                
+                a05knowledgeID:knowledgelist.find(ele=>ele.a15describe==item.title)._id,
+                a10coauthor:item.coauthor,
+                a15year:Date(item.year),
+                a20title:item.title,
+                a25book:item.book,
+                a30collection:item.collection,
+                a35editor:item.editor,
+                a40part:item.part,
+                a45volumn:item.volumn,
+                a50issue:item.issue,
+                a55startpage:Number(item.startpage),
+                a60endpage:Number(item.endpage),
+                a65publisher:item.publisher,
+                a70website:item.website,
+                a75city:item.city,       
+                a99footnote:item.footnote
+            }))
+            );
+        } catch (error) {
+            console.error('寫入publish錯誤:', error);
+            ctx.throw(500, '資料庫寫入失敗');
+        }
+        await ctx.redirect("/career/publish/"+personID+"?statusreport="+statusreport)
 },
 //依參數id刪除資料
 async destroy(ctx,next){

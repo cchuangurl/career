@@ -69,7 +69,7 @@ background-color: rgb(248, 243, 243);
  
     <template id="banderUI">
       <nav class="navbar navbar-expand-lg navbar-light fix-top">
-        <a class="navbar-brand" href="/">{{brand}}</a>
+        <a class="navbar-brand" href="#">{{brand}}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -264,7 +264,7 @@ Vue.component("bander",{
     props:{},
     data(){
       return {
-        brand:"Career",
+        brand:"☆",
         resume:"基本資料",
         share:"分享",
         logout:"登出",
@@ -279,7 +279,7 @@ Vue.component("bander",{
       querytxt="?statusreport=由履歷資料首頁進到本頁";
       this.shareurl="/career/innerweb/share/"+this.personID+querytxt;
        this.paperurl="/career/innerweb/paper/"+this.personID+querytxt;
-       this.logouturl="/career/branch/logout/"+this.personID+querytxt;
+       this.logouturl="/career/branch/logout/";
       },
     methods:{
            
@@ -377,7 +377,7 @@ Vue.component("bander",{
         
     const personID='<%- personID %>'
     const routes=[
-      {path:"/career/goinnerwebpage/personID",component:content1},
+      {path:"/career/goinnerwebpage/"+this.personID,component:content1},
       {
         path:"/school",
         component:content1,        

@@ -13,7 +13,7 @@ router.get('/paper/gosublist/:id', async (ctx, next)=> {
   await innerwebController.showsublist(ctx,next)
 });
 //到免費下載類別頁
-router.get('/freefiletype/:id', async (ctx, next)=> {
+router.get('/share/:id', async (ctx, next)=> {
   await innerwebController.showfreefiletype(ctx,next)
 });
 //到可下載著作清單頁

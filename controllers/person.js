@@ -8,6 +8,7 @@ async list(ctx,next){
     var statusreport=ctx.query.statusreport;
     console.log("gotten query:"+statusreport);
     var personID=ctx.params.id;
+    
     await Person.find({}).then(async persons=>{
         //console.log("found persons:"+persons);
         console.log("type of persons:"+typeof(persons));

@@ -69,7 +69,7 @@ background-color: rgb(248, 243, 243);
  
     <template id="banderUI">
       <nav class="navbar navbar-expand-lg navbar-light fix-top">
-        <a class="navbar-brand" href="/">{{brand}}</a>
+        <a class="navbar-brand" href="#">{{brand}}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -101,7 +101,6 @@ background-color: rgb(248, 243, 243);
       <div class="col-lg-9 col-md-9 col-sm-12">                      
         <router-view></router-view>
     </div>
-
   -->
     </nav>
     </template>
@@ -109,9 +108,10 @@ background-color: rgb(248, 243, 243);
     <template id="content1UI">
       <nav>
         <div class="spa-tab2">
+        <router-link to="/paper/magazine"><input type="button" value="雜誌刊物" class="btn btn-primary"></button></router-link>
         <router-link to="/paper/journal"><input type="button" value="學術期刊" class="btn btn-primary"></button></router-link>
         <router-link to="/paper/conference"><input type="button" value="研討會" class="btn btn-primary"></button></router-link>
-        <router-link to="/paper/magazine"><input type="button" value="雜誌刊物" class="btn btn-primary"></button></router-link>
+        
         </div>
         <div class="col-lg-9 col-md-9 col-sm-12" id="viewzone">                      
           <router-view></router-view>
@@ -134,8 +134,8 @@ background-color: rgb(248, 243, 243);
         <template id="content3UI">
           <nav>
             <div class="spa-tab2">
-            <router-link to="/briefing/opinion"><input type="button" value="議題觀點" class="btn btn-primary"></button></router-link>
             <router-link to="/briefing/handout"><input type="button" value="課程講義" class="btn btn-primary"></button></router-link>
+            <router-link to="/briefing/opinion"><input type="button" value="議題觀點" class="btn btn-primary"></button></router-link>            
             <router-link to="/briefing/note"><input type="button" value="知識整理" class="btn btn-primary"></button></router-link>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-12" id="viewzone">                      
@@ -145,7 +145,7 @@ background-color: rgb(248, 243, 243);
           </template>
     <template id="journalUI">
       <nav>
-        <h4>學術期刊文章</h4>
+        <h4>學術期刊文章</h4>({{noofjournal}})
         <div class="card" style="width: 18rem;">
           <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
             <h5 class="card-title">{{publish.a20title}}</h5>
@@ -153,13 +153,16 @@ background-color: rgb(248, 243, 243);
             <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
           <h6 v-show="publish.a10coauthor[0]!=''">,與{{publish.a10coauthor[0]}}合著</h6>
         </span>
-        <span>
+        <div style="display:flex">
         <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
         <h6 v-show="publish.a45volumn.length>0">,{{publish.a45volumn}}卷</h6>
         <h6 v-show="publish.a50issue.length>0">,{{publish.a50issue}}期</h6>
-        <h6 v-show="publish.a55startpage.length>0">,{{publish.a55startpage}}/h6>
-        <h6 v-show="publish.a60endpage.length>0">-{{publish.a60endpage}}頁</h6>
-      </span>
+        <h6 v-show="publish.a55startpage!=null">,{{publish.a55startpage}}</h6>
+        <h6 v-show="publish.a60endpage!=null">-{{publish.a60endpage}}頁</h6>
+        </div>
+        <div v-show="publish.is4download">
+          <a href="#">下載</a>
+        </div>
             <!--
             <p class="card-text">{{publish.a25publishcontent}}</p>
           
@@ -172,7 +175,7 @@ background-color: rgb(248, 243, 243);
       </template>
     <template id="conferenceUI">
       <nav>
-        <h4>研討會文章</h4>
+        <h4>研討會文章</h4>({{noofconference}})
         <div class="card" style="width: 18rem;">
           <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
             <h5 class="card-title">{{publish.a20title}}</h5>
@@ -196,7 +199,7 @@ background-color: rgb(248, 243, 243);
       </template>
     <template id="magazineUI">
       <nav>
-        <h4>雜誌刊物文章</h4>
+        <h4>雜誌刊物文章</h4>({{noofmagazine}})
         <div class="card" style="width: 18rem;">
           <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
             <h5 class="card-title">{{publish.a20title}}</h5>
@@ -204,13 +207,13 @@ background-color: rgb(248, 243, 243);
             <h6 class="card-subtitle mb-2 text-muted">{{publish.a15year.substring(0,4)}}</h6>
           <h6 v-show="publish.a10coauthor[0]!=''">,與{{publish.a10coauthor[0]}}合著</h6>
         </span>
-        <span>
+        <div style="display:flex">
         <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
         <h6 v-show="publish.a45volumn.length>0">,{{publish.a45volumn}}卷</h6>
         <h6 v-show="publish.a50issue.length>0">,{{publish.a50issue}}期</h6>
-        <h6 v-show="publish.a55startpage.length>0">,{{publish.a55startpage}}</h6>
-        <h6 v-show="publish.a60endpage.length>0">-{{publish.a60endpage}}頁</h6>
-      </span>
+        <h6 v-show="publish.a55startpage!=null">,{{publish.a55startpage}}</h6>
+        <h6 v-show="publish.a60endpage!=null">-{{publish.a60endpage}}頁</h6>
+        </div>
             <!--
             <p class="card-text">{{publish.a25publishcontent}}</p>
           
@@ -224,7 +227,7 @@ background-color: rgb(248, 243, 243);
       
     <template id="thesisUI">
       <nav>
-        <h4>學位論文</h4>
+        <h4>學位論文</h4>({{noofthesis}})
         <div class="card" style="width: 18rem;">
           <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
             <h5 class="card-title">{{publish.a20title}}</h5>
@@ -247,7 +250,7 @@ background-color: rgb(248, 243, 243);
       </template>
       <template id="workreportUI">
         <nav>
-          <h4>工作報告</h4>
+          <h4>工作報告</h4>({{noofworkreport}})
           <div class="card" style="width: 18rem;">
             <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
               <h5 class="card-title">{{publish.a20title}}</h5>
@@ -257,7 +260,6 @@ background-color: rgb(248, 243, 243);
           </span>
           <span>
           <h6 v-show="publish.a25book.length>0" style="font-style:italic">,{{publish.a25book}}</h6>
-
         </span>
               <!--
               <p class="card-text">{{publish.a25publishcontent}}</p>
@@ -276,7 +278,7 @@ background-color: rgb(248, 243, 243);
         </template>
         <template id="opinionUI">
           <nav>
-            <h4>議題觀點</h4>
+            <h4>議題觀點</h4>({{noofopinion}})
             <div class="card" style="width: 18rem;">
               <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
                 <h5 class="card-title">{{publish.a20title}}</h5>
@@ -300,7 +302,7 @@ background-color: rgb(248, 243, 243);
           </template>
         <template id="handoutUI">
           <nav>
-            <h4>教學講義簡報</h4>
+            <h4>教學講義簡報</h4>({{noofhandout}})
             <div class="card" style="width: 18rem;">
               <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
                 <h5 class="card-title">{{publish.a20title}}</h5>
@@ -323,7 +325,7 @@ background-color: rgb(248, 243, 243);
           </template>
         <template id="noteUI">
           <nav>
-            <h4>知識整理簡報</h4>
+            <h4>知識整理簡報</h4>({{noofnote}})
             <div class="card" style="width: 18rem;">
               <div class="card-body" v-for="publish of publishinfo" :key="publish._id">
                 <h5 class="card-title">{{publish.a20title}}</h5>
@@ -354,21 +356,23 @@ Vue.component("bander",{
     props:{},
     data(){
       return {
-        brand:"Career",
+        brand:"☆",
         resume:"基本資料",
         share:"分享",
         logout:"登出",
         paper:"著作清單",
+        personID:'<%- personID %>',
         shareurl:"",
        resumeurl:"",
+
        logouturl:""
       }
     },
     mounted: function(){
       querytxt="?statusreport=由著作清單頁進到本頁";
-      this.shareurl="/career/innerweb/share/"+querytxt;
-       this.resumeurl="/career/innerweb/resume/"+querytxt;
-       this.logouturl="/career/branch/logout/"+querytxt;
+      this.shareurl="/career/innerweb/share/"+this.personID+querytxt;
+       this.resumeurl="/career/branch/goinnerweb/"+this.personID+querytxt;
+       this.logouturl="/career/branch/logout/";
       },
     methods:{
            
@@ -410,20 +414,13 @@ Vue.component("bander",{
       template:"#content1UI"
     };
     const content2={
-      methods:{
-        remind:function(){
-          alert("如要看著作清單及下載著作檔案!!請由「瞭解更多」登入為好友, 謝謝.");
-          $("#formGroupExampleInput2").focus()
-        }
-      },
+      
       template:"#content2UI"
     };
     const content3={
       data(){
-        return{
-          
-      
-    }
+        return{      
+          }
       }, 
       mounted:function(){
       },
@@ -438,14 +435,16 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofjournal:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="b_journal"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
+            this.publishinfo.push(tempinfo);
+            this.noofjournal=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{        
@@ -462,7 +461,8 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofconference:""
     }
       }, 
       mounted:function(){
@@ -470,6 +470,7 @@ Vue.component("bander",{
           if(knowledge.a30explicit=="c_conference"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
             this.publishinfo.push(tempinfo)
+            this.noofconference=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -487,14 +488,17 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofmagazine:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
-          if(knowledge.a30explicit=="d_periodly"){
+          if(knowledge.a30explicit=="d_magazine"){
+            this.noofmagazine++;
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
+            this.publishinfo.push(tempinfo);
+            //this.noofmagazine=this.publishinfo.length;
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -512,14 +516,16 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofthesis:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="a_thesis"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
+            this.publishinfo.push(tempinfo);
+            this.noofthesis=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -537,14 +543,16 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofworkreport:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
-          if(knowledge.a30explicit=="e_workreport"){
+            if(knowledge.a30explicit=="e-workreport"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
+            this.publishinfo.push(tempinfo);
+            this.noofworkreport=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -565,14 +573,16 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofopinion:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="h_opinion"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
+            this.publishinfo.push(tempinfo);
+            this.noofopinion=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -590,14 +600,16 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofhandout:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="g_handout"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
+            this.publishinfo.push(tempinfo);
+            this.noofhandout=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -624,14 +636,16 @@ Vue.component("bander",{
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[]
+          publishinfo:[],
+          noofnote:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="i_note"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
+            this.publishinfo.push(tempinfo);
+            this.noofnote=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -645,10 +659,11 @@ Vue.component("bander",{
       template:"#noteUI"
     };
 
+
         
     const personID='<%- personID %>'
     const routes=[
-      {path:"/career/innerweb/paertype/"+this.personID,component:content1},
+      {path:"/career/innerweb/paper/"+this.personID,component:content1},
       {
         path:"/paper",
         component:content1,        
@@ -664,7 +679,9 @@ Vue.component("bander",{
         children:[
           {path:"thesis",component:thesis},
           {path:"workreport",component:workreport},
-          {path:"picture",component:picture},
+          {path:"picture",component:picture}
+          ]
+      },
       {
         path:"/briefing",
         component:content3,
@@ -673,10 +690,8 @@ Vue.component("bander",{
           {path:"handout",component:handout},
           {path:"note",component:note}
         ]
-      }
-        ]
-      }
-    ]
+      }      
+    ];
     
     const router = new VueRouter({
       mode: 'history',

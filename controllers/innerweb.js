@@ -125,7 +125,7 @@ async showfreefiletype(ctx, next) {
   console.log("進入branch controller的showfreefiletype");
   var statusreport=ctx.query.statusreport;
   var personID=ctx.params.id;
-  var knowledgelist,termlist;
+  var knowledgelist,publishlist,termlist;
   await Knowledge.find({})
     .then(async knowledges=>{
     console.log("type of knowledges:"+typeof(knowledges));
@@ -139,6 +139,19 @@ async showfreefiletype(ctx, next) {
         console.log("Knowledge.find({}) failed !!");
         console.log(err)
     })
+await Publish.find({}).then(async publishs=>{
+  //console.log("found publishs:"+publishs);
+  console.log("type of publishs:"+typeof(publishs));
+  console.log("type of 1st publish:"+typeof(publishs[0]));
+  //console.log("1st publish:"+publishs[0].a20title)
+  console.log("No. of publish:"+publishs.length)
+  publishlist=encodeURIComponent(JSON.stringify(publishs));
+  console.log("type of publishlist:"+typeof(publishlist))
+  })
+  .catch(err=>{
+      console.log("Publish.find({}) failed !!");
+      console.log(err)
+  })
   await Term.find({a15model:"knowledge"}).then(async terms=>{
     console.log("type of terms:"+typeof(terms));
     console.log("type of 1st term:"+typeof(terms[0]));
@@ -149,6 +162,7 @@ async showfreefiletype(ctx, next) {
  
       await ctx.render("innerweb/freefiletypepage" ,{
         knowledgelist,
+        publishlist,
         termlist,
         statusreport,
         personID
