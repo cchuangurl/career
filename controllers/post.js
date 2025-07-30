@@ -234,12 +234,12 @@ async batchinput(ctx, next){
         results.map(item => ({
             a05posttype:item.type,
             a10poster:item.poster,
-            a15postdate:Date(item.date),
+            a15postdate:item.date,
             a20posttitle:item.title,
             a25postcontent:item.content,
             a30reader:item.reader,
             a35showtype:item.showtype,
-            a40datetodown:Date(item.datetodown),             
+            a40datetodown:item.datetodown,             
             a99footnote:item.footnote
         }))
         );

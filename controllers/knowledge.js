@@ -203,7 +203,7 @@ async batchinput(ctx, next){
             a30explicit:item.explicit,
             a35category:item.category,
             a40course:item.course,
-            a50date:Date(item.date),
+            a50date:item.date,
             a55reveal:item.reveal,
             a60is4download:Boolean(item.is4download),        
             a99footnote:item.footnote

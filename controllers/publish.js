@@ -223,7 +223,7 @@ async batchinput(ctx, next){
             results.map(item => ({                
                 a05knowledgeID:knowledgelist.find(ele=>ele.a15describe==item.title)._id,
                 a10coauthor:item.coauthor,
-                a15year:Date(item.year),
+                a15year:item.year,
                 a20title:item.title,
                 a25book:item.book,
                 a30collection:item.collection,

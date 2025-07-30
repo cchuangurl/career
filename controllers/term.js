@@ -1,5 +1,8 @@
 //載入相對應的model
 const Term = require('../models/index').term;
+const fs = require('fs');
+const path = require('path');
+const csv = require('csv-parser');
 module.exports = {
 //列出清單list(req,res)
 async list(ctx,next){
@@ -104,101 +107,43 @@ async batchinput(ctx, next){
     var datafile=ctx.query.datafile;
     console.log("got the name of datafile:"+datafile);
     var personID=ctx.params.id;
-    // 引用需要的模組
-    const fs = require('fs');
-    const path=require("path");
-    const readline = require('readline');
-    // 逐行讀入檔案資料
-    //定義輸出串流
-    //var writeStream = fs.createWriteStream('out.csv');
-
-    //定義讀入串流 (檔案置於/public目錄下)
-    let filepath=path.join(__dirname,"../public/csv/");
-    var lineReader = readline.createInterface({
-        input: fs.createReadStream(filepath+datafile+'.csv')
-    });
-    var lineno=0;
-    var columnno=7;
-    var termArray;
-    var tempstore=new Array(columnno);
-    for (let i=0;i<columnno;i++){
-        tempstore[i]=new Array();
-    };
-    let readfile=(()=>{
-        console.log("reading..."+datafile+".csv");
-        return new Promise((resolve,reject)=>{
-    //當讀入一行資料時
-    lineReader.on('line', function(data) {
-        var values = data.split(',');
-        for (let i=0;i<columnno;i++){
-            tempstore[i][lineno]=values[i].trim();
-        }
-        lineno++;
-        console.log("read line:"+data)
-    });//EOF lineReader.on
-    resolve();
-            })//EOF promise
-    })//EOF readfile
-    let savedata=(()=>{
-        return new Promise((resolve, reject)=>{
-        termArray=new Array(lineno);
-
-        let saveone=(async new_term=>{
-                await new_term.save()
-                .then(()=>{
-                    console.log("Saved document:"+new_term.a30mean)
-                    })
-                .catch((err)=>{
-                    console.log("Term.save() failed !!")
-                    console.log(err)
-                })
-        });//EOF saveone
-        for (let k=0;k<lineno;k++){
-            termArray[k]=new Array(columnno);
-            for (let m=0;m<columnno;m++){
-                termArray[k][m]=tempstore[m][k]
-                //console.log(termArray[k])
-            }
-        }
-        console.log("3 second later...");
-        console.log("1st datum of termArray:"+termArray[0][0]);
-        console.log("read total lines:"+termArray.length);
-        let sequence=Promise.resolve();
-        termArray.forEach(function(termj){
-            sequence=sequence.then(function(){
-                var new_term = new Term({
-                    a05project:termj[0],
-                    a10database:termj[1],
-                    a15model:termj[2],
-                    a20field:termj[3],
-                    a25code:termj[4],
-                    a30mean:termj[5],
-                    a99footnote:termj[6]
-                });//EOF new term
-                    saveone(new_term)
-                .catch(err=>{
-                    console.log(err)
-                })
-            })//EOF sequence
-            })//EOF forEach
+    let filepath=path.join(__dirname,"../public/csv/",datafile+'.csv');
+    const results = [];
+            // 讀取並解析 CSV 檔案
+    await new Promise((resolve, reject) => {
+        fs.createReadStream(filepath)
+        .pipe(csv())
+        .on('data', (data) => {
+            console.log("value of data:"+data.describe);
+            results.push(data)})
+        .on('end',()=>{
+            console.log("length of results:"+results.length);
+            console.log("type of results:"+typeof(results));
+            console.log("value type of results:"+typeof(results.valueOf()));
+            console.log("value of 1st results:"+results[0].code);
+            console.log("value of 2nd results:"+results[1].mean);
             resolve();
-        })//EOF promise
-        })//EOF savedata
-    await readfile()
-    .then(()=>{
-        setTimeout(savedata,3000)
-    })
-    .then(async ()=>{
-        //console.log("going to list prject....");
-        //ctx.redirect("/career/project/?statusreport="+statusreport)
-        console.log("go back to datamanage1.ejs");
-        statusreport="完成term批次輸入";
-        await ctx.redirect("/career/term/"+personID+"?statusreport="+statusreport)
-    })
-    .catch((err)=>{
-        console.log("ctx.redirect failed !!")
-        console.log(err)
-    })
+        })
+        .on('error', reject);
+    });
+            // 批次儲存到 MongoDB
+    try {
+        await Term.insertMany(
+        results.map(item => ({
+            a05project:item.project,
+            a10database:item.database,
+            a15model:item.model,
+            a20field:item.field,
+            a25code:item.code,
+            a30mean:item.mean,       
+            a99footnote:item.footnote
+        }))
+        );
+    } catch (error) {
+        console.error('寫入term錯誤:', error);
+        ctx.throw(500, '資料庫寫入失敗');
+    }
+    await ctx.redirect("/career/term/"+personID+"?statusreport="+statusreport)
 },
 //依參數id刪除資料
 async destroy(ctx,next){
