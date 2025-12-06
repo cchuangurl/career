@@ -440,10 +440,12 @@ Vue.component("bander",{
     }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="b_journal"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
+            if (tempinfo) {
+            this.publishinfo.push(tempinfo)
+            }
             this.noofjournal=this.publishinfo.length
           }
         }
@@ -466,10 +468,12 @@ Vue.component("bander",{
     }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="c_conference"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
+            if (tempinfo) {
             this.publishinfo.push(tempinfo)
+            }
             this.noofconference=this.publishinfo.length
           }
         }
@@ -489,16 +493,18 @@ Vue.component("bander",{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
           publishinfo:[],
-          noofmagazine:""
-    }
+          noofmagazine:0,
+          showtest1:"有連到const magazine"
+          }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="d_magazine"){
-            this.noofmagazine++;
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            //this.noofmagazine=this.publishinfo.length;
+            if (tempinfo) {
+            this.publishinfo.push(tempinfo)
+            }
+            this.noofmagazine=this.publishinfo.length
           }
         }
         this.publishinfo.sort((a,b)=>{
@@ -517,14 +523,16 @@ Vue.component("bander",{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
           publishinfo:[],
-          noofthesis:""
+          noofthesis:""          
     }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="a_thesis"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
+            if (tempinfo) {
+            this.publishinfo.push(tempinfo)
+            }
             this.noofthesis=this.publishinfo.length
           }
         }
@@ -548,10 +556,12 @@ Vue.component("bander",{
     }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
             if(knowledge.a30explicit=="e-workreport"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
+            if (tempinfo) {
+            this.publishinfo.push(tempinfo)
+            }
             this.noofworkreport=this.publishinfo.length
           }
         }
@@ -578,10 +588,12 @@ Vue.component("bander",{
     }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="h_opinion"||knowledge.a30explicit=="j_share"||knowledge.a30explicit=="f_unpublish"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
+            if (tempinfo) {
+            this.publishinfo.push(tempinfo)
+            }
             this.noofopinion=this.publishinfo.length
           }
         }
@@ -602,13 +614,15 @@ Vue.component("bander",{
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
           publishinfo:[],
           noofhandout:""
-    }
+          }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="g_handout"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
+            if (tempinfo) {
+            this.publishinfo.push(tempinfo)
+            }
             this.noofhandout=this.publishinfo.length
           }
         }
@@ -641,10 +655,12 @@ Vue.component("bander",{
     }
       }, 
       mounted:function(){
-        for(knowledge of this.knowledgelist){
+        for(let knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="i_note"){
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
+            if (tempinfo) {
+            this.publishinfo.push(tempinfo)
+            }
             this.noofnote=this.publishinfo.length
           }
         }
@@ -663,14 +679,18 @@ Vue.component("bander",{
         
     const personID='<%- personID %>'
     const routes=[
-      {path:"/career/innerweb/paper/"+this.personID,component:content1},
+      {path:"/career/innerweb/gopaper/"+personID,
+      component:content1
+        //,redirect:"/paper/magazine"
+      },
       {
         path:"/paper",
         component:content1,        
         children:[
+          //{path:"",component:magazine},
+          {path:"magazine",component:magazine},
           {path:"journal",component:journal},
-          {path:"conference",component:conference},
-          {path:"magazine",component:magazine}
+          {path:"conference",component:conference}          
         ]
       },
       {

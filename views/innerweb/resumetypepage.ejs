@@ -145,7 +145,7 @@ background-color: rgb(248, 243, 243);
       <nav>
         <h4>畢業學校</h4>
         <ul>
-        <li>臺灣大學農業經濟學研究所博士(1984年6月畢) </li>
+        <li>臺灣大學農業經濟學研究所博士(1994年6月畢) </li>
             <li>臺灣大學農業經濟學研究所碩士(1987年6月畢) </li>
             <li>臺灣大學農業經濟學系學士(1982年6月畢) </li>
             <li>省立臺南第一高級中學(1978年6月畢)</li>
@@ -278,7 +278,7 @@ Vue.component("bander",{
     mounted: function(){
       querytxt="?statusreport=由履歷資料首頁進到本頁";
       this.shareurl="/career/innerweb/share/"+this.personID+querytxt;
-       this.paperurl="/career/innerweb/paper/"+this.personID+querytxt;
+       this.paperurl="/career/innerweb/gopaper/"+this.personID+querytxt;
        this.logouturl="/career/branch/logout/";
       },
     methods:{
@@ -348,9 +348,19 @@ Vue.component("bander",{
       template:"#content3UI"
     };
     const diploma={
+      data(){
+        return{
+          showtest1:"有連到const diploma"
+        }
+      },
       template:"#diplomaUI"
     };
     const training={
+ data(){
+        return{
+          
+        }
+      },     
       template:"#trainingUI"
     };
     const language={
@@ -377,7 +387,9 @@ Vue.component("bander",{
         
     const personID='<%- personID %>'
     const routes=[
-      {path:"/career/goinnerwebpage/"+this.personID,component:content1},
+      {path:"/career/goinnerweb/"+personID,
+        component:content1
+      },
       {
         path:"/school",
         component:content1,        

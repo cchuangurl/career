@@ -14,7 +14,7 @@ background-color: rgb(248, 243, 243);
   display: flex;
   flex-direction:column;
 	 justify-content: flex-start;
-     align-items:center;
+     align-items:left;
   	margin: 0;
 }
 .fix-top{
@@ -158,7 +158,7 @@ background-color: rgb(248, 243, 243);
         </template>
       <template id="magazineUI">
         <nav>
-          <h4>雜誌刊物文章</h4>({{noofmagazine}})
+          <h4>雜誌刊物文章</h4>({{noofmagazine}}){{showtest1}}
           <h3>抱歉!!尚在建構中...</h3>
         </nav>
         </template>
@@ -223,7 +223,7 @@ Vue.component("bander",{
     mounted: function(){
       querytxt="?statusreport=由免費下載類別頁進到本頁";
        this.resumeurl="/career/branch/goinnerweb/"+this.personID+querytxt;
-       this.paperurl="/career/innerweb/paper/"+this.personID+querytxt;
+       this.paperurl="/career/innerweb/gopaper/"+this.personID+querytxt;
        this.logouturl="/career/branch/logout/";
     },
     methods:{
@@ -341,7 +341,8 @@ Vue.component("bander",{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
           publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
           publishinfo:[],
-          noofmagazine:""
+          noofmagazine:"",
+          showtest1:"有連到const magazine"
     }
       }, 
       mounted:function(){
@@ -514,7 +515,7 @@ Vue.component("bander",{
         
     const personID='<%- personID %>'
     const routes=[
-      {path:"/career/innerweb/paper/"+this.personID,component:content1},
+      {path:"/career/innerweb/share/"+this.personID,component:content1},
       {
         path:"/paper",
         component:content1,        
