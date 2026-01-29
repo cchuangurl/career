@@ -147,56 +147,128 @@ background-color: rgb(248, 243, 243);
       <template id="journalUI">
         <nav>
           <h4>學術期刊文章</h4>({{noofjournal}})
-          <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
         </nav>
         </template>
       <template id="conferenceUI">
         <nav>
           <h4>研討會文章</h4>({{noofconference}})
-          <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
         </nav>
         </template>
       <template id="magazineUI">
         <nav>
           <h4>雜誌刊物文章</h4>({{noofmagazine}}){{showtest1}}
-          <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
         </nav>
         </template>
         
       <template id="thesisUI">
         <nav>
           <h4>學位論文</h4>({{noofthesis}})
-          <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
         </nav>
         </template>
         <template id="workreportUI">
           <nav>
             <h4>工作報告</h4>({{noofworkreport}})
-            <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
           </nav>
           </template>
         <template id="pictureUI">
           <nav>
             <h4>圖片影像等其他訊息</h4>
-            <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
             </nav>
             </template>
           <template id="handoutUI">
             <nav>
               <h4>教學講義簡報</h4>({{noofhandout}})
-              <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
             </nav>
             </template>
             <template id="opinionUI">
               <nav>
                 <h4>議題觀點</h4>({{noofopinion}})
-                <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
               </nav>
               </template>                
           <template id="noteUI">
             <nav>
               <h4>知識整理簡報</h4>({{noofnote}})
-              <h3>抱歉!!尚在建構中...</h3>
+          <div class="card" style="width: 18rem;">
+          <div class="card-body" v-for="knowledge of knowledgeinfo" :key="knowledge._id">
+            <h5 class="card-title">{{knowledge.a15describe}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{knowledge.a20filename.substring(0,4)}}</h6>
+          <div v-show="knowledge.a60is4download">
+          <input type="submit" value="檢視及下載" @click="view2load(knowledge.a20filename)">
+        </div>
+          </div>
+        </div>
             </nav>
             </template>
 <!-- Vue CDN-->
@@ -286,25 +358,27 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          knowledgeinfo:[],
           noofjournal:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="b_journal"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            this.noofjournal=this.publishinfo.length
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofjournal=this.knowledgeinfo.length
         }
-        this.publishinfo.sort((a,b)=>{        
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+        this.knowledgeinfo.sort((a,b)=>{        
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }        
       },
       template:"#journalUI"
     };
@@ -312,26 +386,28 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          knowledgeinfo:[],
           noofconference:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="c_conference"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo)
-            this.noofconference=this.publishinfo.length
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofconference=this.knowledgeinfo.length
         }
-        this.publishinfo.sort((a,b)=>{
+        this.knowledgeinfo.sort((a,b)=>{
         
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }        
       },
       template:"#conferenceUI"
     };
@@ -339,27 +415,30 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          personID:'<%- personID %>',  
+          knowledgeinfo:[],
           noofmagazine:"",
           showtest1:"有連到const magazine"
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
-            if(knowledge.a30explicit=="d_periodly"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            this.noofmagazine=this.publishinfo.length
+            if(knowledge.a30explicit=="d_magazine"){
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofmagazine=this.knowledgeinfo.length          
         }
-        this.publishinfo.sort((a,b)=>{
+        this.knowledgeinfo.sort((a,b)=>{
         
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }
       },
       template:"#magazineUI"
     };
@@ -367,26 +446,28 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          knowledgeinfo:[],
           noofthesis:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="a_thesis"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            this.noofthesis=this.publishinfo.length
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofthesis=this.knowledgeinfo.length
         }
-        this.publishinfo.sort((a,b)=>{
+        this.knowledgeinfo.sort((a,b)=>{
         
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }        
       },
       template:"#thesisUI"
     };
@@ -394,26 +475,28 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          knowledgeinfo:[],
           noofworkreport:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
             if(knowledge.a30explicit=="e-workreport"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            this.noofworkreport=this.publishinfo.length
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofworkreport=this.knowledgeinfo.length
         }
-        this.publishinfo.sort((a,b)=>{
+        this.knowledgeinfo.sort((a,b)=>{
         
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }        
       },
       template:"#workreportUI"
     };
@@ -424,26 +507,28 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          knowledgeinfo:[],
           noofopinion:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="h_opinion"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            this.noofopinion=this.publishinfo.length
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofopinion=this.knowledgeinfo.length
         }
-        this.publishinfo.sort((a,b)=>{
+        this.knowledgeinfo.sort((a,b)=>{
         
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }        
       },
       template:"#opinionUI"
     };
@@ -451,20 +536,18 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          knowledgeinfo:[],
           noofhandout:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="g_handout"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            this.noofhandout=this.publishinfo.length
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofhandout=this.knowledgeinfo.length
         }
-        this.publishinfo.sort((a,b)=>{
+        this.knowledgeinfo.sort((a,b)=>{
         /*
           if(a.a15year.substring(0,4)!=b.a15year.substring(0,4)){
             return Date.parse(a.a15year.substring(0,4)-Date.parse(b.a15year.substring(0,4))
@@ -475,11 +558,15 @@ Vue.component("bander",{
 
         }
                     */ 
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }        
       },
       template:"#handoutUI"
     };
@@ -487,26 +574,28 @@ Vue.component("bander",{
       data(){
         return{
           knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),   
-          publishinfo:[],
+          knowledgeinfo:[],
           noofnote:""
     }
       }, 
       mounted:function(){
         for(knowledge of this.knowledgelist){
           if(knowledge.a30explicit=="i_note"){
-            let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
-            this.publishinfo.push(tempinfo);
-            this.noofnote=this.publishinfo.length
+            this.knowledgeinfo.push(knowledge)
           }
+            this.noofnote=this.knowledgeinfo.length
         }
-        this.publishinfo.sort((a,b)=>{
+        this.knowledgeinfo.sort((a,b)=>{
         
-          return parseInt(b.a15year.substring(0,4))-parseInt(a.a15year.substring(0,4))     
+          return parseInt(b.a20filename)-parseInt(a.a20filename)     
       })
       },
       methods:{
-        
+        view2load:function(id){
+          let querytext="?statusreport=由某類別一篇的下載按鈕進入本頁";
+          let url3='/career/knowledge/download1/'+this.personID+"/"+id;
+          window.location.href=url3;
+        }        
       },
       template:"#noteUI"
     };

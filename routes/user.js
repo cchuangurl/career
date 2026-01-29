@@ -23,10 +23,6 @@ router.get('/editpage/:id/:id2', async (ctx, next)=> {
 router.get('/inputbatch/:id', async (ctx, next)=> {
     await userController.batchinput(ctx,next)
 });
-//依參數id2取得資料
-router.get('/:id/:id2', async(ctx, next)=> {
-	await userController.retrieve(ctx)
-});
 //依參數no取得一筆資料
 router.get('/find/:id/:no', async(ctx, next)=> {
 	await userController.findByNo(ctx)
@@ -36,11 +32,11 @@ router.post('/add/:id', async (ctx, next)=> {
 	console.log(ctx.request.body);
 	await userController.create(ctx)
 });
-//依參數id刪除資料
+//依參數id2刪除資料
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await userController.destroy(ctx)
 });
-//依參數id更新資料
+//存回修正資料
 router.post('/update/:id', async (ctx, next)=> {
 	await userController.update(ctx)
 });

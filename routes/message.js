@@ -23,10 +23,6 @@ router.post('/addbyguest', async (ctx, next)=> {
     await messageController.getmessage(ctx,next)
 });
 
-//依參數id2取得資料
-router.get('/:id/:id2', async(ctx, next)=> {
-	await messageController.retrieve(ctx)
-});
 //依參數no取得一筆資料
 router.get('/find/:id/:no', async(ctx, next)=> {
 	await messageController.findByNo(ctx)
@@ -36,11 +32,11 @@ router.post('/add/:id', async (ctx, next)=> {
 	console.log(ctx.request.body);
 	await messageController.create(ctx)
 });
-//依參數id刪除資料
+//依參數id2刪除資料
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await messageController.destroy(ctx)
 });
-//依參數id更新資料
+//存回修正資料
 router.post('/update/:id', async (ctx, next)=> {
 	await messageController.update(ctx)
 });

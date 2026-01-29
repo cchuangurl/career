@@ -503,9 +503,11 @@ Vue.component("bander",{
             let tempinfo=this.publishlist.find(ele=>ele.a05knowledgeID==knowledge._id)
             if (tempinfo) {
             this.publishinfo.push(tempinfo)
-            }
-            this.noofmagazine=this.publishinfo.length
+            }else{
+              console.log(knowledge._id+""+knowledge.a15describe)
+            }            
           }
+          this.noofmagazine=this.publishinfo.length
         }
         this.publishinfo.sort((a,b)=>{
         

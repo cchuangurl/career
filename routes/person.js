@@ -40,7 +40,7 @@ router.post('/addbyguest', async (ctx, next)=> {
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await personController.destroy(ctx)
 });
-//依參數id更新資料
+//存回修正資料
 router.post('/update/:id', async (ctx, next)=> {
 	await personController.update(ctx)
 });

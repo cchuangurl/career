@@ -31,11 +31,11 @@ router.post('/add/:id', async (ctx, next)=> {
 	console.log(ctx.request.body);
 	await postController.create(ctx)
 });
-//依參數id刪除資料
+//依參數id2刪除資料
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await postController.destroy(ctx)
 });
-//依參數id更新資料
+//存回修正資料
 router.post('/update/:id', async (ctx, next)=> {
 	await postController.update(ctx)
 });

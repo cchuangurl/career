@@ -4,7 +4,7 @@ FROM node:alpine
 # Run some commands and configurations
 WORKDIR /usr/src/project/career
 COPY package*.json ./
-RUN npm install --omit dev
+RUN npm install
 COPY . .
 EXPOSE 8080
 

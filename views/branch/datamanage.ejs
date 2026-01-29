@@ -66,7 +66,7 @@ background-color: rgb(205, 226, 253);
               <a class="nav-link" :href="KMurl">{{KM}}</a>
           </li>
               <li class="nav-item">
-                <a class="nav-link" :href="outerweburl">{{outerweb}}</a>
+                <a class="nav-link" :href="innerweburl">{{innerweb}}</a>
               </li>
           </ul>
           <span class="navbar-text">
@@ -106,16 +106,15 @@ background-color: rgb(205, 226, 253);
           //previouspage:"回案件清單頁",
           data2manage:"各資料表維管入口",
           KM:"知識管理",
-          outerweb:"至外部網站",
+          innerweb:"至好友網站",
           statusreport:'<%- statusreport %>',
           personID:'<%- personID %>',
           //previousurl:"",
-          outerweburl:"",
-          KMurl:""
-        }
+          innerweburl:"",
+          KMurl:""        }
       },
           mounted:function(){
-            this.outerweburl="/career/branch/goouterweb/"+this.personID,
+            this.innerweburl="/career/branch/goinnerweb/"+this.personID,
             this.KMurl="/career/branch/goKM/"+this.personID
           },
       methods:{
@@ -147,10 +146,10 @@ background-color: rgb(205, 226, 253);
           personID:'<%- personID %>',
           tables:[
             {"route":"/career/user",
-            "label":"使用者帳戶資料表維管"
+            "label":"帳戶資料表維管"
             },
             {"route":"/career/userright",
-            "label":"使用者權限資料表維管"
+            "label":"群組權限資料表維管"
             },
             {"route":"/career/person",
             "label":"使用者個資資料表維管"

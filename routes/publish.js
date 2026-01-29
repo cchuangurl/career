@@ -22,10 +22,6 @@ router.get('/lookone/:id/:id2', async(ctx, next)=> {
 router.get('/inputbatch/:id', async (ctx, next)=> {
     await publishController.batchinput(ctx,next)
 });
-//依參數id2取得資料
-router.get('/:id/:id2', async(ctx, next)=> {
-	await publishController.retrieve(ctx)
-});
 //依參數no取得一筆資料
 router.get('/find/:id/:no', async(ctx, next)=> {
 	await publishController.findByNo(ctx)
@@ -39,7 +35,7 @@ router.post('/add/:id', async (ctx, next)=> {
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await publishController.destroy(ctx)
 });
-//依參數id更新資料
+//存回修正資料
 router.post('/update/:id', async (ctx, next)=> {
 	await publishController.update(ctx)
 });

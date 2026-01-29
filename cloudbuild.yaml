@@ -1,0 +1,5 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "asia-east1-docker.pkg.dev/deep0-340312/repocareer/career:v8", "."]
+images:
+  - "asia-east1-docker.pkg.dev/deep0-340312/repocareer/career:v8"

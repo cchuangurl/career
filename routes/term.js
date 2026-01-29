@@ -18,10 +18,7 @@ router.get('/editpage/:id/:id2', async (ctx, next)=> {
 router.get('/inputbatch/:id', async (ctx, next)=> {
     await termController.batchinput(ctx,next)
 });
-//依參數id2取得資料
-router.get('/:id/:id2', async(ctx, next)=> {
-	await termController.retrieve(ctx)
-});
+
 //依參數no取得一筆資料
 router.get('/find/:id/:no', async(ctx, next)=> {
 	await termController.findByNo(ctx)
@@ -35,7 +32,7 @@ router.post('/add/:id', async (ctx, next)=> {
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await termController.destroy(ctx)
 });
-//依參數id更新資料
+//存回修正資料
 router.post('/update/:id', async (ctx, next)=> {
 	await termController.update(ctx)
 });

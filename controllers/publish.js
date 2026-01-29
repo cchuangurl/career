@@ -183,21 +183,7 @@ async batchinput(ctx, next){
     var datafile=ctx.query.datafile;
     console.log("got the name of datafile:"+datafile);
     var personID=ctx.params.id;
-    var knowledgelist
-    await Knowledge.find({}).then(async knowledges=>{
-        //console.log("found knowledges:"+knowledges);
-        console.log("type of knowledges:"+typeof(knowledges));
-        console.log("type of 1st knowledge:"+typeof(knowledges[0]));
-        //console.log("1st knowledge:"+knowledges[0].a15describe)
-        console.log("No. of knowledge:"+knowledges.length)
-        knowledgelist=knowledges;
-        console.log("type of knowledges:"+typeof(knowledgelist));
-    })
-    .catch(err=>{
-        console.log("Knowledge.find({}) failed !!");
-        console.log(err)
-    });
-    
+    const knowledgelist = await Knowledge.find({}).lean();
         let filepath=path.join(__dirname,"../public/csv/",datafile+'.csv');
         const results = [];
                 // 讀取並解析 CSV 檔案
@@ -217,32 +203,46 @@ async batchinput(ctx, next){
             })
             .on('error', reject);
         });
-                // 批次儲存到 MongoDB
-        try {
-            await Publish.insertMany(
-            results.map(item => ({                
-                a05knowledgeID:knowledgelist.find(ele=>ele.a15describe==item.title)._id,
-                a10coauthor:item.coauthor,
-                a15year:item.year,
-                a20title:item.title,
-                a25book:item.book,
-                a30collection:item.collection,
-                a35editor:item.editor,
-                a40part:item.part,
-                a45volumn:item.volumn,
-                a50issue:item.issue,
-                a55startpage:Number(item.startpage),
-                a60endpage:Number(item.endpage),
-                a65publisher:item.publisher,
-                a70website:item.website,
-                a75city:item.city,       
-                a99footnote:item.footnote
-            }))
+        //批次轉換為mongoDB格式
+        const norm = (s) => String(s ?? "")
+            .replace(/^\uFEFF/, "")   // 去 BOM
+            .replace(/\r/g, "")       // 去 Windows 換行殘留
+            .trim();
+        const knowledgeMap = new Map(
+            knowledgelist.map(k => [norm(k.a15describe), k._id])
             );
-        } catch (error) {
-            console.error('寫入publish錯誤:', error);
-            ctx.throw(500, '資料庫寫入失敗');
-        }
+        const docs = results.map((item, idx) => {
+            const key = norm(item.title);
+            const kid = knowledgeMap.get(key);
+
+            if (!kid) {
+                // 你可以選擇：A.直接 throw 讓你立刻知道；B. return null 跳過
+                throw new Error(`No matching knowledge for CSV row ${idx + 1}, title=${JSON.stringify(item.title)}`);
+            }
+
+            return {
+                a05knowledgeID: kid,
+                a10coauthor: item.coauthor,
+                a15year: item.year,
+                a20title: item.title,
+                a25book: item.book,
+                a30collection: item.collection,
+                a35editor: item.editor,
+                a40part: item.part,
+                a45volumn: item.volumn,
+                a50issue: item.issue,
+                a55startpage: Number(item.startpage),
+                a60endpage: Number(item.endpage),
+                a65publisher: item.publisher,
+                a70website: item.website,
+                a75city: item.city,
+                a99footnote: item.footnote
+            };
+            });
+        
+        // 批次儲存到 MongoDB
+        await Publish.insertMany(docs);
+        //顯示批次輸入後的資料清單        
         await ctx.redirect("/career/publish/"+personID+"?statusreport="+statusreport)
 },
 //依參數id刪除資料

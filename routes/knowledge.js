@@ -18,9 +18,9 @@ router.get('/editpage/:id/:id2', async (ctx, next)=> {
 router.get('/inputbatch/:id', async (ctx, next)=> {
     await knowledgeController.batchinput(ctx,next)
 });
-//依參數id2取得資料
-router.get('/:id/:id2', async(ctx, next)=> {
-	await knowledgeController.retrieve(ctx)
+//批次更新資料
+router.get('/updatebatch/:id', async (ctx, next)=> {
+    await knowledgeController.batchupdate(ctx,next)
 });
 //依參數no取得一筆資料
 router.get('/find/:id/:no', async(ctx, next)=> {
@@ -35,7 +35,7 @@ router.post('/add/:id', async (ctx, next)=> {
 router.get('/delete/:id/:id2', async (ctx, next)=> {
 	await knowledgeController.destroy(ctx)
 });
-//依參數id2更新資料
+//存回修正資料
 router.post('/update/:id', async (ctx, next)=> {
 	await knowledgeController.update(ctx)
 });
