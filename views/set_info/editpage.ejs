@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<style type="text/css">
+body {
+  background-color: #d6d6d3;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+     flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#e5f8cd;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+</style>
+
+  <title>修正指定之set_info</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>
+        <inputer></inputer>
+        <!-- <outputer></outputer> -->
+    </div>
+
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" :href="listpageurl">{{listpage}}</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#">{{edit1}} <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">{{editbatch}}</a>
+            </li>
+          </ul>
+          <span class="navbar-text">
+            <!--{{statusreport}}-->
+          </span>
+        </div>
+      </nav>
+    </template>
+
+    <template id="inputerUI" >
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">修正{{set_info.a25code}}之對照資料</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{card_subtitle}}</h6>
+          <form :action="updateurl" method="post">
+            <div class="form-group" :key="inputerUIkey">
+            <label for="formGroupExampleInput2">{{items.item}}</label>
+            <input type="text" name="_id" class="form-control" id="formGroupExampleInput" :value="set_info._id">
+
+            <label for="formGroupExampleInput2">{{items.item0}}</label>
+              <select :name="names.name0" class="form-select"">
+              <optgroup v-for="(domain,index) of domains" :key="domain._id" >                
+              <option :value="domain.a25code" :selected="domainindex[index]">{{domain.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>  
+          
+            <label for="formGroupExampleInput2">{{items.item1}}</label>
+            <input type="text" :name="names.name1" class="form-control" id="formGroupExampleInput1" :value="set_info.a15describe">
+
+            <label for="formGroupExampleInput2">{{items.item2}}</label>
+            <input type="text" :name="names.name2" class="form-control" id="formGroupExampleInput2" :value="set_info.a20filename">
+
+            <label for="formGroupExampleInput2">{{items.item3}}</label>
+            <input type="text" :name="names.name3" class="form-control" id="formGroupExampleInput3" :value="set_info.a25alias">
+
+            <label for="formGroupExampleInput2">{{items.item4}}</label>
+             <select :name="names.name4" class="form-select"">
+              <optgroup v-for="(explicit,index) of explicits" :key="explicit._id" >                
+              <option :value="explicit.a25code" :selected="explicitindex[index]">{{explicit.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>  
+          
+            <label for="formGroupExampleInput2">{{items.item5}}</label>
+             <select :name="names.name5" class="form-select"">
+              <optgroup v-for="(category,index) of categorys" :key="category._id" >                
+              <option :value="category.a25code" :selected="categoryindex[index]">{{category.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>  
+          
+            <label for="formGroupExampleInput2">{{items.item6}}</label>
+             <select :name="names.name6" class="form-select"">
+              <optgroup v-for="(course,index) of courses" :key="course._id" >                
+              <option :value="course.a25code" :selected="courseindex[index]">{{course.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>  
+          
+            <label for="formGroupExampleInput2">{{items.item8}}</label>
+            <input type="text" :name="names.name8" class="form-control" id="formGroupExampleInput8" :value="set_info.a50date>
+
+            <label for="formGroupExampleInput2">{{items.item9}}</label>
+            <select :name="names.name9" class="form-select"">
+              <optgroup v-for="(reveal,index) of reveals" :key="reveal._id" >                
+              <option :value="reveal.a25code" :selected="revealindex[index]">{{reveal.a30mean}}</option>
+              </optgroup>
+              </select>
+            <br>  
+          
+              <input type="hidden" name="statusreport" class="form-control" id="msg1" value="由修正set_info後進入本頁">
+
+              <input type="submit" id="button1" value="確定送出" class="btn btn-info">
+            </div>
+          </form>
+          <input type="submit" id="button2" value="重新輸入" class="btn btn-info" @click="rerender()">
+          <!-- <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div>
+    </template>
+
+
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"career",
+        listpage:"回前頁",
+        input1:"手動新增1筆",
+        inputbatch:"批次輸入",
+        crawl:"從網路抓取",
+        statusreport:'<%- statusreport %>',
+        personID:'<%- personID %>',
+        listpageurl:""        
+      }
+    },
+    mounted:function(){
+      this.listpageurl="/career/set_info/"+this.personID
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("inputer",{
+    props:{},
+    data(){
+      return {
+        card_title:"",
+        card_subtitle:"請修正以下各項資料:",
+        items:{
+          item0:"資料所在網址",
+          item1:"資料組編號",
+          item2:"本批次擷取筆數",
+          item3:"跳過之筆數(即過去已擷取之筆數)",
+          item4:"查詢條件(含起始日期、結束日期、所需欄位、符合之標準等)",
+          item5:"資料排序方式(欄位名稱及排序方向)",
+          item6:"給予之此批次資料簡稱",
+          item7:"資料描述",
+          item8:"擷取日期",
+          item9:"檔名主要字母",
+          item10:"同檔名時之序號",
+          item99:"特別註記"
+          },
+        names:{
+          name0:"a05archive_url",
+          name1:"a10unitID",
+          name2:"a15data_volume",
+          name3:"a20skip",
+          name4:"a25filter",
+          name5:"a30order",
+          name6:"a35dataset_name",
+          name7:"a40describe",
+          name8:"a45date_of_get",
+          name9:"a50filename_part",
+          name10:"a55preventer"
+            },
+      set_info:JSON.parse(decodeURIComponent('<%=set_info%>')),
+      termlist:JSON.parse(decodeURIComponent('<%=termlist%>')),
+        publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),
+        domains:[],
+        explicits:[],
+        categorys:[],
+        courses:[],
+        reveals:[],
+        publishindex:[],
+        domainindex:[],
+        explicitindex:[],
+        categoryindex:[],
+        courseindex:[],
+        revealindex:[],
+      inputerUIkey:0,
+      personID: '<%- personID %>',
+      updateurl:""
+      }//EOF return
+    },//EOF data()
+    mounted:function(){
+        this.updateurl="/career/set_info/update/"+this.personID;
+
+        for(term of this.termlist){
+          if(term.a20field=="a05domain"){
+                this.domains.push(term)
+            }
+          }
+          for(term of this.termlist){
+            if(term.a20field=="a30explicit"){
+                this.explicits.push(term)
+            }
+          }
+
+          for(term of this.termlist){
+          if(term.a20field=="a35category"){
+                this.categorys.push(term)
+            }
+          }
+
+          for(term of this.termlist){
+            if(term.a20field=="a40course"){
+                this.courses.push(term)
+            }
+          }
+
+          for(term of this.termlist){
+          if(term.a20field=="a55reveal"){
+                this.reveals.push(term)
+            }
+          }
+
+          for(publish of this.publishlist){
+            if(publish._id==this.set_info.a45publish){
+                this.publishindex.push(true)
+            }else{
+                this.publishindex.push(false)
+            }
+        }
+
+        for(domain of this.domains){
+            if(domain.a25code==this.publish.a05domain){
+                this.domainindex.push(true)
+            }else{
+                this.domainindex.push(false)
+            }
+        }
+
+        for(explicit of this.explicits){
+            if(explicit.a25code==this.publish.a30explicit){
+                this.explicitindex.push(true)
+            }else{
+                this.explicitindex.push(false)
+            }
+        }
+
+        for(category of this.categorys){
+            if(category.a25code==this.publish.a35category){
+                this.categoryindex.push(true)
+            }else{
+                this.categoryindex.push(false)
+            }
+        }
+
+        for(course of this.courses){
+            if(course.a25code==this.publish.a40course){
+                this.courseindex.push(true)
+            }else{
+                this.courseindex.push(false)
+            }
+        }
+
+        for(reveal of this.reveals){
+            if(reveal.a25code==this.publish.a55reveal){
+                this.revealindex.push(true)
+            }else{
+                this.revealindex.push(false)
+            }
+        }
+    },
+
+    methods:{
+        rerender:function() {
+      this.inputerUIkey += 1;
+      console.log("inputerUIkey:"+this.inputerUIkey)
+    }
+    },
+
+    template:"#inputerUI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        components:{
+
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        }
+    })
+</script>
+
+
+  </body>
+</html>

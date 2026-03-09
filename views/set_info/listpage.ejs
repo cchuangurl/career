@@ -18,25 +18,36 @@ background-color: rgb(205, 226, 253);
      align-items:center;
   	margin: 0;
 }
+#tablefy{
+    display: inline-block;
+  flex-direction:row;
+	 justify-content: flex-start;
+     align-items:left;
+     margin:10px
+}
 .navbar{background:#cff8c5;}
 .nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
 .nav-link{margin-right:1em !important;}
 .nav-link:hover{background: #f4f4f4;color:#f97300;}
 .navbar-collapse{justify-content:flex-end;}
 .navbar-toggler{background:#fff !important;}
-.pager { margin-top: 12px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.pager-btn { padding: 6px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
-.pager-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-.pager-btn.active { font-weight: 700; border-color: #333; }
-.pager-info { margin-left: 10px; color: #666; }
+.page-item {
+    margin-right:12px
+}
+.page-item[active=true]{
+    font-weight: bold;
+    text-decoration:underline
+}
 </style>
 
-  <title>出版訊息資料管理</title>
+  <title>開放資料操作入口</title>
   </head>
   <body>
     <div id="show_div">
       <bander></bander>
+      <div class="row" align="justify">
         <outputer></outputer>
+      </div>
         <!-- <inputer></inputer> -->
     </div>
 
@@ -49,23 +60,26 @@ background-color: rgb(205, 226, 253);
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" :href="innerweburl">{{innerweb}}</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" :href="datamanageurl">{{otherdata}}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link  active" href="#">{{modeltype}}<span class="sr-only">(current)</span></a>
-            </li>
+              <a class="nav-link" :href="KMurl">{{KM}}</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link active" href="#">{{northgate}}<span class="sr-only">(current)</span></a>
+          </li>
+              <li class="nav-item">
+                <a class="nav-link" :href="innerweburl">{{innerweb}}</a>
+              </li>
           </ul>
           <span class="navbar-text">
-            <font size="1">{{statusreport}}</font>
+            <font size="2">{{statusreport}}</font>
           </span>
         </div>
       </nav>
     </template>
 
-    <template id="outputerUI">
+      <template id="outputerUI">
         <nav aria-label="...">
           <table>
             <tr>
@@ -154,33 +168,36 @@ background-color: rgb(205, 226, 253);
 
     <!-- 總頁數/總筆數訊息 -->
     <span class="pager-info">
-      共 {{ publishlist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
+      共 {{ set_infolist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
     </span>
   </div>
   </div>
         <table border="1" class="table table-striped">
             <thead>
             <tr>
-              <th>{{items.item2}}</th>
+                <th>{{items.item6}}</th>
+                <th>{{items.item8}}</th>
+                <th>{{items.item2}}</th>
                 <th>{{items.item3}}</th>
-                <th>{{items.item4}}</th>
-                <th>{{items.item8}}：{{items.item9}}</th>
-               <!--<th>特別註記</th> -->
+              <!-- <th>特別註記</th> -->
             </tr>
             </thead>
-            <tbody id="publishlist">
-              <tr v-for="(publish, idx) in pagedPublishs" :key="publish.id || (publish.title + '_' + idx)">
-                <td>{{formatDate(publish.a15year)}}</td>
-                <td>{{publish.a20title}}</td>
-                <td>{{publish.a25book}}</td>
-                <td>{{publish.a45volumn}}：{{publish.a50issue}}</td>
+            <tbody id="set_infolist">
+              <tr v-for="(set_info, idx) in pagedSet_infos" :key="set_info._id || (set_info.a10unitID+ '_' + idx)">
+                <td>{{set_info.a35dataset_name}}</td>
+                <td>{{set_info.a45date_of_get}}</td>
+                <td>{{set_info.a15data_volume}}</td>
+                <td>{{set_info.a20skip}}</td>
                 <!-- statusreport="由已擷取資料組清單頁進入本頁"> -->
 
                   <td>
-                    <input type="submit" value="檢視或編輯" @click="editone(publish._id)">
+                    <input type="submit" value="檢視或編輯" @click="editone(set_info._id)">
                   </td>
                   <td>
-                    <input type="submit" value="刪除" @click="deleteone(publish._id)">
+                    <input type="submit" value="取回opendata" @click="getdata(set_info._id)">
+                  </td>
+                  <td>
+                    <input type="submit" value="刪除" @click="deleteone(set_info._id)">
                   </td>
                 </tr>
             </tbody>
@@ -244,15 +261,11 @@ background-color: rgb(205, 226, 253);
 
     <!-- 總頁數/總筆數訊息 -->
     <span class="pager-info">
-      共 {{ publishlist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
+      共 {{ set_infolist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
     </span>
   </div>
   </div>
       </nav>
-      </template>
-
-      <template id="outputerUI">
-
       </template>
 
   <!-- Vue CDN-->
@@ -264,36 +277,46 @@ background-color: rgb(205, 226, 253);
       props:{},
       data(){
         return {
-        brand:"Career",
-        innerweb:"好友網頁",
-        otherdata:"維管其他資料",
-        modeltype:"出版資料維管",
-        innerweburl:"",
-        datamanageurl:"",
-        statusreport:'<%- statusreport %>',
-        personID:'<%- personID %>'
-        }
+          brand:"Career",
+          //previouspage:"回案件清單頁",
+          KM:"知識管理",
+          northgate:"北冥入口",
+          innerweb:"至好友網站",
+          statusreport:'<%- statusreport %>',
+          personID:'<%- personID %>',
+          //previousurl:"",
+          otherdata:"維管其他資料",
+          datamanageurl:"",
+          KMurl:"",
+          innerweburl:""
+          }
       },
-      mounted:function(){
-        this.innerweburl="/career/branch/goinnerweb/"+this.personID;
-        this.datamanageurl="/career/branch/gomaintainer/"+this.personID
-      },
+          mounted:function(){
+            this.innerweburl="/career/branch/goinnerweb/"+this.personID,
+            this.datamanageurl="/career/branch/gomaintainer/"+this.personID
+            this.KMurl="/career/branch/goKM/"+this.personID
+          },
       methods:{
 
       },
       template:"#banderUI"
     });
+    /*
     Vue.component("inputer",{
       props:{},
       data(){
         return {
+
+
         }
       },
+
       methods:{
 
       },
       template:"#inputerUI"
     });
+    */
     Vue.component("outputer",{
       props:{},
       data(){
@@ -305,36 +328,32 @@ background-color: rgb(205, 226, 253);
           personID:'<%- personID %>',
           inputpageurl:"",
           inputbatchurl:"",
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),
+          set_infolist:JSON.parse(decodeURIComponent('<%=set_infolist%>')),
         items:{
-          item0:"對應的knowledge",
-            item1:"共同作者",
-            item2:"出版或完稿年",
-            item3:"標題",
-            item4:"刊物或研討會名",
-            item5:"彙編或總集",
-            item6:"編輯者",
-            item7:"篇",
-            item8:"卷",
-            item9:"期",
-            item10:"起頁",
-            item11:"末頁",
-            item12:"出版商",
-            item13:"網址",
-            item14:"城市",
+            item0:"資料所在網址",
+            item1:"資料組編號",
+            item2:"本批次擷取筆數",
+            item3:"跳過之筆數(即過去已擷取之筆數)",
+            item4:"查詢條件(含起始日期、結束日期、所需欄位、符合之標準等)",
+            item5:"資料排序方式(欄位名稱及排序方向)",
+            item6:"給予之此批次資料簡稱",
+            item7:"資料描述",
+            item8:"擷取日期",
+            item9:"檔名主要字母",
+            item10:"同檔名時之序號",
             item99:"特別註記"
             }
         }
       },
     computed: {
         totalPages() {
-          const n = this.publishlist.length;
+          const n = this.set_infolist.length;
           return Math.max(1, Math.ceil(n / this.pageSize));
         },
 
-        pagedPublishs() {
+        pagedSet_infos() {
           const start = (this.currentPage - 1) * this.pageSize;
-          return this.publishlist.slice(start, start + this.pageSize);
+          return this.set_infolist.slice(start, start + this.pageSize);
         },
 
         pageRange() {
@@ -389,37 +408,36 @@ background-color: rgb(205, 226, 253);
       },
 
       watch: {
-        // publishlist 更新後，避免頁碼超界
-        publishlist() {
+        // set_infolist 更新後，避免頁碼超界
+        set_infolist() {
           if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
           if (this.currentPage < 1) this.currentPage = 1;
         }
-      },            
+      },      
       mounted:function(){
-        this.inputpageurl="/career/publish/inputpage/"+this.personID;
-        this.inputbatchurl="/career/publish/inputbatch/"+this.personID
+        this.inputpageurl="/career/set_info/inputpage/"+this.personID;
+        this.inputbatchurl="/career/set_info/inputbatch/"+this.personID        
       },
       methods:{
         editone:function(id){
-          let querytext="?statusreport=由publish資料清單頁的編輯按鈕進入本頁";
-          let url2='/career/publish/editpage/'+this.personID+"/"+id+querytext;
+          let querytext="?statusreport=由set_info資料清單頁的編輯按鈕進入本頁";
+          let url2='/career/set_info/editpage/'+this.personID+"/"+id+querytext;
           window.location=url2;
         },
         deleteone:function(id){
-          let querytext="?statusreport=由publish資料清單頁的刪除按鈕進入本頁";
-          let url3='/career/publish/delete/'+this.personID+"/"+id+querytext;
+          let querytext="?statusreport=由set_info資料清單頁的刪除按鈕進入本頁";
+          let url3='/career/set_info/delete/'+this.personID+"/"+id+querytext;
+          window.location=url3
+           },
+           getdata:function(id){
+          let querytext="?statusreport=由set_info資料清單頁的getdata按鈕進入本頁";
+          let url3='/career/set_info/getdata/'+this.personID+"/"+id+querytext;
           window.location=url3
            },
         goPage(p) {
           if (p < 1 || p > this.totalPages) return;
           this.currentPage = p;
-        },
-        formatDate(date) {
-              // 若後端給 '2026-01-07' 或 ISO 字串都可處理
-              if (!date) return '';
-              // 不強制格式：你可以改成自己想要的顯示
-              return String(date).slice(0, 4);
-            }
+        }
       },
     template:"#outputerUI"
   });

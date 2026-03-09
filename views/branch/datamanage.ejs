@@ -65,6 +65,9 @@ background-color: rgb(205, 226, 253);
             <li class="nav-item">
               <a class="nav-link" :href="KMurl">{{KM}}</a>
           </li>
+          <li class="nav-item">
+              <a class="nav-link" :href="northgateurl">{{northgate}}</a>
+          </li>
               <li class="nav-item">
                 <a class="nav-link" :href="innerweburl">{{innerweb}}</a>
               </li>
@@ -106,15 +109,19 @@ background-color: rgb(205, 226, 253);
           //previouspage:"回案件清單頁",
           data2manage:"各資料表維管入口",
           KM:"知識管理",
+          northgate:"北冥入口",
           innerweb:"至好友網站",
           statusreport:'<%- statusreport %>',
           personID:'<%- personID %>',
           //previousurl:"",
-          innerweburl:"",
-          KMurl:""        }
+          northgateurl:"",
+          KMurl:"",
+          innerweburl:""
+          }
       },
           mounted:function(){
             this.innerweburl="/career/branch/goinnerweb/"+this.personID,
+            this.northgateurl="/career/set_info/"+this.personID,
             this.KMurl="/career/branch/goKM/"+this.personID
           },
       methods:{

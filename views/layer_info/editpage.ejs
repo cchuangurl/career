@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<style type="text/css">
+body {
+  background-color: #d6d6d3;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+     flex-direction:column;
+	 justify-content: flex-start;
+     align-items:center;
+  	margin: 0;
+}
+.navbar{background:#e5f8cd;}
+.nav-link, .navbar-brand{color: #f4f4f4;cursor:pointer;}
+.nav-link{margin-right:1em !important;}
+.nav-link:hover{background: #f4f4f4;color:#f97300;}
+.navbar-collapse{justify-content:flex-end;}
+.navbar-toggler{background:#fff !important;}
+</style>
+
+  <title>修正指定之layer_info</title>
+  </head>
+  <body>
+    <div id="show_div">
+      <bander></bander>
+        <inputer></inputer>
+        <!-- <outputer></outputer> -->
+    </div>
+
+    <template id="banderUI">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">{{brand}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" :href="listpageurl">{{listpage}}</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#">{{edit1}} <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">{{editbatch}}</a>
+            </li>
+          </ul>
+          <span class="navbar-text">
+            <!--{{statusreport}}-->
+          </span>
+        </div>
+      </nav>
+    </template>
+
+    <template id="inputerUI" >
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">修正{{layer_info.a25code}}之對照資料</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{card_subtitle}}</h6>
+          <form :action="updateurl" method="post">
+            <div class="form-group" :key="inputerUIkey">
+            <label for="formGroupExampleInput2">{{items.item}}</label>
+            <input type="text" name="_id" class="form-control" id="formGroupExampleInput" :value="layer_info._id">
+
+            <label for="formGroupExampleInput2">{{items.item0}}</label>
+            <select :name="names.name0" class="form-select">
+              <optgroup v-for="(knowledge,index) of knowledgelist" :key="knowledge._id">
+              <option :value="knowledge._id" :selected="knowindex[index]">{{knowledge.a15describe}}</option>
+              </optgroup>
+              </select>
+            <br>
+
+            <label for="formGroupExampleInput2">{{items.item1}}</label>
+            <input type="text" :name="names.name1" class="form-control" id="formGroupExampleInput1" :value="layer_info.a10coauthor">
+
+            <label for="formGroupExampleInput2">{{items.item2}}</label>
+            <input type="text" :name="names.name2" class="form-control" id="formGroupExampleInput2" :value="layer_info.a15year">
+
+            <label for="formGroupExampleInput2">{{items.item3}}</label>
+            <input type="text" :name="names.name3" class="form-control" id="formGroupExampleInput3" :value="layer_info.a20title">
+
+            <label for="formGroupExampleInput2">{{items.item4}}</label>
+            <input type="text" :name="names.name4" class="form-control" id="formGroupExampleInput4" :value="layer_info.a25book">
+
+            <label for="formGroupExampleInput2">{{items.item5}}</label>
+            <input type="text" :name="names.name5" class="form-control" id="formGroupExampleInput5" :value="layer_info.a30collection">
+
+            <label for="formGroupExampleInput2">{{items.item6}}</label>
+            <input type="text" :name="names.name6" class="form-control" id="formGroupExampleInput6" :value="layer_info.a35editor">
+
+            <label for="formGroupExampleInput2">{{items.item7}}</label>
+            <input type="text" :name="names.name7" class="form-control" id="formGroupExampleInput7" :value="layer_info.a40part">
+
+            <label for="formGroupExampleInput2">{{items.item8}}</label>
+            <input type="text" :name="names.name8" class="form-control" id="formGroupExampleInput8" :value="layer_info.a45volumn">
+
+            <label for="formGroupExampleInput2">{{items.item9}}</label>
+            <input type="text" :name="names.name9" class="form-control" id="formGroupExampleInput9" :value="layer_info.a50issue">
+
+            <label for="formGroupExampleInput2">{{items.item10}}</label>
+            <input type="text" :name="names.name10" class="form-control" id="formGroupExampleInput10" :value="layer_info.a55startpage">
+
+            <label for="formGroupExampleInput2">{{items.item11}}</label>
+            <input type="text" :name="names.name11" class="form-control" id="formGroupExampleInput11" :value="layer_info.a60endpage">
+
+            <label for="formGroupExampleInput2">{{items.item12}}</label>
+            <input type="text" :name="names.name12" class="form-control" id="formGroupExampleInput12" :value="layer_info.a65layer_infoer">
+
+            <label for="formGroupExampleInput2">{{items.item13}}</label>
+            <input type="text" :name="names.name13" class="form-control" id="formGroupExampleInput13" :value="layer_info.a70website">
+
+            <label for="formGroupExampleInput2">{{items.item14}}</label>
+            <input type="text" :name="names.name14" class="form-control" id="formGroupExampleInput14" :value="layer_info.a75city">
+
+            <input type="hidden" name="statusreport" class="form-control" id="msg1" value="由修正layer_info後進入本頁">
+              <input type="submit" id="button1" value="確定送出" class="btn btn-info">
+            </div>
+          </form>
+          <input type="submit" id="button2" value="重新輸入" class="btn btn-info" @click="rerender()">
+          <!-- <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div>
+    </template>
+
+
+<!-- Vue CDN-->
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script>
+Vue.component("bander",{
+    props:{},
+    data(){
+      return {
+        brand:"Career",
+        listpage:"回前頁",
+        input1:"手動新增1筆",
+        inputbatch:"批次輸入",
+        crawl:"從網路抓取",
+        statusreport:'<%- statusreport %>',
+        personID:'<%- personID %>',
+        listpageurl:""        
+      }
+    },
+    mounted:function(){
+      this.listpageurl="/career/layer_info/"+this.personID
+    },
+    methods:{
+
+    },
+    template:"#banderUI"
+  });
+  Vue.component("inputer",{
+    props:{},
+    data(){
+      return {
+        card_title:"",
+        card_subtitle:"請修正以下各項資料:",
+        items:{
+          item0:"所屬資料集訊息的_id",
+          item1:"所屬批次資料簡稱",
+          item2:"原資料的key",
+          item3:"第幾層資料",
+          item4:"本層key數量",
+          item5:"本層key為物件的數量",
+          item6:"上一層的_id",
+          item7:"上一層的key",
+          item8:"本項資料的單位",
+          item9:"欄位名稱",
+          item99:"特別註記"
+          },
+        names:{
+          name0:"a05set_infoID",
+          name1:"a10dataset_name",
+          name2:"a15key_name",
+          name3:"a20data_layer",
+          name4:"a25no_subkey",
+          name5:"a30no_container",
+          name6:"a35upper_layerID",
+          name7:"a40upper_key",
+          name8:"a45unit",
+          name9:"a50field_name"
+            },
+      layer_info:JSON.parse(decodeURIComponent('<%=layer_info%>')),
+      knowledgelist:JSON.parse(decodeURIComponent('<%=knowledgelist%>')),
+      knowindex:[],
+      inputerUIkey:0,
+      personID: '<%- personID %>',
+      updateurl:""
+      }//EOF return
+    },//EOF data()
+    mounted:function(){
+        this.updateurl="/career/layer_info/update/"+this.personID;
+
+        for(knowledge of this.knowledgelist){
+            if(knowledge._id==this.layer_info.a05knowledgeID){
+                this.knowindex.push(true)
+            }else{
+                this.knowindex.push(false)
+            }
+        }
+    },
+    methods:{
+        rerender:function() {
+      this.inputerUIkey += 1;
+      console.log("inputerUIkey:"+this.inputerUIkey)
+    }
+    },
+
+    template:"#inputerUI"
+  });
+    new Vue({
+        el:'#show_div',
+        data:{
+          testdata:'有執行到此。。。。'
+        },
+        /* computed:{
+
+        },
+        watch:{
+
+        },
+        filters:{
+
+        },
+        mixins:[
+
+        ],
+        template:" ",
+        components:{
+
+        },*/
+        beforeCreate:function(){
+          console.log("before create...")
+        },created:function(){
+          console.log("created...")
+        },
+        beforeMount:function(){
+          console.log("before mount...")
+        },
+        mounted:function(){
+          console.log("mounted...")
+        },
+        beforeUpdate:function(){
+          console.log("before update...")
+        },
+        updated:function(){
+          console.log("updated...")
+        },
+        beforeDestroy:function(){
+
+        }
+    })
+</script>
+
+
+  </body>
+</html>

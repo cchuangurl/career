@@ -38,6 +38,7 @@ router.get('/goouterweb2', async (ctx, next)=> {
 router.get('/gomaintainer/:id', async (ctx, next)=> {
   await branchController.maintainer(ctx,next)
 });
+
 //到KM
 router.get('/goKM/:id', async (ctx, next)=> {
   await branchController.KM(ctx,next)

@@ -154,7 +154,7 @@ background-color: rgb(205, 226, 253);
 
     <!-- 總頁數/總筆數訊息 -->
     <span class="pager-info">
-      共 {{ publishlist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
+      共 {{ layer_infolist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
     </span>
   </div>
   </div>
@@ -168,19 +168,19 @@ background-color: rgb(205, 226, 253);
                <!--<th>特別註記</th> -->
             </tr>
             </thead>
-            <tbody id="publishlist">
-              <tr v-for="(publish, idx) in pagedPublishs" :key="publish.id || (publish.title + '_' + idx)">
-                <td>{{formatDate(publish.a15year)}}</td>
-                <td>{{publish.a20title}}</td>
-                <td>{{publish.a25book}}</td>
-                <td>{{publish.a45volumn}}：{{publish.a50issue}}</td>
+            <tbody id="layer_infolist">
+              <tr v-for="(layer_info, idx) in pagedPublishs" :key="layer_info.id || (layer_info.title + '_' + idx)">
+                <td>{{formatDate(layer_info.a15year)}}</td>
+                <td>{{layer_info.a20title}}</td>
+                <td>{{layer_info.a25book}}</td>
+                <td>{{layer_info.a45volumn}}：{{layer_info.a50issue}}</td>
                 <!-- statusreport="由已擷取資料組清單頁進入本頁"> -->
 
                   <td>
-                    <input type="submit" value="檢視或編輯" @click="editone(publish._id)">
+                    <input type="submit" value="檢視或編輯" @click="editone(layer_info._id)">
                   </td>
                   <td>
-                    <input type="submit" value="刪除" @click="deleteone(publish._id)">
+                    <input type="submit" value="刪除" @click="deleteone(layer_info._id)">
                   </td>
                 </tr>
             </tbody>
@@ -244,7 +244,7 @@ background-color: rgb(205, 226, 253);
 
     <!-- 總頁數/總筆數訊息 -->
     <span class="pager-info">
-      共 {{ publishlist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
+      共 {{ layer_infolist.length }} 筆｜共 {{ totalPages }} 頁｜目前第 {{ currentPage }} 頁
     </span>
   </div>
   </div>
@@ -305,36 +305,31 @@ background-color: rgb(205, 226, 253);
           personID:'<%- personID %>',
           inputpageurl:"",
           inputbatchurl:"",
-          publishlist:JSON.parse(decodeURIComponent('<%=publishlist%>')),
+          layer_infolist:JSON.parse(decodeURIComponent('<%=layer_infolist%>')),
         items:{
-          item0:"對應的knowledge",
-            item1:"共同作者",
-            item2:"出版或完稿年",
-            item3:"標題",
-            item4:"刊物或研討會名",
-            item5:"彙編或總集",
-            item6:"編輯者",
-            item7:"篇",
-            item8:"卷",
-            item9:"期",
-            item10:"起頁",
-            item11:"末頁",
-            item12:"出版商",
-            item13:"網址",
-            item14:"城市",
+          item0:"所屬資料集訊息的_id",
+          item1:"所屬批次資料簡稱",
+          item2:"原資料的key",
+          item3:"第幾層資料",
+          item4:"本層key數量",
+          item5:"本層key為物件的數量",
+          item6:"上一層的_id",
+          item7:"上一層的key",
+          item8:"本項資料的單位",
+          item9:"欄位名稱",
             item99:"特別註記"
             }
         }
       },
     computed: {
         totalPages() {
-          const n = this.publishlist.length;
+          const n = this.layer_infolist.length;
           return Math.max(1, Math.ceil(n / this.pageSize));
         },
 
         pagedPublishs() {
           const start = (this.currentPage - 1) * this.pageSize;
-          return this.publishlist.slice(start, start + this.pageSize);
+          return this.layer_infolist.slice(start, start + this.pageSize);
         },
 
         pageRange() {
@@ -389,25 +384,25 @@ background-color: rgb(205, 226, 253);
       },
 
       watch: {
-        // publishlist 更新後，避免頁碼超界
-        publishlist() {
+        // layer_infolist 更新後，避免頁碼超界
+        layer_infolist() {
           if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
           if (this.currentPage < 1) this.currentPage = 1;
         }
       },            
       mounted:function(){
-        this.inputpageurl="/career/publish/inputpage/"+this.personID;
-        this.inputbatchurl="/career/publish/inputbatch/"+this.personID
+        this.inputpageurl="/career/layer_info/inputpage/"+this.personID;
+        this.inputbatchurl="/career/layer_info/inputbatch/"+this.personID
       },
       methods:{
         editone:function(id){
-          let querytext="?statusreport=由publish資料清單頁的編輯按鈕進入本頁";
-          let url2='/career/publish/editpage/'+this.personID+"/"+id+querytext;
+          let querytext="?statusreport=由layer_info資料清單頁的編輯按鈕進入本頁";
+          let url2='/career/layer_info/editpage/'+this.personID+"/"+id+querytext;
           window.location=url2;
         },
         deleteone:function(id){
-          let querytext="?statusreport=由publish資料清單頁的刪除按鈕進入本頁";
-          let url3='/career/publish/delete/'+this.personID+"/"+id+querytext;
+          let querytext="?statusreport=由layer_info資料清單頁的刪除按鈕進入本頁";
+          let url3='/career/layer_info/delete/'+this.personID+"/"+id+querytext;
           window.location=url3
            },
         goPage(p) {
